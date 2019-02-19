@@ -9,7 +9,32 @@
 	  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
   </head>     
   <body>
-  	{% block content %}
-    {% endblock content %}
+		<nav class="navbar navbar-expand-md navbar-dark sticky-top" id="sidebar">
+	    <h3 class="navbar-brand">LOGO</h3> 
+	    <h3 class="mx-auto navbar-brand">Nominate your bee</h3>
+	  </nav>
+		<div class="container-fluid">
+		  <div class="row">
+		    <div class="col-sm-2 bg-dark">
+		      <nav class="navbar navbar-expand-sm navbar-dark">
+		        <button class="navbar-toggler" data-toggle="collapse"  data-target="#navbar_wex">
+		          <span class="navbar-toggler-icon"></span>
+		        </button>
+		        <div class="nav navbar-nav navbar-collapse collapse flex-column" id="navbar_wex">
+		          <a href="#create_award" class="nav-link active" data-toggle="tab">Create Award</a>
+		          <a href="#nomination" class="nav-link" data-toggle="tab">Nominatins</a>
+		          <a href="#nominee" class="nav-link" data-toggle="tab">Nomiante</a>
+		          <a href="#result" class="nav-link" data-toggle="tab">Result</a>
+		          <a href="" class="nav-link" data-toggle="tab">Graph</a>
+		        </div>
+		      </nav>
+		    </div>  
+		    <div class="col-sm-10">
+		      <!-- Tab panes -->
+		      {% block content %}
+	        {% endblock content %}
+		    </div>
+		  </div>
+		</div>
   </body>
 </html>
