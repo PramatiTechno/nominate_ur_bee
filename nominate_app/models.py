@@ -9,6 +9,9 @@ class User(models.Model):
     email = models.EmailField(max_length=70, unique=True)
     designation = models.CharField(max_length=70)
 
+    class Meta:
+        db_table='users'
+
     def __str__(self):
         return self.name
 
@@ -25,6 +28,9 @@ class Role(models.Model):
 
     name = models.CharField(max_length=30)
     group = models.CharField(choices=choice_level, max_length=3)
+
+    class Meta:
+        db_table='roles'
 
     def __str__(self):
         return self.group
@@ -53,6 +59,9 @@ class Awards(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
     # get_awardtype_display()
 
+    class Meta:
+        db_table='awards'
+
     def __str__(self):
         return self.name
 
@@ -63,11 +72,15 @@ class NominationPeriod(models.Model):
     start_day = models.CharField(max_length=3, choices=CHOICES)
     end_day = models.CharField(max_length=3, choices=CHOICES)
 
-
+    class Meta:
+        db_table='nomination_periods'
     
 class AwardTemplate(models.Model):
     template_name = models.CharField(max_length=30, null=True, blank=True)
     award = models.ForeignKey(Awards, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table='award_templates'
 
     def __str__(self):
         return self.template_name
@@ -81,6 +94,9 @@ class Questions(models.Model):
         (SUBJECTIVE, 'subjective'),
         (OBJECTIVE, 'objective')
         )
+
+    class Meta:
+        db_table='award_questions'
 
     qname = models.CharField(max_length=100)
     qtype = models.CharField(max_length=1, choices=query_choice)
