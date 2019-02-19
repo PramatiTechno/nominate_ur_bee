@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import dotenv
 
+dotenv.read_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env")))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -88,7 +91,7 @@ DATABASES = {
         'USER': os.environ['DB_USER'],
         'PASSWORD': os.environ['CORE_PASSWORD'],
         'HOST': os.environ['CORE_HOST'], 
-        'PORT':''  
+        'PORT': os.environ['DB_PORT']  
     }  
 }
 
