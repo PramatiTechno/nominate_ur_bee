@@ -1,0 +1,8 @@
+
+#navbar_wex {
+  min-height: calc(100vh - 50px); /* 54 pixel is the height of your .navbar */
+}
+#sidebar {
+  min-height: 103px;
+  background-color: #00b6d5;
+}
