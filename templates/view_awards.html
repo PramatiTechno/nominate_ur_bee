@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 align="center">Awards</h1>
+  <div style="position: relative; top: 50">
+    
+    <div style="position: absolute; top: -40; right: 5;"><input onclick="location.href='{% url 'nominate_app:home' %}'" type="button" value="Create New Award" /></div>
+</div>
+<div style="position: relative; top: 60">
+  <form>
+    <table style="width:100%" border="10">
+      <thead align="center">
+      <tr>
+        <th> Awards </th>
+        <th> Status </th> 
+        <th> View/Edit </th>
+      </tr>
+      </thead>
+    {% for form in forms %}
+      <tr> 
+        <!-- &emsp; -->
+        <td align="center"> {{ form.name }} </td> 
+        {% if form.is_active == True %}
+          <td align="center"> Enabled  </td>
+        {% else %}
+          <td align="center"> Disabled  </td>
+        {% endif %}
+        <td align="center"> <a href="{% url 'nominate_app:edit_awards' form.id %} ">View</a> </td>
+        <!-- <td> <button formaction="{% url 'nominate_app:edit_awards' form.id %}">View</button> </td> -->
+    </tr>
+    {% endfor %}
+  </table>
+  </form>
+</div>
+{% endblock %}

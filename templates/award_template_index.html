@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 align="center">Award Templates</h1>
+<div style="position: relative; top: 50">
+    
+    <div style="position: absolute; top: -40; right: 5;"><input onclick="location.href='{% url 'nominate_app:home' %}'" type="button" value="Create New Template" /></div>
+</div>
+<div id="templates" style="position: relative; top: 50 ">
+  <form method = "POST">
+    {% csrf_token %}
+    <select type="selection" id = "award" style="text-align-last: center; text-align: center;">
+      <option value="default_value" selected="true"> Select An Award to Filter </option>
+      {% for form in forms %}
+        <option value="{{ form.id }}">
+        {{ form.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<div id="templates" style="position: relative; top: 100">
+     <table style="width:100%" border="10" id="templates_table">
+     {% for lt in load_templates %}
+      <tr>
+        <td align="center"> {{ lt.template_name }} </td>         
+        <td align="center"> <a href="{% url 'nominate_app:award_template_load' lt.id %} "> View </a> </td>
+      </tr>
+    {% endfor %} 
+    </table>
+</div>
+
+  <script>
+      $(document).on('change', '[type=selection]', function(event) {
+      event.preventDefault();
+      var award_id = $(this).children("option:selected").val();
+      // console.log("log : ", award_id);
+      $.ajax({
+        url:'/nominate_app/award_template_load/' + award_id + '/',
+        type:'GET',
+        dataType: 'json',
+        data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+        success:function (json) {
+            // console.log('in succ fn')
+            // console.log(json[0].fields.template_name)
+            var length = json.length
+            // console.log(length)
+            if (length == 0)
+              {
+                data='No Templates Found For Selected Award'
+                console.log(data)
+                $('#templates_table').html(data);
+              }
+            else
+              {
+                data=''
+                $('#templates_table').html(data);
+              }
+            for (i = 0; i <= length-1 ; i++) 
+            {
+                data='<tr><td align="center"> '+json[i].fields.template_name+' </td><td align="center"> <a href="/nominate_app/award_template_load/'+json[i].pk+'"> View </a> </td></tr>'
+                $('#templates_table').append(data);
+            }
+             // ('<li><a href="/user/messages"><span class="tab">Message Center</span></a></li>');
+            // $('.ajaxProgress').hide();
+        }
+      });
+      
+    }); 
+  </script>
+{% endblock %}
