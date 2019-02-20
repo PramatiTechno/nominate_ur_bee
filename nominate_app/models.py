@@ -66,7 +66,7 @@ class Awards(models.Model):
         return self.name
 
 class NominationPeriod(models.Model):
-    CHOICES = [(i,i) for i in range(1,32)]
+    CHOICES = [(str(i),str(i)) for i in range(1,32)]
     level = models.ForeignKey(Role, on_delete=models.CASCADE)
     award = models.ForeignKey(Awards, on_delete=models.CASCADE)
     start_day = models.CharField(max_length=3, choices=CHOICES)
