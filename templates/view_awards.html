@@ -19,7 +19,6 @@
       </thead>
     {% for form in forms %}
       <tr> 
-        <!-- &emsp; -->
         <td align="left"> {{ form.name }} </td> 
         {% if form.is_active == True %}
           <td align="left"> Enabled  </td>
@@ -27,7 +26,6 @@
           <td align="left"> Disabled  </td>
         {% endif %}
         <td align="left"> <a href="{% url 'nominate_app:edit_awards' form.id %} ">View</a> </td>
-        <!-- <td> <button formaction="{% url 'nominate_app:edit_awards' form.id %}">View</button> </td> -->
     </tr>
     {% endfor %}
   </table>
