@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 align="center" class="text-info">Award Templates</h1>
+<div style="position: relative; top: 50">
+    
+    <div style="position: absolute; top: -40; right: 5;"><a href="{% url 'nominate_app:award_template_load' 1 %}" type="button" id="create_link" class="btn btn-primary" value="Create New Template">Create New Template</a></div>
+</div>
+<div id="templates" style="position: relative; top: 50 ">
+  <form method = "POST">
+    {% csrf_token %}
+    <select type="selection" class="mySelect btn btn-info" id = "award" style="text-align-last: center; text-align: center;">
+      <option value="default_value" selected="selected"> Select An Award to Filter </option>
+      {% for form in forms %}
+        <option value="{{ form.id }}">
+        {{ form.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<div id="templates" style="position: relative; top: 100">
+     <table style="width:100%" border="10" id="templates_table">
+     {% for lt in load_templates %}
+      <tr>
+        <td align="center"> {{ lt.template_name }} </td>         
+        <td align="center"> <a href="{% url 'nominate_app:award_template_load' lt.id %} "> View </a> </td>
+      </tr>
+    {% endfor %} 
+    </table>
+</div>
+
+  <script>
+      $(document).on('change', '[type=selection]', function(event) {
+      event.preventDefault();
+      document.getElementById('create_link').href="/award_template_load/"+$(this).children("option:selected").val();;
+      var award_id = $(this).children("option:selected").val();
+      $.ajax({
+        url:'/award_template_load/' + award_id + '/',
+        type:'GET',
+        dataType: 'json',
+        data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+        success:function (json) {
+            var length = json.length
+            if (length == 0)
+              {
+                data='No Templates Found For Selected Award'
+                $('#templates_table').html(data);
+              }
+            else
+              {
+                data=''
+                $('#templates_table').html(data);
+              }
+            for (i = 0; i <= length-1 ; i++) 
+            {
+                data='<tr><td align="center"> '+json[i].fields.template_name+' </td><td align="center"> <a href="/award_template_load/'+json[i].pk+'"> View </a> </td></tr>'
+                $('#templates_table').append(data);
+            }
+        }
+      });
+    }); 
+
+    $(function() {
+        $('.mySelect').val( 'default_value' );
+    });
+
+  </script>
+{% endblock %}

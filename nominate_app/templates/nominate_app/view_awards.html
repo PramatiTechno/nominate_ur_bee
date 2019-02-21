@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 align="center" class="text-info">Awards</h1>
+  <div style="position: relative; top: 50">
+    
+    <div style="position: absolute; top: -40; right: 5;"><input onclick="location.href='{% url 'nominate_app:newawards' %}'" type="button" class="btn btn-primary" value="Create New Award" /></div>
+</div>
+<div style="position: relative; top: 60">
+  <button class="accordion">Awards</button>
+  <form>
+    <table style="width:100%" frame="box">
+      <thead align="left">
+      <tr>
+        <th> Awards </th>
+        <th> Status </th> 
+        <th> View/Edit </th>
+      </tr>
+      </thead>
+    {% for form in forms %}
+      <tr> 
+        <td align="left"> {{ form.name }} </td> 
+        {% if form.is_active == True %}
+          <td align="left"> Enabled  </td>
+        {% else %}
+          <td align="left"> Disabled  </td>
+        {% endif %}
+        <td align="left"> <a href="{% url 'nominate_app:edit_awards' form.id %} ">View</a> </td>
+    </tr>
+    {% endfor %}
+  </table>
+  </form>
+</div>
+
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.display === "block") {
+      panel.style.display = "none";
+    } else {
+      panel.style.display = "block";
+    }
+  });
+}
+</script>
+{% endblock %}
