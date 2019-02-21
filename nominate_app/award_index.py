@@ -3,7 +3,6 @@ from nominate_app.models import Awards, AwardTemplate
 from django.http import HttpResponse
 from django.core import serializers
 from django.http import JsonResponse 
-import IPython
 
 # Create your views here.
 
@@ -28,14 +27,11 @@ def award_template_index(request):
 		forms = Awards.objects.all()
 		id = request.GET.get('id')
 		load_templates = AwardTemplate.objects.all()
-		print (load_templates)
 	return render(request, 'award_template_index.html',{'forms': forms,
         'load_templates': load_templates,
     })
 
 def award_template_load(request,id):
 	load_templates = AwardTemplate.objects.filter(award_id=id)
-	print (load_templates)
 	to_json = serializers.serialize('json', load_templates)
-	print (to_json)
 	return HttpResponse(to_json, content_type='application/json')
