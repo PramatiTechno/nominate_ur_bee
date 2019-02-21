@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
-from .models import NominationPeriod, Awards, Role
+from nominate_app.models import NominationPeriod, Awards, Role
 from django.forms import modelformset_factory, inlineformset_factory
 from django.http import HttpResponse
-from .forms import AwardsForm, AwardsActiveForm
+from nominate_app.forms import AwardsForm, AwardsActiveForm
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 
 # Create your views here.
 
-def home(request, award_id):
+def edit_awards(request, award_id):
 	award = Awards.objects.get(pk=award_id)
 	award_form = AwardsActiveForm(instance=award)
 
@@ -32,7 +32,8 @@ def home(request, award_id):
 			if formset.is_valid():
 				created_award.save()
 				formset.save()
-				return redirect('home', award_id=award.id)
+				return redirect('nominate_app:view_awards')
+				# return redirect('nominate_app:edit_awards', award_id=award.id)
 
 	return render(request, 'nominate_app/home.html', {'formset':formset, 'award':award, 'award_form':award_form })
 
@@ -60,7 +61,7 @@ def awards(request):
 			if formset.is_valid():
 				created_award.save()
 				formset.save()
-				return redirect('newawards')
+				return redirect('nominate_app:view_awards')
 
 	return render(request, 'nominate_app/awards_form.html', {'formset':formset,'award_form':award_form })
 

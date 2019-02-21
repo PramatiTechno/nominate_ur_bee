@@ -34,10 +34,10 @@
   <script>
       $(document).on('change', '[type=selection]', function(event) {
       event.preventDefault();
-      document.getElementById('create_link').href="/nominate_app/award_template_load/"+$(this).children("option:selected").val();;
+      document.getElementById('create_link').href="/award_template_load/"+$(this).children("option:selected").val();;
       var award_id = $(this).children("option:selected").val();
       $.ajax({
-        url:'/nominate_app/award_template_load/' + award_id + '/',
+        url:'/award_template_load/' + award_id + '/',
         type:'GET',
         dataType: 'json',
         data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
@@ -55,7 +55,7 @@
               }
             for (i = 0; i <= length-1 ; i++) 
             {
-                data='<tr><td align="center"> '+json[i].fields.template_name+' </td><td align="center"> <a href="/nominate_app/award_template_load/'+json[i].pk+'"> View </a> </td></tr>'
+                data='<tr><td align="center"> '+json[i].fields.template_name+' </td><td align="center"> <a href="/award_template_load/'+json[i].pk+'"> View </a> </td></tr>'
                 $('#templates_table').append(data);
             }
         }

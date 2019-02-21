@@ -13,13 +13,13 @@ def home(request):
 def view_awards(request):
     if request.method == 'GET':
         forms = Awards.objects.all()
-    return render(request, 'view_awards.html',{'forms':forms})
+    return render(request, 'nominate_app/view_awards.html',{'forms':forms})
 
 
 def edit_awards(request,id):
     if request.method == 'GET':
         forms = Awards.objects.all()
-    return render(request, 'view_awards.html',{'forms':forms})
+    return render(request, 'nominate_app/view_awards.html',{'forms':forms})
 
 
 def award_template_index(request):
@@ -27,7 +27,7 @@ def award_template_index(request):
 		forms = Awards.objects.all()
 		id = request.GET.get('id')
 		load_templates = AwardTemplate.objects.all()
-	return render(request, 'award_template_index.html',{'forms': forms,
+	return render(request, 'nominate_app/award_template_index.html',{'forms': forms,
         'load_templates': load_templates,
     })
 
