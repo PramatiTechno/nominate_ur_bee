@@ -31,9 +31,10 @@
 			var vall = Number($('#'+checkboxId).next('input').next('input')[0].value);
 			par_table = $('#'+checkboxId).closest('.no_error');
 			par_table.hide();
+			debugger
 			$.ajax({
 
-				url:'/bee/delete/' + vall + '/',
+				url:'/delete/' + vall + '/',
 				type:'POST',
 				data:{
 					csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),

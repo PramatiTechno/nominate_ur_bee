@@ -55,7 +55,7 @@ class Awards(models.Model):
 
     name = models.CharField(max_length=30, null=True, blank=True)
     is_active = models.BooleanField(default = False)
-    frequency = models.CharField(max_length=3, choices=choice_type)
+    frequency = models.CharField(max_length=3, choices=choice_type, blank=True)
     description = models.CharField(max_length=200, null=True, blank=True)
     # get_awardtype_display()
 
