@@ -10,16 +10,18 @@ import pdb
 def new_home(request):
   return render(request, 'new_home.html')
 
-def new_award_template(request):
+def new_award_template(request, award_id):
+  award = Awards.objects.get(id = award_id)
   AwardTemplateFormset = modelformset_factory(Questions, fields=('qname', 'qtype', 'role', 'attachment_need'), extra=1, can_delete=True)
   if request.method == 'POST':
     new_form = request.POST.copy()
-    template_name = new_form.pop('template_name')[0]
+    template_name = award.name
     is_active_val = new_form.pop('is_active')[0] 
     is_active = True if is_active_val ==  'yes' else False
-    award_id = new_form.pop('award_id')[0]
+    award_id = award.id
     award_template = AwardTemplate.objects.create(template_name= template_name, is_active=is_active, award_id=award_id)
     request.POST = new_form
+    # pdb.set_trace()
     formset = AwardTemplateFormset(request.POST)
     if formset.is_valid():
       instances = formset.save(commit=False)
@@ -33,10 +35,10 @@ def new_award_template(request):
   else:
     formset = AwardTemplateFormset(queryset=Questions.objects.none())
 
-  return render(request, 'new_award_template.html', {'formset':formset})
+  return render(request, 'new_award_template.html', {'formset':formset, 'template_name': award.name})
 
-def edit_award_template(request, award_template_id):
-  award_template = AwardTemplate.objects.get(id = award_template_id)
+def edit_award_template(request, template_id):
+  award_template = AwardTemplate.objects.get(id = template_id)
   questions = Questions.objects.filter(award_template_id=award_template.id)
   if questions.exists():
     x=0
@@ -57,10 +59,10 @@ def edit_award_template(request, award_template_id):
   else:
     formset = AwardTemplateFormset(queryset=questions)
 
-  return render(request, 'new_award_template.html', {'formset':formset})
+  return render(request, 'new_award_template.html', {'formset':formset, 'award_template': award_template})
 
 def delete_award_template(request, ques_id):
-  question = Questions.objects.get(pk=ques_id)
-  if question.exists():
-    question.delete()
+  questions = Questions.objects.filter(id=ques_id)
+  if questions.exists():
+    questions.delete()
   return HttpResponse('')

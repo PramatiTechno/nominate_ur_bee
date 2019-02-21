@@ -2,7 +2,7 @@
 {% block content%}
   <form id="" method="post" action="">
     {% csrf_token %}
-     <h2>{{ template_name }}</h2>
+     <h2>{{ award_template.name }}</h2>
     <label>Enabled:</label>
     <select name='is_active'>
       <option value='yes'>yes</option>
@@ -28,6 +28,7 @@
         event.preventDefault();
         checkboxId = event.target.id;
         ques_id = Number($('#'+checkboxId).next('input')[0].value);
+        console.log(ques_id)
         par_table = $('#'+checkboxId).closest('.form_table');
         par_table.hide();
         // need ajax func for edit questions template form
