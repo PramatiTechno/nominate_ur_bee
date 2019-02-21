@@ -1,15 +1,25 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 	<form method = "post">
 		</br>
 		{% csrf_token %}
-		{{ award_form.as_p }}
+
+		{{ award_form.name }}</br>
+		{{ award_form.frequency }}</br>
+		{{ award_form.description }}
+
 		{{ formset.management_form }}
+
 		{% for form in formset.forms %}
 			<div class='table'>
     		<table class='no_error'>
-        		{{ form }}
+        		{{ form.level }}
+        		{{ form.start_day }}
+        		{{ form.end_day }}
+        		{{ form.DELETE }}
     		</table>
     		</div>
 		{% endfor %}
@@ -26,9 +36,8 @@
 	    $(document).on('change', '[type=checkbox]', function(event) {
 			event.preventDefault();
 			var checkboxId = event.target.id;
-			var vall = Number($('#'+checkboxId).next('input')[0].value);
-			par_table = $('#'+checkboxId).closest('.no_error');
-			par_table.hide();
+			par_table = $('#'+checkboxId).closest('.table');
+			par_table.remove();
 			
 		}); 
 		
