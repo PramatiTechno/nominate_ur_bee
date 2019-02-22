@@ -1,51 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 align="center" class="text-info">Awards</h1>
-  <div style="position: relative; top: 50">
-    
-    <div style="position: absolute; top: -40; right: 5;"><input onclick="location.href='{% url 'nominate_app:newawards' %}'" type="button" class="btn btn-primary" value="Create New Award" /></div>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<h1 align="center" class="text-info">Awards</h1>
+<div class="container">
+<div class="form-group">
+<div class = "row award_top_margin">
+<div class="col-sm-12">
+<input input onclick="location.href='{% url 'nominate_app:newawards' %}'" type="button" class="btn btn-success float-sm-right" value = "Create New Award">
 </div>
-<div style="position: relative; top: 60">
-  <button class="accordion">Awards</button>
-  <form>
-    <table style="width:100%" frame="box">
-      <thead align="left">
-      <tr>
-        <th> Awards </th>
-        <th> Status </th> 
-        <th> View/Edit </th>
-      </tr>
-      </thead>
-    {% for form in forms %}
-      <tr> 
-        <td align="left"> {{ form.name }} </td> 
-        {% if form.is_active == True %}
-          <td align="left"> Enabled  </td>
-        {% else %}
-          <td align="left"> Disabled  </td>
-        {% endif %}
-        <td align="left"> <a href="{% url 'nominate_app:edit_awards' form.id %} ">View</a> </td>
-    </tr>
-    {% endfor %}
-  </table>
-  </form>
 </div>
-
-<script>
-var acc = document.getElementsByClassName("accordion");
-var i;
-
-for (i = 0; i < acc.length; i++) {
-  acc[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var panel = this.nextElementSibling;
-    if (panel.style.display === "block") {
-      panel.style.display = "none";
-    } else {
-      panel.style.display = "block";
-    }
-  });
-}
-</script>
+</div>
+<div id="accordion">
+<div class="card">
+<div class="card-header" data-toggle="collapse" href="#collapseThree">
+<a class="collapsed card-link" >
+Awards
+</a>
+</div>
+<div id="collapseThree" class="collapse show" data-parent="#accordion">
+<div class="card-body">
+<div class="container"> 
+<form>
+<table class="table table-borderless">
+<tbody>
+{% for form in forms %}
+<tr class="d-flex">
+<td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ form.name }} </td>
+<td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:edit_awards' form.id %}'" type="button" class="btn btn-success" value = "View"></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
 {% endblock %}
