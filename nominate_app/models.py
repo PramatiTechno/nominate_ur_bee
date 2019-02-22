@@ -16,18 +16,14 @@ class User(models.Model):
         return self.name
 
 class Role(models.Model):
-    LEVEL1 = 'l1'
-    LEVEL2 = 'l2'
-    LEVEL3 = 'l3'
-
     choice_level = (
-        (LEVEL1, 'level1'),
-        (LEVEL2, 'level2'),
-        (LEVEL3, 'level3'),
+        ('level1', 'level1'),
+        ('level2', 'level2'),
+        ('level3', 'level3'),
         )
 
     name = models.CharField(max_length=30)
-    group = models.CharField(choices=choice_level, max_length=3)
+    group = models.CharField(choices=choice_level, max_length=7)
 
     class Meta:
         db_table='roles'
@@ -78,6 +74,7 @@ class NominationPeriod(models.Model):
 class AwardTemplate(models.Model):
     template_name = models.CharField(max_length=30, null=True, blank=True)
     award = models.ForeignKey(Awards, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default = False)
 
     class Meta:
         db_table='award_templates'
