@@ -12,13 +12,18 @@
 		{{ award_form.description }}
 
 		{{ formset.management_form }}
-
+		</br>
+		</br>
 		{% for form in formset.forms %}
 			<div class='table'>
     		<table class='no_error'>
+    			<label for='{{form.level}}'>Level</label>
         		{{ form.level }}
+        		<label for='{{form.start_day}}'>Start Day</label>
         		{{ form.start_day }}
+        		<label for='{{form.end_day}}'>End Day</label>
         		{{ form.end_day }}
+        		<label for='{{form.DELETE}}'>Delete</label>
         		{{ form.DELETE }}
     		</table>
     		</div>
