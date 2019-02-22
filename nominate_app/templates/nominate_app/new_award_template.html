@@ -19,8 +19,10 @@
         {{ form.role }}
         <label for='{{form.attachment_need}}'>Need Attachment</label>
         {{ form.attachment_need }}
-        <label for='{{form.DELETE}}'>Delete</label>
-        <span class="del_btn_formset">{{ form.DELETE }}</span>
+        <span class="del_btn_formset">
+          <label for='{{form.DELETE}}'>Delete</label>
+          {{ form.DELETE }}
+        </span>
       </div>
     {% endfor %}
     <br>

@@ -1,9 +1,30 @@
 $(document).ready(function(){
+  if(($('#id_form' + '-TOTAL_FORMS').val()) == '1'){
+    $('.del_btn_formset').hide()
+  }
+  else{
+    $('.del_btn_formset').each(function(i, obj) {
+        $(obj).show()
+    });
+  }
   $('#add_more').click(function() {
+    $('.del_btn_formset').each(function(i, obj) {
+        $(obj).show()
+    });  
     cloneMore('div:last', 'form');
   });
 
   $(document).on('change', '.del_btn_formset', function(event) {
+    if(($('.del_btn_formset').length) == 2){
+      $('.del_btn_formset').each(function(i, obj) {
+          $(obj).hide()
+      });
+    }
+    else{
+      $('.del_btn_formset').each(function(i, obj) {
+          $(obj).show()
+      });    
+    }
     event.preventDefault();
     checkboxId = event.target.id;
     par_table = $('#'+checkboxId).closest('.formset_table');
