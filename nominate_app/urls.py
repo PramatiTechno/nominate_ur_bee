@@ -28,7 +28,7 @@ urlpatterns = [
   path('award_template_index/', award_index.award_template_index, name='award_template_index'),
   path('award_template_load/<id>/', award_index.award_template_load, name='award_template_load'),
   path('delete/<nom_id>/', create_award_view.award_delete),
-  path('new_award_template/<award_id>/', award_template_views.new_award_template),
-  path('edit_award_template/<template_id>/', award_template_views.edit_award_template),
+  path('new_award_template/<award_id>/', award_template_views.new_award_template, name='new_award_template'),
+  path('edit_award_template/<template_id>/', award_template_views.edit_award_template, name='edit_award_template'),
   path('question/delete/<ques_id>/', award_template_views.delete_award_template),
 ]

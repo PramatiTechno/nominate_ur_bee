@@ -7,8 +7,6 @@ import json
 import pdb
 
 # Create your views here.
-def home(request):
-    return render(request, 'base.html')
 
 def new_award_template(request, award_id):
   award = Awards.objects.get(id = award_id)
@@ -29,7 +27,7 @@ def new_award_template(request, award_id):
       for instance in instances:
         instance.award_template_id=award_template.id
         instance.save()
-      return redirect('home')
+      return redirect('nominate_app:award_template_index')
 
   else:
     formset = AwardTemplateFormset(queryset=Questions.objects.none())
@@ -53,7 +51,7 @@ def edit_award_template(request, template_id):
       for instance in instances:
         instance.award_template_id=award_template.id
         instance.save()
-      return redirect('home')
+      return redirect('award_template_index')
 
   else:
     formset = AwardTemplateFormset(queryset=questions)
