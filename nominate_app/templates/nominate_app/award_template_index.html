@@ -4,7 +4,7 @@
 <h1 align="center" class="text-info">Award Templates</h1>
 <div style="position: relative; top: 50">
     
-    <div style="position: absolute; top: -40; right: 5;"><a href="{% url 'nominate_app:award_template_load' 1 %}" type="button" id="create_link" class="btn btn-primary" value="Create New Template">Create New Template</a></div>
+    <div style="position: absolute; top: -40; right: 5;"><a href="" type="button" id="create_link" class="btn btn-primary" value="Create New Template">Create New Template</a></div>
 </div>
 <div id="templates" style="position: relative; top: 50 ">
   <form method = "POST">
@@ -34,7 +34,7 @@
   <script>
       $(document).on('change', '[type=selection]', function(event) {
       event.preventDefault();
-      document.getElementById('create_link').href="/award_template_load/"+$(this).children("option:selected").val();;
+      document.getElementById('create_link').href="/award_template_load/"+$(this).children("option:selected").val();
       var award_id = $(this).children("option:selected").val();
       $.ajax({
         url:'/award_template_load/' + award_id + '/',
@@ -62,9 +62,10 @@
       });
     }); 
 
-    $(function() {
-        $('.mySelect').val( 'default_value' );
-    });
+     $(function() {
+         $('.mySelect').val( 'default_value' );
+         document.getElementById('create_link').href="/award_template_load/"+document.getElementById('award').options[1].value
+     });
 
   </script>
 {% endblock %}
