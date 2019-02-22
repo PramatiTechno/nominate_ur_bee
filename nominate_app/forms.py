@@ -1,4 +1,3 @@
-from .models import 
 from django import forms  
 from nominate_app.models import Awards, NominationPeriod, AwardTemplate, Questions
 from django.forms import inlineformset_factory

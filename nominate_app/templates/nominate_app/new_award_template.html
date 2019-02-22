@@ -1,0 +1,33 @@
+{% extends  'base.html'%}
+{% block content%}
+  <form id="" method="post" action="">
+    {% csrf_token %}
+     <h2>{{ template_name }}</h2>
+    <label>Enabled:</label>
+    <select name='is_active'>
+      <option value='yes'>yes</option>
+      <option value='no'>no</option>
+    </select>
+    {{ formset.management_form }}
+    {% for form in formset %}
+      <div class='formset_table'>
+        <label for='{{form.qname}}'>Question name</label>
+        {{ form.qname }}
+        <label for='{{form.qtype}}'>Question Type</label>
+        {{ form.qtype }}
+        <label for='{{form.role}}'>Level</label>
+        {{ form.role }}
+        <label for='{{form.attachment_need}}'>Need Attachment</label>
+        {{ form.attachment_need }}
+        <label for='{{form.DELETE}}'>Delete</label>
+        <span class="del_btn_formset">{{ form.DELETE }}</span>
+      </div>
+    {% endfor %}
+    <br>
+    <input type="button" id='add_more' name="add_more" value="Add Question" /><br><br>
+    <input type="submit" name="submit" value="Submit" />
+  </form>
+  <script>
+  </script>
+
+{% endblock %}

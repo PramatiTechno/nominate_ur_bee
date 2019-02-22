@@ -30,6 +30,5 @@ urlpatterns = [
   path('delete/<nom_id>/', create_award_view.award_delete),
   path('new_award_template/<award_id>/', award_template_views.new_award_template),
   path('edit_award_template/<template_id>/', award_template_views.edit_award_template),
-  path('new_home/', award_template_views.new_home, name='new_home'),
   path('question/delete/<ques_id>/', award_template_views.delete_award_template),
 ]

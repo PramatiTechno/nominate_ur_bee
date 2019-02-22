@@ -7,8 +7,8 @@ import json
 import pdb
 
 # Create your views here.
-def new_home(request):
-  return render(request, 'new_home.html')
+def home(request):
+    return render(request, 'base.html')
 
 def new_award_template(request, award_id):
   award = Awards.objects.get(id = award_id)
@@ -21,7 +21,6 @@ def new_award_template(request, award_id):
     award_id = award.id
     award_template = AwardTemplate.objects.create(template_name= template_name, is_active=is_active, award_id=award_id)
     request.POST = new_form
-    # pdb.set_trace()
     formset = AwardTemplateFormset(request.POST)
     if formset.is_valid():
       instances = formset.save(commit=False)
@@ -30,12 +29,12 @@ def new_award_template(request, award_id):
       for instance in instances:
         instance.award_template_id=award_template.id
         instance.save()
-      return redirect('new_home')
+      return redirect('home')
 
   else:
     formset = AwardTemplateFormset(queryset=Questions.objects.none())
 
-  return render(request, 'new_award_template.html', {'formset':formset, 'template_name': award.name})
+  return render(request, 'nominate_app/new_award_template.html', {'formset':formset, 'template_name': award.name})
 
 def edit_award_template(request, template_id):
   award_template = AwardTemplate.objects.get(id = template_id)
@@ -54,7 +53,7 @@ def edit_award_template(request, template_id):
       for instance in instances:
         instance.award_template_id=award_template.id
         instance.save()
-      return redirect('new_home')
+      return redirect('home')
 
   else:
     formset = AwardTemplateFormset(queryset=questions)
