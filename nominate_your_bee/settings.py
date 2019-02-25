@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import dotenv
+# from django.contrib.messages import constants as message_constants
+
 
 dotenv.read_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env")))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -141,6 +143,5 @@ STATICFILES_DIRS = (
   os.path.join(BASE_DIR, "static"),
 )
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

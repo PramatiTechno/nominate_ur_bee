@@ -47,4 +47,17 @@ $(document).ready(function(){
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
   }
+
+   $('#submit').click(function(){
+    // debugger
+    var level = $('#id_nominationperiod_set-0-level').val();
+
+    if(level == ""){
+      $('#levelerror').html('**This field cannot be empty')
+      $('#levelerror').css('color', 'red');
+      return false
+    }
+  });
+
 });
+
