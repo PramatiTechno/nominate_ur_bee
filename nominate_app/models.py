@@ -65,8 +65,8 @@ class NominationPeriod(models.Model):
     CHOICES = [(str(i),str(i)) for i in range(1,32)]
     level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
     award = models.ForeignKey(Awards, on_delete=models.CASCADE)
-    start_day = models.CharField(max_length=3, choices=CHOICES, null=False, blank=False)
-    end_day = models.CharField(max_length=3, choices=CHOICES, null=False, blank=False)
+    start_day = models.CharField(max_length=3, choices=CHOICES, null=False, blank=False, default=1)
+    end_day = models.CharField(max_length=3, choices=CHOICES, null=False, blank=False, default=1)
 
     class Meta:
         db_table='nomination_periods'
