@@ -44,8 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles', 
     'django.contrib.postgres',
     'nominate_app',
-    'widget_tweaks',
-    'django_nose'
+    'crispy_forms',
+    'django_nose',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [

@@ -7,11 +7,11 @@ $(document).ready(function(){
         $(obj).show()
     });    
   }
-  $('#add_more').click(function() {
+  $('.add_more').click(function() {
     $('.del_btn_formset').each(function(i, obj) {
       $(obj).show()
     });  
-    cloneMore('div.table:last', 'nominationperiod_set');
+    cloneMore('div.add_nomination_period:last', 'nominationperiod_set');
   });
 
   $(document).on('change', '[type=checkbox]', function(event) {
@@ -27,7 +27,7 @@ $(document).ready(function(){
     }
     event.preventDefault();
     var checkboxId = event.target.id;
-    par_table = $('#'+checkboxId).closest('.table');
+    par_table = $('#'+checkboxId).closest('.add_nomination_period');
     par_table.remove();
   }); 
     
