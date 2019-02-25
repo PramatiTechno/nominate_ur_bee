@@ -23,11 +23,12 @@ def edit_awards(request,id):
 
 
 def award_template_index(request):
-	if request.method == 'GET':
-		forms = Awards.objects.all()
-		id = request.GET.get('id')
-		load_templates = AwardTemplate.objects.all()
-	return render(request, 'nominate_app/award_template_index.html',{'forms': forms,
+    if request.method == 'GET':
+        forms = Awards.objects.all()
+        award_id = Awards.objects.first().id
+        id = request.GET.get('id')
+        load_templates = AwardTemplate.objects.filter(award_id=award_id)
+    return render(request, 'nominate_app/award_template_index.html',{'forms': forms,
         'load_templates': load_templates,
     })
 

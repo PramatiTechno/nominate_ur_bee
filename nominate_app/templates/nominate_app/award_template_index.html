@@ -1,15 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% load staticfiles %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="{% static 'js/award_index.js' %}"></script>
 <h1 align="center" class="text-info">Award Templates</h1>
+<div class="container">
+<div class="form-group">
+<div class = "row award_top_margin">
+<div class="col-sm-12">
 <div style="position: relative; top: 50">
-  <div style="position: absolute; top: -40; right: 5;"><a href="" type="button" id="create_link" class="btn btn-primary" value="Create New Template">Create New Template</a></div>
+  <div style="position: absolute; top: -40; right: 5;"><a href="" type="button" id="create_link" class="btn btn-success float-sm-right" value="Create New Template" >Create New Template</a></div>
+</div>
+</div>
+</div>
 </div>
 <div id="templates" style="position: relative; top: 50 ">
   <form method = "POST">
     {% csrf_token %}
     <select type="selection" class="mySelect btn btn-info" id = "award" style="text-align-last: center; text-align: center;">
-      <option value="default_value" selected="selected"> Select An Award to Filter </option>
       {% for form in forms %}
         <option value="{{ form.id }}">
         {{ form.name }}
@@ -18,53 +27,31 @@
     </select>
   </form>
 </div>
-
-<div id="templates" style="position: relative; top: 100">
-     <table style="width:100%" border="10" id="templates_table">
-     {% for lt in load_templates %}
-      <tr>
-        <td align="center"> {{ lt.template_name }} </td>         
-        <td align="center"> <a href="{% url 'nominate_app:new_award_template' lt.id %} "> View </a> </td>
-      </tr>
-    {% endfor %} 
-    </table>
+<div id="accordion" style="position: relative; top: 100">
+<div class="card">
+<div class="card-header" data-toggle="collapse" href="#collapseThree">
+<a class="collapsed card-link" >
+Award Templates
+</a>
 </div>
-
-  <script>
-      $(document).on('change', '[type=selection]', function(event) {
-      event.preventDefault();
-      document.getElementById('create_link').href="/new_award_template/"+$(this).children("option:selected").val();
-      var award_id = $(this).children("option:selected").val();
-      $.ajax({
-        url:'/new_award_template/' + award_id + '/',
-        type:'GET',
-        dataType: 'json',
-        data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
-        success:function (json) {
-            var length = json.length
-            if (length == 0)
-              {
-                data='No Templates Found For Selected Award'
-                $('#templates_table').html(data);
-              }
-            else
-              {
-                data=''
-                $('#templates_table').html(data);
-              }
-            for (i = 0; i <= length-1 ; i++) 
-            {
-                data='<tr><td align="center"> '+json[i].fields.template_name+' </td><td align="center"> <a href="/new_award_template/'+json[i].pk+'"> View </a> </td></tr>'
-                $('#templates_table').append(data);
-            }
-        }
-      });
-    }); 
-
-     $(function() {
-         $('.mySelect').val( 'default_value' );
-         document.getElementById('create_link').href="/award_template_load/"+document.getElementById('award').options[1].value
-     });
-
-  </script>
+<div id="collapseThree" class="collapse show" data-parent="#accordion">
+<div class="card-body">
+<div class="container"> 
+<form>
+<table class="table table-borderless" id="templates_table">
+<tbody>
+{% for lt in load_templates %}
+<tr class="d-flex">
+<td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ lt.template_name }} </td>
+<td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><a href="{% url 'nominate_app:edit_award_template' lt.id %}" type="button" class="btn btn-success" value = "View">View</a></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
 {% endblock %}
