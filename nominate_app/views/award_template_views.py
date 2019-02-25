@@ -51,7 +51,7 @@ def edit_award_template(request, template_id):
       for instance in instances:
         instance.award_template_id=award_template.id
         instance.save()
-      return redirect('award_template_index')
+      return redirect('nominate_app:award_template_index')
 
   else:
     formset = AwardTemplateFormset(queryset=questions)
