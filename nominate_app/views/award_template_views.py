@@ -13,7 +13,7 @@ def new_award_template(request, award_id):
   AwardTemplateFormset = modelformset_factory(Questions, fields=('qname', 'qtype', 'role', 'attachment_need'), extra=1, can_delete=True)
   if request.method == 'POST':
     new_form = request.POST.copy()
-    template_name = award.name
+    template_name = new_form.pop('template_name')[0] 
     is_active_val = new_form.pop('is_active')[0] 
     is_active = True if is_active_val ==  'yes' else False
     award_id = award.id
