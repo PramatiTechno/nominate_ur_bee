@@ -49,10 +49,11 @@ class Awards(models.Model):
         (YEARLY, 'Yearly')
         )
 
-    name = models.CharField(max_length=30, null=False, blank=False)
+    name = models.CharField(max_length=30, null=True, blank=True)
     is_active = models.BooleanField(default = False)
-    frequency = models.CharField(max_length=3, choices=choice_type, blank=False, null=False)
+    frequency = models.CharField(max_length=3, choices=choice_type, blank=True)
     description = models.CharField(max_length=200, null=True, blank=True)
+    # get_awardtype_display()
 
     class Meta:
         db_table='awards'
@@ -62,16 +63,16 @@ class Awards(models.Model):
 
 class NominationPeriod(models.Model):
     CHOICES = [(str(i),str(i)) for i in range(1,32)]
-    level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
-    award = models.ForeignKey(Awards, on_delete=models.CASCADE, null=False, blank=False)
-    start_day = models.CharField(max_length=3, choices=CHOICES, null=False, blank=False, default=1)
-    end_day = models.CharField(max_length=3, choices=CHOICES, null=False, blank=False, default=1)
+    level = models.ForeignKey(Role, on_delete=models.CASCADE)
+    award = models.ForeignKey(Awards, on_delete=models.CASCADE)
+    start_day = models.CharField(max_length=3, choices=CHOICES)
+    end_day = models.CharField(max_length=3, choices=CHOICES)
 
     class Meta:
         db_table='nomination_periods'
     
 class AwardTemplate(models.Model):
-    template_name = models.CharField(max_length=30, null=True, blank=True)
+    template_name = models.CharField(max_length=30, null=False, blank=False)
     award = models.ForeignKey(Awards, on_delete=models.CASCADE)
     is_active = models.BooleanField(default = False)
 
@@ -94,10 +95,10 @@ class Questions(models.Model):
     class Meta:
         db_table='award_questions'
 
-    qname = models.CharField(max_length=100)
-    qtype = models.CharField(max_length=1, choices=query_choice)
+    qname = models.CharField(max_length=100, null=False, blank=False)
+    qtype = models.CharField(max_length=1, choices=query_choice, null=False, blank=False)
     award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
     attachment_need = models.BooleanField(default=False)
 
     def __str__(self):
