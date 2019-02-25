@@ -79,11 +79,13 @@
 						    {{ form.end_day|attr:"class:form-control" }}
 					    </div>
 					    <span class="fa del_btn_formset remove_nomination">
-					     {{ form.DELETE|attr:"class:image-checkbox" }}
+					    	<label><span class="fa fa-minus">
+					      {{ form.DELETE | attr:"class:hide_checkbox"}}
+					        </span>
+					      </label>
 					    </span>  
 						</div>
 					</div>
-
 				</div>
 
         <div class = "row award_top_margin justify-content-md-center">
@@ -105,9 +107,9 @@
 		  	<div class="col-sm-4">
 			  	<button type="button" class="btn btn-danger">Cancel</button>
 			  	<button type="submit" class="btn btn-success">Success</button>
-			  </div> 	
-			</div>  	
-		</form>	
-  </div>
-</div>	
+			  </div>
+			</div>
+		</form>
+	</div>
+</div>
 {% endblock %}
