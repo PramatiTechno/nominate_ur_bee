@@ -1,40 +1,131 @@
 {% extends 'base.html' %}
 
-{% load crispy_forms_tags %}
+{% load widget_tweaks %}
 
 {% block content %}
 {% load staticfiles %}
 <script src="{% static 'js/award_creation.js' %}"></script>
-	<form method = "post">
-		</br>
-		{% csrf_token %}
+<div class = "container">
+	<div class="form-group">
+		<form method = "post">
+			{% csrf_token %}
+			<div class = "row award_top_margin">
+			  <div class="col-sm-4">
+			    <div class="form-row">
+		      </div>
+			  </div>
+			  <div class="col-sm-4">
+			    <div class="form-row">
+		      </div>
+			  </div>
+			  <div class="col-sm-4">
+			    <div class="form-row">
+			    	<label class="col-form-label" for="name">Enable/Disable</label>
+		        <div class="custom-control custom-switch">
+						  <input type="checkbox" class="custom-control-input" id="customSwitch" checked>
+						  <label class="custom-control-label" for="customSwitch1"></label>
+						</div>	
+		      </div>
+			  </div>
+			</div>
+			<div class = "row award_top_margin">
+			  <div class="col-sm-2">
+			  	<label class="col-form-label" for="name">Award Name</label>
+			  </div>
+			  <div class="col-sm-8">  	
+			    <input type="text" name="name" class="form-control" placeholder="Enter award name" value="" required />
+			  </div>
+			</div> 
 
-		{{ award_form.name }}</br>
-		{{ award_form.frequency }}</br>
-		{{ award_form.description }}
+			<div class = "row award_top_margin">
+			  <div class="col-sm-2">
+			  	<label class="col-form-label" for="name">Frequency</label>
+			  </div>
+			  <div class="col-sm-3">  	
+			    <div class="form-group">
+				    <select class="form-control" id="exampleSelect1" name="frequency">
+				      <option value = "M">Monthly</option>
+				      <option value = "Y">Yearly</option>
+				    </select>
+				  </div>
+			  </div>
+		  </div> 
+		  {{ formset.management_form }}
+		  {% for form in formset.forms %}
+			  <div class = "row award_top_margin add_nomination_period">
+					<div class="col-sm-2"> 	
+				    <div class="form-group">
+					    <!-- <select class="form-control" id="exampleSelect1">
+					      <option value ="1">Level 1</option>
+					      <option value ="2">Level 2</option>
+					      <option value ="3">Level 3</option>
+					    </select> -->
+					    {{ form.level|attr:"class:form-control" }}
+					  </div>
+					</div>
+					<div class="col-sm-2"> 	
+						<div class="form-row">
+							<label class="col-form-label" for="name">Start Date</label>
+						  <div class="form-group">
+						    <!-- <select class="form-control" id="exampleSelect1">
+						      <option>1</option>
+						      <option>2</option>
+						      <option>3</option>
+						      <option>4</option>
+						      <option>5</option>
+						    </select> -->
+						    {{ form.start_day|attr:"class:form-control" }}
+					    </div> 
+					  </div>
+					</div>
+				  <div class="col-sm-1"> 	
+		        <div class="form-row">
+							<label class="col-form-label" for="name">To</label>
+					  </div>		
+					</div>		
+					<div class="col-sm-3"> 
+					  <div class="form-row">
+							<label class="col-form-label" for="name">End Date</label>	
+							<div class="form-group">
+						    <!-- <select class="form-control" id="exampleSelect1">
+						      <option>1</option>
+						      <option>2</option>
+						      <option>3</option>
+						      <option>4</option>
+						      <option>5</option>
+						    </select> -->
+						    {{ form.end_day|attr:"class:form-control" }}
+					    </div>
+					    <span class="fa del_btn_formset remove_nomination">
+					     {{ form.DELETE|attr:"class:image-checkbox" }}
+					    </span>  
+						</div>
+					</div>
 
-		{{ formset.management_form }}
-		</br>
-		</br>
-		{% for form in formset.forms %}
-			<div class='table'>
-    		<table class='no_error'>
-    			<label for='{{form.level}}'>Level</label>
-        		{{ form.level }}
-        		<label for='{{form.start_day}}'>Start Day</label>
-        		{{ form.start_day }}
-        		<label for='{{form.end_day}}'>End Day</label>
-        		{{ form.end_day }}
-            <span class="del_btn_formset">
-              <label for='{{form.DELETE}}'>Delete</label>
-              {{ form.DELETE }}
-            </span>
-    		</table>
-    		</div>
-		{% endfor %}
-	<input type="button" value="+" id="add_more">
-	</br>
-	</br>
-	<button type="submit">Save</button>
-	</form>
+				</div>
+
+        <div class = "row award_top_margin justify-content-md-center">
+        	<div class="col-sm-2">
+			  	  <button type="button" class="btn btn-primary add_more">Add More</button>
+			    </div>
+			  </div>   
+			  <br>
+				<div class ="row award_top_margin">
+					<div class="col-sm-2"> 
+						<label class="col-form-label" for="name">Description</label>	
+					</div>	
+					<div class="col-sm-6"> 
+						<textarea class="form-control" rows="5" id="comment" name="description"></textarea>	
+					</div>	
+		    </div>	
+		  {% endfor %} 	
+		  <div class ="row award_top_margin justify-content-md-center">
+		  	<div class="col-sm-4">
+			  	<button type="button" class="btn btn-danger">Cancel</button>
+			  	<button type="submit" class="btn btn-success">Success</button>
+			  </div> 	
+			</div>  	
+		</form>	
+  </div>
+</div>	
 {% endblock %}

@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'nominate_app',
     'crispy_forms',
-    'django_nose'
+    'django_nose',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
