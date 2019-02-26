@@ -15,8 +15,8 @@ def new_award_template(request, award_id):
   if request.method == 'POST':
     new_form = request.POST.copy()
     template_name = new_form.pop('template_name')[0] 
-    is_active_val = new_form.get('is_active',False)
-    is_active = True if is_active_val ==  'on' else False
+    is_active_val = new_form.pop('is_active', ['off'])
+    is_active = True if is_active_val[0] ==  'on' else False
     award_id = award.id
     if (template_name != ''):
       award_template =AwardTemplate.objects.create(template_name= template_name, is_active=is_active, award_id=award_id)
