@@ -12,7 +12,7 @@ $(document).ready(function(){
     $('.del_btn_formset').each(function(i, obj) {
         $(obj).show()
     });  
-    cloneMore('div.add_nomination_period:last', 'form');
+    cloneMore('div.add_template_questions:last', 'form');
   });
 
   $(document).on('change', '.del_btn_formset', function(event) {

@@ -15,16 +15,12 @@
             <div class="form-row float-right">
               <label class="col-form-label" name='is_active'>Enable/Disable</label>
               <div class="custom-control custom-switch">
-                <input type="checkbox" name="is_active" class="custom-control-input" id="customSwitch1" checked="">
+                <input type="checkbox" name="is_active" class="custom-control-input" id="customSwitch1" >
                 <label class="custom-control-label" for="customSwitch1" ></label>
               </div>
             </div>
           </div>
         </div>
-<!--     <select name='is_active'>
-      <option value='yes'>yes</option>
-      <option value='no'>no</option>
-    </select> -->
       <div class = "row award_top_margin">
         <div class="col-sm-2">
           <label class="col-form-label" for='{{template_name}}'>Template Name</label>
@@ -36,7 +32,7 @@
       <br>
       {{ formset.management_form }}
       {% for form in formset.forms %}
-      <div class="formset_table add_nomination_period">
+      <div class="formset_table add_template_questions">
       <div class = "row award_top_margin ">
 
         <div class="col-sm-2">
