@@ -4,7 +4,9 @@
   <script src="{% static 'js/award_templates.js' %}"></script>
   <form id="" method="post" action="">
     {% csrf_token %}
-     <h2>{{ award_template.name }}</h2>
+    <h2>{{ award_template.template_name }}</h2>
+    <label>Template Name</label>
+    <input type="text" name="template_name" value="{{award_template.template_name}}" /><br>
     <label>Enabled:</label>
     <select name='is_active' value='{{form.is_active}}'>
       <option value='yes'>yes</option>

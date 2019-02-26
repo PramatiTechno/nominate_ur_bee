@@ -37,6 +37,7 @@ def new_award_template(request, award_id):
 def edit_award_template(request, template_id):
   award_template = AwardTemplate.objects.get(id = template_id)
   questions = Questions.objects.filter(award_template_id=award_template.id)
+  # pdb.set_trace()
   if questions.exists():
     x=0
   else:
@@ -56,7 +57,7 @@ def edit_award_template(request, template_id):
   else:
     formset = AwardTemplateFormset(queryset=questions)
 
-  return render(request, 'nominate_app/new_award_template.html', {'formset':formset, 'award_template': award_template})
+  return render(request, 'nominate_app/edit_award_template.html', {'formset':formset, 'award_template': award_template})
 
 def delete_award_template(request, ques_id):
   questions = Questions.objects.filter(id=ques_id)
