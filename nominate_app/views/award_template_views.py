@@ -44,8 +44,12 @@ def edit_award_template(request, template_id):
     x=1
   AwardTemplateFormset = modelformset_factory(Questions, fields=('qname', 'qtype', 'role', 'attachment_need'), extra=x, can_delete=True)
   if request.method == 'POST':
+    import IPython; IPython.embed()
+    is_active_val = request.POST.get('is_active',False)
+    is_active = True if is_active_val ==  'on' else False
     formset = AwardTemplateFormset(request.POST, queryset=questions)
     if formset.is_valid():
+      AwardTemplate.objects.filter(id=template_id).update(is_active=is_active)
       instances = formset.save(commit=False)
       for obj in formset.deleted_objects:
         obj.delete()
@@ -57,7 +61,7 @@ def edit_award_template(request, template_id):
   else:
     formset = AwardTemplateFormset(queryset=questions)
 
-  return render(request, 'nominate_app/edit_award_template.html', {'formset':formset, 'award_template': award_template})
+  return render(request, 'nominate_app/edit_award_template.html', {'formset':formset, 'award_template': award_template, 'is_active':award_template.is_active })
 
 def delete_award_template(request, ques_id):
   questions = Questions.objects.filter(id=ques_id)

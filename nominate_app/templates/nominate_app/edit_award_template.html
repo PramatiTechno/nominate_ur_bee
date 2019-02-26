@@ -1,65 +1,95 @@
-{% extends  'base.html'%}
-{% block content%}
-  <form id="" method="post" action="">
-    {% csrf_token %}
-     <h2>{{ award_template.name }}</h2>
-    <label>Enabled:</label>
-    <select name='is_active'>
-      <option value='yes'>yes</option>
-      <option value='no'>no</option>
-    </select>
-    {{ formset.management_form }}
-    {% for form in formset %}
-        <div class='form_table'>
-          {{ form }}
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+
+{% load staticfiles %}
+<script src="{% static 'js/edit_award_template.js' %}"></script>
+<div class = "container">
+  <div class="form-group">
+    <form method = "post">
+      {% csrf_token %}
+      <div class = "row award_top_margin">
+          <div class="col-sm-10">
+            <div class="form-row float-right">
+              <label class="col-form-label" name='is_active'>Enable/Disable</label>
+              <div class="custom-control custom-switch">
+                {% if award_template.is_active %}
+                <input type="checkbox" name="is_active" class="custom-control-input" id="customSwitch1" checked="" >
+                {% else %}
+                <input type="checkbox" name="is_active" class="custom-control-input" id="customSwitch1" >
+                {% endif %}
+                <label class="custom-control-label" for="customSwitch1" ></label>
+              </div>
+            </div>
+          </div>
         </div>
-    {% endfor %}
-    <br>
-    <input type="button" id='add_more' name="add_more" value="Add Question" /><br><br>
-    <input type="submit" name="submit" value="Submit" />
-  </form>
-  <script>
-      $('#add_more').click(function() {
-        console.log("in checkbox click")
-          cloneMore('div:last', 'form');
-      });
+      <div class = "row award_top_margin">
+        <div class="col-sm-2">
+          <label class="col-form-label" for='{{award_template}}'>Template Name</label>
+        </div>
+        <div class="col-sm-8">    
+          <input type="text" name="award_template" class="form-control" placeholder="Enter award name" value="{{ award_template }}" required />
+        </div>
+      </div> 
+      <br>
+      {{ formset.management_form }}
+      {% for form in formset.forms %}
+      <div class="formset_table add_template_questions">
+      <div class = "row award_top_margin ">
 
-      $(document).on('change', '[name^=form-]', function(event) {
-        event.preventDefault();
-        checkboxId = event.target.id;
-        ques_id = Number($('#'+checkboxId).next('input')[0].value);
-        console.log(ques_id)
-        par_table = $('#'+checkboxId).closest('.form_table');
-        par_table.hide();
-        // need ajax func for edit questions template form
-        $.ajax({
-          url:'/question/delete/' + ques_id + '/',
-          type:'POST',
-          data:{
-            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-          },
-          dataType: 'json',
-          success:function(){
-          }
-        });
-      
-    }); 
-      function cloneMore(selector, type) {
-        var newElement = $(selector).clone(true);
-        var total = $('#id_' + type + '-TOTAL_FORMS').val();
-        newElement.find(':input').each(function() {
-            var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
-            var id = 'id_' + name;
-            $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-        });
-        newElement.find('label').each(function() {
-            var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
-            $(this).attr('for', newFor);
-        });
-        total++;
-        $('#id_' + type + '-TOTAL_FORMS').val(total);
-        $(selector).after(newElement);
-    }
-  </script>
-
+        <div class="col-sm-2">
+          <label class="col-form-label" for='{{form.qname}}' >Question</label>
+        </div>
+        <div class="col-sm-8">    
+          {{ form.qname|attr:"class:form-control" }}
+        </div>
+      </div> 
+        <div class = "row award_top_margin ">
+          <div class="col-sm-3"> 
+            <div class="form-row">
+              <label class="col-form-label" for='{{form.qtype}}' >Question Type</label> 
+              <div class="form-group">
+                {{ form.qtype|attr:"class:form-control" }}
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-2"> 
+            <div class="form-row">
+              <label class="col-form-label" for='{{form.role}' >Level</label> 
+              <div class="form-group">
+                {{ form.role|attr:"class:form-control" }}
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-3"> 
+            <div class="form-row">
+              <label class="col-form-label" for='{{form.attachment_need}}'>Need Attachment</label> 
+              <div class="form-group">
+                {{ form.attachment_need|attr:"class:form-control" }}
+              </div>
+              <span class="fa del_btn_formset remove_nomination">
+                <label for='{{form.DELETE}}'>Delete</label>
+               {{ form.DELETE|attr:"class:image-checkbox" }}
+              </span>  
+            </div>
+          </div>
+        </div>
+        </div>
+      {% endfor %}  
+              <div class = "row award_top_margin justify-content-md-center">
+          <div class="col-sm-2">
+            <button name="add_more" id="add_more" type="button" class="btn btn-primary add_more">Add More</button>
+          </div>
+        </div>   
+      <div class ="row award_top_margin justify-content-md-center">
+        <div class="col-sm-4">
+          <button type="button" class="btn btn-danger">Cancel</button>
+          <button type="submit" class="btn btn-success">Success</button>
+        </div>  
+      </div>    
+    </form> 
+  </div>
+</div>  
 {% endblock %}
