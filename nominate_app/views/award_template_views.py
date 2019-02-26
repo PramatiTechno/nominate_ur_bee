@@ -35,7 +35,7 @@ def new_award_template(request, award_id):
   else:
     formset = AwardTemplateFormset(queryset=Questions.objects.none())
 
-  return render(request, 'nominate_app/new_award_template.html', {'formset':formset, 'template_name': award.name, 'is_active':is_active})
+  return render(request, 'nominate_app/new_award_template.html', {'formset':formset, 'template_name': award.name})
 
 def edit_award_template(request, template_id):
   award_template = AwardTemplate.objects.get(id = template_id)
@@ -62,7 +62,7 @@ def edit_award_template(request, template_id):
   else:
     formset = AwardTemplateFormset(queryset=questions)
 
-  return render(request, 'nominate_app/edit_award_template.html', {'formset':formset, 'award_template': award_template, 'is_active':award_template.is_active })
+  return render(request, 'nominate_app/edit_award_template.html', {'formset':formset, 'award_template': award_template })
 
 def delete_award_template(request, ques_id):
   questions = Questions.objects.filter(id=ques_id)

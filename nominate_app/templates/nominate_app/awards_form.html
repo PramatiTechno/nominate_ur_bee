@@ -12,7 +12,7 @@
 				    <div class="form-row float-right">
 				    	<label class="col-form-label" for="name">Enable/Disable</label>
 	            <div class="custom-control custom-switch">
-							  <input type="checkbox" class="custom-control-input" id="customSwitch1">
+							  {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
 							  <label class="custom-control-label" for="customSwitch1"></label>
 							</div>
 			      </div>
@@ -33,8 +33,11 @@
 				  <div class="col-sm-3">  	
 				    <div class="form-group">
 					    <select class="form-control" id="exampleSelect1" name="frequency">
-					      <option value = "M">Monthly</option>
-					      <option value = "Y">Yearly</option>
+					      {% for form in award_form.frequency %}
+					        {{ form }}
+					        {% empty %}
+					        <option> No Awards Found </option>
+					      {% endfor %}
 					    </select>
 					  </div>
 				  </div>
