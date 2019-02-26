@@ -39,19 +39,15 @@ class User_Role(models.Model):
         db_table = 'user_role'
 
 class Awards(models.Model):
-    MONTHLY = 'M'
-    QUATERLY = 'Q'
-    YEARLY = 'Y'
-
     choice_type = (
-        (MONTHLY, 'Monthly'),
-        (QUATERLY, 'Quaterly'),
-        (YEARLY, 'Yearly')
+        ('MONTHLY', 'Monthly'),
+        ('QUATERLY', 'Quaterly'),
+        ('YEARLY', 'Yearly')
         )
 
     name = models.CharField(max_length=30, null=False, blank=False)
     is_active = models.BooleanField(default = False)
-    frequency = models.CharField(max_length=3, choices=choice_type, null=False, blank=False)
+    frequency = models.CharField(max_length=10, choices=choice_type, null=False, blank=False)
     description = models.CharField(max_length=200, null=True, blank=True)
     # get_awardtype_display()
 
@@ -84,19 +80,16 @@ class AwardTemplate(models.Model):
 
 
 class Questions(models.Model):
-    SUBJECTIVE = 'S'
-    OBJECTIVE = 'O'
-
     query_choice = (
-        (SUBJECTIVE, 'subjective'),
-        (OBJECTIVE, 'objective')
+        ('SUBJECTIVE', 'subjective'),
+        ('OBJECTIVE', 'objective')
         )
 
     class Meta:
         db_table='award_questions'
 
     qname = models.CharField(max_length=100, null=False, blank=False)
-    qtype = models.CharField(max_length=1, choices=query_choice, null=False, blank=False)
+    qtype = models.CharField(max_length=20, choices=query_choice, null=False, blank=False)
     award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
     attachment_need = models.BooleanField(default=False)
