@@ -44,7 +44,6 @@ def edit_award_template(request, template_id):
     x=1
   AwardTemplateFormset = modelformset_factory(Questions, fields=('qname', 'qtype', 'role', 'attachment_need'), extra=x, can_delete=True)
   if request.method == 'POST':
-    import IPython; IPython.embed()
     is_active_val = request.POST.get('is_active',False)
     is_active = True if is_active_val ==  'on' else False
     formset = AwardTemplateFormset(request.POST, queryset=questions)
