@@ -14,7 +14,7 @@ $(document).ready(function(){
     cloneMore('div.add_nomination_period:last', 'nominationperiod_set');
   });
 
-  $(document).on('change', '[type=checkbox]', function(event) {
+  $(document).on('change', 'del_btn_formset', function(event) {
     if(($('.del_btn_formset').length) == 2){
       $('.del_btn_formset').each(function(i, obj) {
           $(obj).hide()
@@ -51,16 +51,6 @@ $(document).ready(function(){
     $(selector).after(newElement);
   }
 
-   $('#submit').click(function(){
-    // debugger
-    var level = $('#id_nominationperiod_set-0-level').val();
-
-    if(level == ""){
-      $('#levelerror').html('**This field cannot be empty')
-      $('#levelerror').css('color', 'red');
-      return false
-    }
-  });
-
+ 
 });
 

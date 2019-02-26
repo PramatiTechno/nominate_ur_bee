@@ -31,5 +31,9 @@ $.ajax({
 
 $(function() {
    $("#award").val($("#award option:first").val());
-   document.getElementById('create_link').href="/new_award_template/"+$('.mySelect').val()
+  if ($('.mySelect').val() != "No Awards Found" )
+    {
+      document.getElementById('create_link').href="/new_award_template/"+$('.mySelect').val()
+    }
+
 });
