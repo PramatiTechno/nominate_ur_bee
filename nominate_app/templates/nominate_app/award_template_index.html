@@ -23,6 +23,8 @@
         <option value="{{ form.id }}">
         {{ form.name }}
         </option>
+        {% empty %}
+        <option> No Awards Found </option>
       {% endfor %}
     </select>
   </form>
@@ -44,6 +46,10 @@ Award Templates
 <tr class="d-flex">
 <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ lt.template_name }} </td>
 <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><a href="{% url 'nominate_app:edit_award_template' lt.id %}" type="button" class="btn btn-success" value = "View">View</a></td>
+</tr>
+{% empty %}
+<tr class="d-flex">
+<td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> No Awards Found </td>
 </tr>
 {% endfor %}
 </tbody>
