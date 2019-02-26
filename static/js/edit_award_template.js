@@ -1,6 +1,5 @@
 
       $('#add_more').click(function() {
-        console.log("in checkbox click")
           cloneMore('div:last', 'form');
       });
 
@@ -8,7 +7,6 @@
         event.preventDefault();
         checkboxId = event.target.id;
         ques_id = Number($('#'+checkboxId).next('input')[0].value);
-        console.log(ques_id)
         par_table = $('#'+checkboxId).closest('.form_table');
         par_table.hide();
         // need ajax func for edit questions template form
