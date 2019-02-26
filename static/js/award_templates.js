@@ -1,5 +1,6 @@
 $(document).ready(function(){
-  if(($('#id_form' + '-TOTAL_FORMS').val()) == '1'){
+
+ if(($('.del_btn_formset').length) == 1){
     $('.del_btn_formset').hide()
   }
   else{
@@ -11,7 +12,7 @@ $(document).ready(function(){
     $('.del_btn_formset').each(function(i, obj) {
         $(obj).show()
     });  
-    cloneMore('div:last', 'form');
+    cloneMore('div.add_nomination_period:last', 'form');
   });
 
   $(document).on('change', '.del_btn_formset', function(event) {
