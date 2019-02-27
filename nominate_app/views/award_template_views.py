@@ -13,6 +13,7 @@ def new_award_template(request, award_id):
   is_active=False
   AwardTemplateFormset = modelformset_factory(Questions, fields=('qname', 'qtype', 'role', 'attachment_need'), extra=1, can_delete=True)
   if request.method == 'POST':
+    # This code to be refactored. Replace with 2 forms
     new_form = request.POST.copy()
     template_name = new_form.pop('template_name')[0] 
     is_active_val = new_form.pop('is_active', ['off'])
@@ -40,13 +41,13 @@ def new_award_template(request, award_id):
 def edit_award_template(request, template_id):
   award_template = AwardTemplate.objects.get(id = template_id)
   questions = Questions.objects.filter(award_template_id=award_template.id)
-  # pdb.set_trace()
   if questions.exists():
     x=0
   else:
     x=1
   AwardTemplateFormset = modelformset_factory(Questions, fields=('qname', 'qtype', 'role', 'attachment_need'), extra=x, can_delete=True)
   if request.method == 'POST':
+    # This code to be refactored. Replace with 2 forms
     new_form = request.POST.copy()
     template_name = new_form.pop('template_name')[0] 
     is_active_val = new_form.pop('is_active', ['off'])
