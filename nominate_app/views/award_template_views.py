@@ -13,6 +13,7 @@ def new_award_template(request, award_id):
   is_active=False
   AwardTemplateFormset = modelformset_factory(Questions, fields=('qname', 'qtype', 'role', 'attachment_need'), extra=1, can_delete=True)
   if request.method == 'POST':
+    # This code to be refactored. Replace with 2 forms
     new_form = request.POST.copy()
     template_name = new_form.pop('template_name')[0] 
     is_active_val = new_form.pop('is_active', ['off'])
@@ -46,11 +47,15 @@ def edit_award_template(request, template_id):
     x=1
   AwardTemplateFormset = modelformset_factory(Questions, fields=('qname', 'qtype', 'role', 'attachment_need'), extra=x, can_delete=True)
   if request.method == 'POST':
-    is_active_val = request.POST.get('is_active',False)
-    is_active = True if is_active_val ==  'on' else False
+    # This code to be refactored. Replace with 2 forms
+    new_form = request.POST.copy()
+    template_name = new_form.pop('template_name')[0] 
+    is_active_val = new_form.pop('is_active', ['off'])
+    is_active = True if is_active_val[0] ==  'on' else False
+    request.POST = new_form
+    award_template_new = AwardTemplate.objects.filter(id=template_id).update(template_name= template_name, is_active=is_active)
     formset = AwardTemplateFormset(request.POST, queryset=questions)
     if formset.is_valid():
-      AwardTemplate.objects.filter(id=template_id).update(is_active=is_active)
       instances = formset.save(commit=False)
       for obj in formset.deleted_objects:
         obj.delete()
