@@ -1,45 +1,44 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <h1 align="center" class="text-info">Awards</h1>
 <div class="container">
 <div class="form-group">
-<div class = "row award_top_margin">
-<div class="col-sm-12">
-<input input onclick="location.href='{% url 'nominate_app:newawards' %}'" type="button" class="btn btn-success float-sm-right" value = "Create New Award">
-</div>
-</div>
+  <div class = "row award_top_margin">
+    <div class="col-sm-12">
+      <input input onclick="location.href='{% url 'nominate_app:newawards' %}'" type="button" class="btn btn-success float-sm-right" value = "Create New Award">
+    </div>
+  </div>
 </div>
 <div id="accordion">
-<div class="card">
-<div class="card-header" data-toggle="collapse" href="#collapseThree">
-<a class="collapsed card-link" >
-Awards
-</a>
-</div>
-<div id="collapseThree" class="collapse show" data-parent="#accordion">
-<div class="card-body">
-<div class="container"> 
-<form>
-<table class="table table-borderless">
-<tbody>
-{% for form in forms %}
-<tr class="d-flex">
-<td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ form.name }} </td>
-<td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:edit_awards' form.id %}'" type="button" class="btn btn-success" value = "View"></td>
-</tr>
-{% empty %}
-<tr class="d-flex">
-<td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> No Awards Found </td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-</form>
-</div>
-</div>
-</div>
-</div>
+  <div class="card">
+    <div class="card-header" data-toggle="collapse" href="#collapseThree">
+      <a class="collapsed card-link" >
+      Awards
+      </a>
+    </div>
+    <div id="collapseThree" class="collapse show" data-parent="#accordion">
+      <div class="card-body">
+        <div class="container">
+          <form>
+            <table class="table table-borderless">
+              <tbody>
+                {% for form in forms %}
+                  <tr class="d-flex">
+                    <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ form.name }} </td>
+                    <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:edit_awards' form.id %}'" type="button" class="btn btn-success" value = "View"></td>
+                  </tr>
+                {% empty %}
+                  <tr class="d-flex">
+                    <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> No Awards Found </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

@@ -14,7 +14,7 @@ $(document).ready(function(){
     cloneMore('div.add_nomination_period:last', 'nominationperiod_set');
   });
 
-  $(document).on('change', 'del_btn_formset', function(event) {
+  $(document).on('change', '[type=checkbox]', function(event) {
     if(($('.del_btn_formset').length) == 2){
       $('.del_btn_formset').each(function(i, obj) {
           $(obj).hide()
