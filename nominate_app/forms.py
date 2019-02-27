@@ -44,3 +44,28 @@ class NominationPeriodForm(forms.ModelForm):
 		self.fields['level'].widget.attrs.update({'class': 'form-control abc'})
 		self.fields['start_day'].widget.attrs.update({'class': 'form-control def'})
 		self.fields['end_day'].widget.attrs.update({'class': 'form-control ghi'})
+
+
+class TemplateForm(forms.ModelForm):
+
+	class Meta:
+		model = AwardTemplate
+		fields = ('template_name', 'award', 'is_active' )
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['template_name'].widget.attrs.update({'class': 'form-control def', 'placeholder': "Enter Award Template Name"})
+
+
+class AwardQuestionForm(forms.ModelForm):
+
+	class Meta:
+		model = Questions
+		fields = ('qname', 'qtype', 'role', 'attachment_need')
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['qname'].widget.attrs.update({'class': 'form-control def', 'placeholder': "Enter Question"})
+		self.fields['qtype'].widget.attrs.update({'class': 'form-control abc'})
+		self.fields['role'].widget.attrs.update({'class': 'form-control abc'})
+		self.fields['attachment_need'].widget.attrs.update({'class': 'form-control abc'})
