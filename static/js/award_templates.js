@@ -12,7 +12,7 @@ $(document).ready(function(){
     $('.del_btn_formset').each(function(i, obj) {
         $(obj).show()
     });  
-    cloneMore('div.add_template_questions:last', 'form');
+    cloneMore('div.add_template_questions:last', 'questions_set');
   });
 
   $(document).on('change', '.del_btn_formset', function(event) {
@@ -30,6 +30,7 @@ $(document).ready(function(){
     checkboxId = event.target.id;
     par_table = $('#'+checkboxId).closest('.formset_table');
     par_table.remove();
+    re_calc_total('div.add_template_questions:last', 'questions_set');
     // need ajax func for edit questions template form
     
   }); 
@@ -48,5 +49,10 @@ $(document).ready(function(){
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
+  }
+  function re_calc_total(selector, type) {
+    var total = $('#id_' + type + '-TOTAL_FORMS').val();
+    total--;
+    $('#id_' + type + '-TOTAL_FORMS').val(total);
   }
 });
