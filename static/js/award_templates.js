@@ -30,7 +30,7 @@ $(document).ready(function(){
     checkboxId = event.target.id;
     par_table = $('#'+checkboxId).closest('.formset_table');
     par_table.remove();
-    re_calc_total('div.add_template_questions:last', 'questions_set');
+    re_calc_total()
     // need ajax func for edit questions template form
     
   }); 
@@ -50,9 +50,11 @@ $(document).ready(function(){
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
   }
-  function re_calc_total(selector, type) {
-    var total = $('#id_' + type + '-TOTAL_FORMS').val();
+
+  function re_calc_total() {
+    var total = $('#id_form-TOTAL_FORMS').val();
     total--;
-    $('#id_' + type + '-TOTAL_FORMS').val(total);
+    $('#id_form-TOTAL_FORMS').val(total);
+    $('#id_form-TOTAL_FORMS').attr('value', total);
   }
 });

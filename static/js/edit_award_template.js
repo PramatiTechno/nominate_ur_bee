@@ -28,11 +28,29 @@ $(document).ready(function(){
     }
     event.preventDefault();
     checkboxId = event.target.id;
+    id_val = checkboxId.split('DELETE')[0]
+    var ques_id = Number($('#'+id_val+'id').val())
+
     par_table = $('#'+checkboxId).closest('.formset_table');
     par_table.remove();
+    re_calc_total()
     // need ajax func for edit questions template form
-    
-  }); 
+
+    if (ques_id != 0){
+      $.ajax({
+        url:'/question/delete/' + ques_id + '/',
+        type:'POST',
+        data:{
+          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+        },
+        dataType: 'json',
+        success:function(){
+
+        }
+      });
+    }
+  });
+
   function cloneMore(selector, type) {
     var newElement = $(selector).clone(true);
     var total = $('#id_' + type + '-TOTAL_FORMS').val();
@@ -49,4 +67,12 @@ $(document).ready(function(){
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
   }
+
+  function re_calc_total() {
+    var total = $('#id_form-TOTAL_FORMS').val();
+    total--;
+    $('#id_form-TOTAL_FORMS').val(total);
+    $('#id_form-TOTAL_FORMS').attr('value', total);
+  }
+
 });

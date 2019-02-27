@@ -29,7 +29,7 @@ $(document).ready(function(){
     var checkboxId = event.target.id;
     par_table = $('#'+checkboxId).closest('.add_nomination_period');
     par_table.remove();
-    re_calc_total('div.add_nomination_period:last', 'nominationperiod_set');
+    re_calc_total()
   }); 
     
   function cloneMore(selector, type) {
@@ -51,12 +51,13 @@ $(document).ready(function(){
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
   }
-    function re_calc_total(selector, type) {
-    var total = $('#id_' + type + '-TOTAL_FORMS').val();
-    total--;
-    $('#id_' + type + '-TOTAL_FORMS').val(total);
-  }
 
+  function re_calc_total() {
+    var total = $('#id_form-TOTAL_FORMS').val();
+    total--;
+    $('#id_form-TOTAL_FORMS').val(total);
+    $('#id_form-TOTAL_FORMS').attr('value', total);
+  }
  
 });
 
