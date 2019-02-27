@@ -60,6 +60,7 @@ def awards(request):
             if formset.is_valid():
                 created_award.save()
                 formset.save()
+                messages.success(request, 'Award is created successfully.')
                 return redirect('nominate_app:view_awards')
 
     return render(request, 'nominate_app/awards_form.html', {'formset':formset,'award_form':award_form })
