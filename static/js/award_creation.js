@@ -29,6 +29,7 @@ $(document).ready(function(){
     var checkboxId = event.target.id;
     par_table = $('#'+checkboxId).closest('.add_nomination_period');
     par_table.remove();
+    re_calc_total('div.add_nomination_period:last', 'nominationperiod_set');
   }); 
     
   function cloneMore(selector, type) {
@@ -49,6 +50,11 @@ $(document).ready(function(){
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
+  }
+    function re_calc_total(selector, type) {
+    var total = $('#id_' + type + '-TOTAL_FORMS').val();
+    total--;
+    $('#id_' + type + '-TOTAL_FORMS').val(total);
   }
 
  
