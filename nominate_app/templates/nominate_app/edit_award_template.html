@@ -27,10 +27,10 @@
         </div>
       <div class = "row award_top_margin">
         <div class="col-sm-2">
-          <label class="col-form-label" for='{{award_template}}'>Template Name</label>
+          <label class="col-form-label" for='{{award_template.template_name}}'>Template Name</label>
         </div>
         <div class="col-sm-8">    
-          <input type="text" name="award_template" class="form-control" placeholder="Enter award name" value="{{ award_template }}" required />
+          <input type="text" name="template_name" class="form-control" placeholder="Enter award name" value="{{ award_template.template_name }}" required />
         </div>
       </div> 
       <br>
@@ -38,7 +38,7 @@
       {% for form in formset.forms %}
       <div class="formset_table add_template_questions">
       <div class = "row award_top_margin ">
-
+        {{ form.id }}
         <div class="col-sm-2">
           <label class="col-form-label" for='{{form.qname}}' >Question</label>
         </div>

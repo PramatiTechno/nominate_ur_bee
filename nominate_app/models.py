@@ -68,7 +68,7 @@ class NominationPeriod(models.Model):
         db_table='nomination_periods'
     
 class AwardTemplate(models.Model):
-    template_name = models.CharField(max_length=30, null=False, blank=False)
+    template_name = models.CharField(max_length=150, null=False, blank=False)
     award = models.ForeignKey(Awards, on_delete=models.CASCADE)
     is_active = models.BooleanField(default = False)
 
@@ -89,7 +89,7 @@ class Questions(models.Model):
         db_table='award_questions'
 
     qname = models.CharField(max_length=100, null=False, blank=False)
-    qtype = models.CharField(max_length=20, choices=query_choice, null=False, blank=False)
+    qtype = models.CharField(max_length=100, choices=query_choice, null=False, blank=False)
     award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
     attachment_need = models.BooleanField(default=False)
