@@ -30,21 +30,23 @@ $(document).ready(function(){
 	    checkboxId = event.target.id;
 	  	id_val = checkboxId.split('DELETE')[0]
 	  	var child_id = Number($('#'+id_val+'id').val())
-		par_table = $('#'+checkboxId).closest('.add_nomination_period');
-		par_table.hide();
-		if (child_id != 0){
-			$.ajax({
-					url:'/delete/' + child_id + '/',
-					type:'POST',
-					data:{
-						csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-					},
-					dataType: 'json',
-					success:function(){
-					}
-			});
-		}
-	}	
+      $(this).val('on')
+
+  		par_table = $('#'+checkboxId).closest('.add_nomination_period');
+  		par_table.hide();
+  		if (child_id != 0){
+  			$.ajax({
+  					url:'/delete/' + child_id + '/',
+  					type:'POST',
+  					data:{
+  						csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+  					},
+  					dataType: 'json',
+  					success:function(){
+  					}
+  			});
+  		}
+  	}	
   }); 
     
   function cloneMore(selector, type) {
