@@ -8,7 +8,6 @@
 		<form method ="post">
 		</br>
 		{{ award_form.errors }}
-		{{ formset.errors }}
 		 {% csrf_token %}
 		<div class = "row award_top_margin">
           <div class="col-sm-10">
@@ -30,7 +29,7 @@
 		  	<label class="col-form-label" for="name">Award Name</label>
 		  </div>
 		  <div class="col-sm-8">  	
-		    <input type="text" name="name" class="form-control" value="{{  award.name }}" disabled />
+		    <input type="text" name="name" class="form-control" value="{{  award.name }}" />
 		  </div>
 		</div> 
 
@@ -39,7 +38,7 @@
 		  	<label class="col-form-label" for="name">Frequency</label>
 		  </div>
 		  <div class="col-sm-8">  	
-		    <input type="text" name="frequency" class="form-control" value="{{  award.frequency }}" disabled />
+		    <input type="text" name="frequency" class="form-control" value="{{  award.frequency }}" />
 		  </div>
 		</div> 
 
@@ -48,7 +47,7 @@
 		  	<label class="col-form-label" for="name">Description</label>
 		  </div>
 		  <div class="col-sm-6">
-		  	<textarea class="form-control descript" rows="5" name="description", disabled>{{ award.description }}</textarea>  	
+		  	<textarea class="form-control descript" rows="5" name="description">{{ award.description }}</textarea>  	
 		  </div>
 		</div>
 			  {{ formset.management_form }}
