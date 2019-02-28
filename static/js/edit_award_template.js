@@ -34,8 +34,6 @@ $(document).ready(function(){
 
       par_table = $('#'+checkboxId).closest('.formset_table');
       par_table.hide();
-      // re_calc_total()
-      // need ajax func for edit questions template form
 
       if (ques_id != 0){
         $.ajax({
@@ -68,13 +66,6 @@ $(document).ready(function(){
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
-  }
-
-  function re_calc_total() {
-    var total = $('#id_form-TOTAL_FORMS').val();
-    total--;
-    $('#id_form-TOTAL_FORMS').val(total);
-    $('#id_form-TOTAL_FORMS').attr('value', total);
   }
 
 });
