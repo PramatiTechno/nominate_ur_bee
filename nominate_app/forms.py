@@ -65,6 +65,7 @@ class AwardQuestionForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
+		self.fields['role'].empty_label = None
 		self.fields['qname'].widget.attrs.update({'class': 'form-control def', 'placeholder': "Enter Question"})
 		self.fields['qtype'].widget.attrs.update({'class': 'form-control abc'})
 		self.fields['role'].widget.attrs.update({'class': 'form-control abc'})
