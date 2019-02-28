@@ -48,11 +48,12 @@ def edit_award_template(request, template_id):
       new_form = request.POST.copy()
       new_form['award'] = str(award_template.award_id)
       request.POST = new_form
-      is_active = True if new_form['is_active'] ==  'on' else False
+      is_active = request.POST.get('is_active',False)
+      if is_active == 'on':
+        is_active = True
 
       template_form = TemplateForm(request.POST)
       formset = TemplateFormset(request.POST)
-
       if template_form.is_valid():
           created_award = AwardTemplate.objects.filter(id=template_id).update(template_name= new_form['template_name'], is_active=is_active)
           formset = TemplateFormset(request.POST, instance=award_template)

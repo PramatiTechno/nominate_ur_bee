@@ -24,7 +24,7 @@ def edit_awards(request,id):
 
 def award_template_index(request):
     if request.method == 'GET':
-        forms = Awards.objects.all()
+        forms = Awards.objects.all().order_by('id')
         if forms.exists()   :
             award_id = Awards.objects.first().id
             id = request.GET.get('id')
