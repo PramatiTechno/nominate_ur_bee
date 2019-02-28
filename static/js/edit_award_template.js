@@ -12,7 +12,7 @@ $(document).ready(function(){
     $('.del_btn_formset').each(function(i, obj) {
         $(obj).show()
     });  
-    cloneMore('div.add_template_questions:visible:last', 'form');
+    cloneMore('div.add_template_questions:visible:last', 'questions_set');
   });
 
   $(document).on('change', '[type=checkbox]', function(event) {
