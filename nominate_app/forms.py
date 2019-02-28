@@ -30,7 +30,7 @@ class AwardsActiveForm(forms.ModelForm):
 
     class Meta:
         model = Awards
-        fields = ('is_active',)
+        fields = '__all__'
 
 
 class NominationPeriodForm(forms.ModelForm):

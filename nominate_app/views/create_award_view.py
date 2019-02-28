@@ -35,7 +35,7 @@ def edit_awards(request, award_id):
                 formset.save()
                 return redirect('nominate_app:edit_awards', award_id=award.id)
 
-    return render(request, 'nominate_app/home.html', {'formset':formset, 'award':award, 'award_form':award_form })
+    return render(request, 'nominate_app/edit_award.html', {'formset':formset, 'award':award, 'award_form':award_form })
 
 
 def award_delete(request, nom_id):
