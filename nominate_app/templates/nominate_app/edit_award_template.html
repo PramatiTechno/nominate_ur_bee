@@ -15,11 +15,7 @@
             <div class="form-row float-right">
               <label class="col-form-label" name='is_active'>Enable/Disable</label>
               <div class="custom-control custom-switch">
-                {% if template_form.is_active %}
-                <input type="checkbox" name="is_active" class="custom-control-input" id="customSwitch1" checked="" >
-                {% else %}
-                <input type="checkbox" name="is_active" class="custom-control-input" id="customSwitch1" >
-                {% endif %}
+                {{ template_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
                 <label class="custom-control-label" for="customSwitch1" ></label>
               </div>
             </div>
