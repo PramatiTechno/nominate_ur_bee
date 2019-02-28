@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles', 
     'django.contrib.postgres',
     'nominate_app',
-    'crispy_forms',
     'django_nose',
     'widget_tweaks'
 ]
