@@ -18,7 +18,7 @@ def edit_awards(request, award_id):
         x=0
     else:
         x=1
-    NominationFormset = inlineformset_factory(Awards, NominationPeriod, fields='__all__', extra=x)
+    NominationFormset = inlineformset_factory(Awards, NominationPeriod, form=NominationPeriodForm, extra=x)
     formset = NominationFormset(instance=award)
 
     if request.method == 'POST':
@@ -33,9 +33,10 @@ def edit_awards(request, award_id):
             if formset.is_valid():
                 created_award.save()
                 formset.save()
+                messages.success(request, 'Award is updated successfully.')
                 return redirect('nominate_app:edit_awards', award_id=award.id)
 
-    return render(request, 'nominate_app/edit_award.html', {'formset':formset, 'award':award, 'award_form':award_form })
+    return render(request, 'nominate_app/edit_award.html', {'formset':formset, 'award':award, 'award_form':award_form, 'frequencies': Awards.edit_frequencies.items() })
 
 
 def award_delete(request, nom_id):
