@@ -5,6 +5,17 @@
 	<script src="{% static 'js/award_creation.js' %}"></script>
 	<div class = "container">
 		<div class="form-group">
+			{% if award_form.errors or formset.errors %}
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<ul>
+					{{ award_form.errors }}
+					{{ formset.errors }}
+				</ul>	
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			    <span aria-hidden="true">&times;</span>
+			  </button>
+			</div>	
+      {% endif %}
 			<form method = "post" id="needs-validation" novalidate>
 				{% csrf_token %}
 				<div class = "row award_top_margin">
@@ -35,19 +46,29 @@
 				  </div>
 				  <div class="col-sm-3">  	
 				    <div class="form-group">
-					    <select class="form-control" id="exampleSelect1" name="frequency">
-					      {% for form in award_form.frequency %}
-					        {{ form }}
-					        {% empty %}
-					        <option> No Awards Found </option>
+					    <select class="form-control" id="exampleSelect1" name="frequency" required>
+					      {% for k, v in frequencies %}
+					        {% if k == "" %}
+					          <option selected="selected" value="{{ k }}">{{ v }}</option>
+					        {% else %}
+					          <option value="{{ k }}">{{ v }}</option>
+					        {% endif %}
 					      {% endfor %}
 					    </select>
+					    <div class="invalid-feedback">
+				        Please provide frequency.
+				      </div>
 					  </div>
 				  </div>
 			  </div> 
 			  {{ formset.management_form }}
 			  {% for form in formset.forms %}
 				  <div class = "row award_top_margin add_nomination_period">
+				  	<div class="col-sm-2">
+				  		<div class="form-row">
+								<label class="col-form-label" for="name">Label</label>
+							</div>
+				  	</div>
 						<div class="col-sm-2"> 	
 					    <div class="form-group">
 						    {{ form.level|attr:"class:form-control" }}

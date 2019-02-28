@@ -41,7 +41,7 @@ class NominationPeriodForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.fields['level'].widget.attrs.update({'class': 'form-control abc'})
+		self.fields['level'].empty_label = None
 		self.fields['start_day'].widget.attrs.update({'class': 'form-control def'})
 		self.fields['end_day'].widget.attrs.update({'class': 'form-control ghi'})
 

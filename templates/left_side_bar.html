@@ -4,8 +4,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="nav navbar-nav navbar-collapse collapse flex-column" id="navbar_wex">
-      <a href="{% url 'nominate_app:view_awards' %}" class="nav-link active">Awards</a>
-      <a href="{% url 'nominate_app:award_template_index' %}" class="nav-link active">Award Templates</a>
+      <a href="{% url 'nominate_app:view_awards' %}" class="nav-link {% if request.path == "/view_awards/" %}active{% endif %}">Awards</a>
+      <a href="{% url 'nominate_app:award_template_index' %}" class="nav-link {% if request.path == "/award_template_index/" %}active{% endif %}">Award Templates</a>
       <a href="#nomination" class="nav-link" data-toggle="tab">Nomination Status</a>
       <a href="#nominee" class="nav-link" data-toggle="tab">Nominate</a>
       <a href="#nomination" class="nav-link" data-toggle="tab">Nominations</a>
@@ -14,4 +14,4 @@
       <a href="" class="nav-link" data-toggle="tab">Graph</a>
     </div>
   </nav>
-</div> 
+</div>
