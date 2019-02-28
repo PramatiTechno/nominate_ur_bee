@@ -44,7 +44,7 @@ $(document).ready(function(){
         if($(this).attr('id').endsWith('qtype')){
           $(this).val('SUBJECTIVE')
         }
-        else{
+        else if($(this).attr('id').endsWith('role')){
           $(this).val(1)
         }
     });
