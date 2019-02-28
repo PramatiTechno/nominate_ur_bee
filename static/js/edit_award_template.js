@@ -12,42 +12,42 @@ $(document).ready(function(){
     $('.del_btn_formset').each(function(i, obj) {
         $(obj).show()
     });  
-    cloneMore('div.add_template_questions:last', 'form');
+    cloneMore('div.add_template_questions:visible:last', 'questions_set');
   });
 
-  $(document).on('change', '.del_btn_formset', function(event) {
-    if(($('.del_btn_formset').length) == 2){
-      $('.del_btn_formset').each(function(i, obj) {
-          $(obj).hide()
-      });
-    }
-    else{
-      $('.del_btn_formset').each(function(i, obj) {
-          $(obj).show()
-      });    
-    }
+  $(document).on('change', '[type=checkbox]', function(event) {
     event.preventDefault();
-    checkboxId = event.target.id;
-    id_val = checkboxId.split('DELETE')[0]
-    var ques_id = Number($('#'+id_val+'id').val())
+    if(event.target.id.endsWith('DELETE') && ($(this).is(":checked"))){
+      if(($('.del_btn_formset').length) == 2){
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).hide()
+        });
+      }
+      else{
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).show()
+        });    
+      }
+      checkboxId = event.target.id;
+      id_val = checkboxId.split('DELETE')[0]
+      var ques_id = Number($('#'+id_val+'id').val())
 
-    par_table = $('#'+checkboxId).closest('.formset_table');
-    par_table.remove();
-    re_calc_total()
-    // need ajax func for edit questions template form
+      par_table = $('#'+checkboxId).closest('.formset_table');
+      par_table.hide();
 
-    if (ques_id != 0){
-      $.ajax({
-        url:'/question/delete/' + ques_id + '/',
-        type:'POST',
-        data:{
-          csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
-        },
-        dataType: 'json',
-        success:function(){
+      if (ques_id != 0){
+        $.ajax({
+          url:'/question/delete/' + ques_id + '/',
+          type:'POST',
+          data:{
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+          },
+          dataType: 'json',
+          success:function(){
 
-        }
-      });
+          }
+        });
+      }
     }
   });
 
@@ -66,13 +66,6 @@ $(document).ready(function(){
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
-  }
-
-  function re_calc_total() {
-    var total = $('#id_form-TOTAL_FORMS').val();
-    total--;
-    $('#id_form-TOTAL_FORMS').val(total);
-    $('#id_form-TOTAL_FORMS').attr('value', total);
   }
 
 });
