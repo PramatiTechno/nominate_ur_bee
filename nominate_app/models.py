@@ -44,6 +44,7 @@ class Awards(models.Model):
         ('QUATERLY', 'Quaterly'),
         ('YEARLY', 'Yearly')
         )
+    frequencies = {"": "Please select", "MONTHLY":"Monthly", "QUATERLY": "Quaterly", "YEARLY": "Yearly"}
 
     name = models.CharField(max_length=30, null=False, blank=False)
     is_active = models.BooleanField(default = False)
@@ -56,6 +57,7 @@ class Awards(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class NominationPeriod(models.Model):
     CHOICES = [(str(i),str(i)) for i in range(1,32)]
@@ -96,3 +98,4 @@ class Questions(models.Model):
 
     def __str__(self):
         return self.qname
+

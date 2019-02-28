@@ -56,14 +56,13 @@ def awards(request):
         if award_form.is_valid():
             created_award = award_form.save(commit=False)
             formset = NominationFormset(request.POST, instance=created_award)
-
-            if formset.is_valid():
+            if formset.is_valid():  
                 created_award.save()
                 formset.save()
                 messages.success(request, 'Award is created successfully.')
                 return redirect('nominate_app:view_awards')
 
-    return render(request, 'nominate_app/awards_form.html', {'formset':formset,'award_form':award_form })
+    return render(request, 'nominate_app/awards_form.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items(), 'roles': Role.objects.values()})
 
 def award_delete(request, nom_id):
     NominationPeriod.objects.get(pk=nom_id).delete()
