@@ -17,7 +17,7 @@ $(document).ready(function(){
 
   $(document).on('change', '[type=checkbox]', function(event) {
     event.preventDefault();
-    if(event.target.id.endsWith('DELETE') && ($(this).is(":checked"))){
+    if(event.target.id.endsWith('DELETE') ){
       if(($('.del_btn_formset').length) == 2){
         $('.del_btn_formset').each(function(i, obj) {
             $(obj).hide()
@@ -30,7 +30,8 @@ $(document).ready(function(){
       }
       checkboxId = event.target.id;
       id_val = checkboxId.split('DELETE')[0]
-      var ques_id = Number($('#'+id_val+'id').val())
+      var ques_id = Number($('#'+id_val+'id').val());
+      $(this).val('on')
 
       par_table = $('#'+checkboxId).closest('.formset_table');
       par_table.hide();
