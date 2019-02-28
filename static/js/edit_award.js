@@ -56,7 +56,9 @@ $(document).ready(function(){
         var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
         var id = 'id_' + name;
         $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-        $(this).val(1)
+        if($(this).attr('id').endsWith('level') || $(this).attr('id').endsWith('day')){
+          $(this).val(1)
+        }
     });
    
       newElement.find('label').each(function() {
