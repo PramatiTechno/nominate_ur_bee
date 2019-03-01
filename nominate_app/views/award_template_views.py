@@ -5,7 +5,6 @@ from nominate_app.models import Questions, AwardTemplate, Awards
 from django.http import HttpResponse
 from django.contrib import messages
 import json
-import pdb
 
 # Create your views here.
 
