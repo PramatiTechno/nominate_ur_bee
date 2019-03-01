@@ -83,9 +83,11 @@
 							    {{ form.end_day|attr:"class:form-control" }}
 						    </div>
 						    <span class="fa del_btn_formset remove_nomination">
-			                  <label for='{{form.DELETE}}'>Delete</label>
-			                 {{ form.DELETE|attr:"class:image-checkbox" }}
-			                </span>  
+                  <label><span class="fa fa-minus">
+						      {{ form.DELETE | attr:"class:hide_checkbox"}}
+						        </span>
+						      </label>
+                </span>  
 							</div>
 						</div>
 					</div>
