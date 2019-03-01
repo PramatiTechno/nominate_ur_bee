@@ -9,6 +9,17 @@
 <div class = "container">
   <div class="form-group">
     <form method = "post">
+      {% if template_form.errors or formset.errors %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <ul>
+            {{ template_form.errors }}
+            {{ formset.errors }}
+          </ul> 
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>  
+      {% endif %}
       {% csrf_token %}
       <div class = "row award_top_margin">
           <div class="col-sm-10">

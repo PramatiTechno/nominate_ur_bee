@@ -7,7 +7,17 @@
 		<div class="form-group">
 		<form method ="post">
 		</br>
-		{{ award_form.errors }}
+		{% if award_form.errors or formset.errors %}
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<ul>
+					{{ award_form.errors }}
+					{{ formset.errors }}
+				</ul>	
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			    <span aria-hidden="true">&times;</span>
+			  </button>
+			</div>	
+      {% endif %}
 		 {% csrf_token %}
 		<div class = "row award_top_margin">
           <div class="col-sm-10">
