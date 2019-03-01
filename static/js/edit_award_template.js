@@ -26,6 +26,7 @@ $(document).ready(function(){
 
       par_table = $('#'+checkboxId).closest('.formset_table');
       par_table.remove();
+      deleteForm('questions_set','del_btn_formset')
 
       if (ques_id != 0){
         $.ajax({
@@ -41,7 +42,6 @@ $(document).ready(function(){
         });
         re_calc_init()
       }
-      re_calc_total()
       if(($('.del_btn_formset').length) == 1){
         $('.del_btn_formset').each(function(i, obj) {
             $(obj).hide()
@@ -78,16 +78,31 @@ $(document).ready(function(){
     $(selector).after(newElement);
   }
 
-  function re_calc_total() {
-    var total = $('#id_questions_set-TOTAL_FORMS').val();
-    total--;
-    $('#id_questions_set-TOTAL_FORMS').val(total);
-    $('#id_questions_set-TOTAL_FORMS').attr('value', total);
-  }
   function re_calc_init(){
     initial_count = $('#id_questions_set-INITIAL_FORMS').val();
     initial_count--;
     $('#id_questions_set-INITIAL_FORMS').val(initial_count);
     $('#id_questions_set-INITIAL_FORMS').attr('value', initial_count);
   }
+  function deleteForm(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    if (total > 1){
+        var forms = $('.formset_table');
+        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+
+function updateElementIndex(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
 });
