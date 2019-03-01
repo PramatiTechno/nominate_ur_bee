@@ -36,6 +36,7 @@ $(document).ready(function(){
   					success:function(){
   					}
   			});
+        re_calc_init()
   		}
       if(($('.del_btn_formset').length) == 1){
         $('.del_btn_formset').each(function(i, obj) {
@@ -78,7 +79,8 @@ $(document).ready(function(){
     total--;
     $('#id_nominationperiod_set-TOTAL_FORMS').val(total);
     $('#id_nominationperiod_set-TOTAL_FORMS').attr('value', total);
-
+  }
+  function re_calc_init(){
     initial_count = $('#id_nominationperiod_set-INITIAL_FORMS').val();
     initial_count--;
     $('#id_nominationperiod_set-INITIAL_FORMS').val(initial_count);
