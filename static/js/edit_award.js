@@ -81,8 +81,8 @@ $(document).ready(function(){
 
     initial_count = $('#id_nominationperiod_set-INITIAL_FORMS').val();
     initial_count--;
-    $('#id_nominationperiod_set-INITIAL_FORMS').val(total);
-    $('#id_nominationperiod_set-INITIAL_FORMS').attr('value', total);
+    $('#id_nominationperiod_set-INITIAL_FORMS').val(initial_count);
+    $('#id_nominationperiod_set-INITIAL_FORMS').attr('value', initial_count);
   }
 });
 
