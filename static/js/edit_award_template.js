@@ -39,6 +39,7 @@ $(document).ready(function(){
 
           }
         });
+        re_calc_init()
       }
       re_calc_total()
       if(($('.del_btn_formset').length) == 1){
@@ -60,7 +61,6 @@ $(document).ready(function(){
     newElement.find(':input').each(function() {
       var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
       var id = 'id_' + name;
-      debugger
       $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
       if($(this).attr('id').endsWith('qtype')){
         $(this).val('SUBJECTIVE')
@@ -83,5 +83,11 @@ $(document).ready(function(){
     total--;
     $('#id_questions_set-TOTAL_FORMS').val(total);
     $('#id_questions_set-TOTAL_FORMS').attr('value', total);
+  }
+  function re_calc_init(){
+    initial_count = $('#id_questions_set-INITIAL_FORMS').val();
+    initial_count--;
+    $('#id_questions_set-INITIAL_FORMS').val(initial_count);
+    $('#id_questions_set-INITIAL_FORMS').attr('value', initial_count);
   }
 });
