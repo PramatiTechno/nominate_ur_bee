@@ -34,7 +34,7 @@ def edit_awards(request, award_id):
                 created_award.save()
                 formset.save()
                 messages.success(request, 'Award is updated successfully.')
-                return redirect('nominate_app:edit_awards', award_id=award.id)
+                return redirect('nominate_app:view_awards')
 
     return render(request, 'nominate_app/edit_award.html', {'formset':formset, 'award':award, 'award_form':award_form, 'frequencies': Awards.edit_frequencies.items() })
 

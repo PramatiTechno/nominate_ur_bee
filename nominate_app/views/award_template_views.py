@@ -3,8 +3,7 @@ from django.forms import modelformset_factory, inlineformset_factory
 from nominate_app.forms import TemplateForm, AwardQuestionForm, AwardTemplateForm, QuestionForm 
 from nominate_app.models import Questions, AwardTemplate, Awards
 from django.http import HttpResponse
-import json
-import pdb
+from django.contrib import messages
 
 # Create your views here.
 
@@ -28,6 +27,7 @@ def new_award_template(request,award_id):
             if formset.is_valid():
                 created_award.save()
                 formset.save()
+                messages.success(request, 'Award Template created successfully.')
                 return redirect('nominate_app:award_template_index')
 
     return render(request, 'nominate_app/new_award_template.html', {'formset':formset,'award_form':award_form })
@@ -59,6 +59,7 @@ def edit_award_template(request, template_id):
           formset = TemplateFormset(request.POST, instance=award_template)
           if formset.is_valid():
             formset.save()
+            messages.success(request, 'Award Template updated successfully.')
             return redirect('nominate_app:award_template_index')
 
   else:
