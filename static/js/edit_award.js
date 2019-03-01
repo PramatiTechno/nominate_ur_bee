@@ -18,7 +18,6 @@ $(document).ready(function(){
   	 event.preventDefault();
   	if(event.target.id.endsWith('DELETE') ){
 	    checkboxId = event.target.id;
-      debugger
 	  	id_val = checkboxId.split('DELETE')[0]
 	  	var child_id = Number($('#'+id_val+'id').val())
       $(this).val('on')
