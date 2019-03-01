@@ -30,7 +30,7 @@ SECRET_KEY = '$eew7_t+*^%jg$v!fokk#q8kas0=mk3!=o7*h)!k7x#=ng1*w-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["ldap.dev","localhost","nominate-your-bee.dev"]
 
 
 # Application definition
@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'nominate_app',
     'django_nose',
-    'widget_tweaks'
+    'widget_tweaks',
+    'django_cas_ng'
 ]
 
 MIDDLEWARE = [
@@ -56,9 +57,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cas_ng.middleware.CASMiddleware'
 ]
 
 ROOT_URLCONF = 'nominate_your_bee.urls'
+CAS_SERVER_URL = "https://cev3-test.pramati.com/cas/login"
 
 TEMPLATES = [
     {
@@ -77,6 +80,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'nominate_your_bee.wsgi.application'
+
+AUTHENTICATION_BACKENDS = (
+    'django_cas_ng.backends.CASBackend'
+)
 
 
 # Database
