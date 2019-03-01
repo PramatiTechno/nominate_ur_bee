@@ -58,9 +58,9 @@ $(document).ready(function(){
   }
 
   function re_calc_total() {
-    var total = $('#id_form-TOTAL_FORMS').val();
+    var total = $('#id_questions_set-TOTAL_FORMS').val();
     total--;
-    $('#id_form-TOTAL_FORMS').val(total);
-    $('#id_form-TOTAL_FORMS').attr('value', total);
+    $('#id_questions_set-TOTAL_FORMS').val(total);
+    $('#id_questions_set-TOTAL_FORMS').attr('value', total);
   }
 });

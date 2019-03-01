@@ -17,23 +17,14 @@ $(document).ready(function(){
   $(document).on('change', '[type=checkbox]', function(event) {
   	 event.preventDefault();
   	if(event.target.id.endsWith('DELETE') ){
-	    if(($('.del_btn_formset').length) == 2){
-	      $('.del_btn_formset').each(function(i, obj) {
-	          $(obj).hide()
-	      });
-	    }
-	    else{
-	      $('.del_btn_formset').each(function(i, obj) {
-	          $(obj).show()
-	      });    
-	    }
 	    checkboxId = event.target.id;
 	  	id_val = checkboxId.split('DELETE')[0]
 	  	var child_id = Number($('#'+id_val+'id').val())
       $(this).val('on')
 
   		par_table = $('#'+checkboxId).closest('.add_nomination_period');
-  		par_table.hide();
+  		par_table.remove()
+      re_calc_total()
   		if (child_id != 0){
   			$.ajax({
   					url:'/delete/' + child_id + '/',
@@ -46,6 +37,16 @@ $(document).ready(function(){
   					}
   			});
   		}
+      if(($('.del_btn_formset').length) == 2){
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).hide()
+        });
+      }
+      else{
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).show()
+        });    
+      }
   	}	
   }); 
     
@@ -72,6 +73,11 @@ $(document).ready(function(){
     $(selector).after(newElement);
   }
 
- 
+  function re_calc_total() {
+    total = $('#id_nominationperiod_set-TOTAL_FORMS').val();
+    total--;
+    $('#id_nominationperiod_set-TOTAL_FORMS').val(total);
+    $('#id_nominationperiod_set-TOTAL_FORMS').attr('value', total);
+  }
 });
 

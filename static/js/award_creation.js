@@ -15,21 +15,24 @@ $(document).ready(function(){
   });
 
   $(document).on('change', '[type=checkbox]', function(event) {
-    if(($('.del_btn_formset').length) == 2){
-      $('.del_btn_formset').each(function(i, obj) {
-          $(obj).hide()
-      });
-    }
-    else{
-      $('.del_btn_formset').each(function(i, obj) {
-          $(obj).show()
-      });    
-    }
     event.preventDefault();
-    var checkboxId = event.target.id;
-    par_table = $('#'+checkboxId).closest('.add_nomination_period');
-    par_table.remove();
-    re_calc_total()
+    if(event.target.id.endsWith('DELETE') ){
+      if(($('.del_btn_formset').length) == 2){
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).hide()
+        });
+      }
+      else{
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).show()
+        });    
+      }
+
+      var checkboxId = event.target.id;
+      par_table = $('#'+checkboxId).closest('.add_nomination_period');
+      par_table.remove();
+      re_calc_total()
+    }
   }); 
     
   function cloneMore(selector, type) {
@@ -56,10 +59,10 @@ $(document).ready(function(){
   }
 
   function re_calc_total() {
-    var total = $('#id_form-TOTAL_FORMS').val();
+    total = $('#id_nominationperiod_set-TOTAL_FORMS').val();
     total--;
-    $('#id_form-TOTAL_FORMS').val(total);
-    $('#id_form-TOTAL_FORMS').attr('value', total);
+    $('#id_nominationperiod_set-TOTAL_FORMS').val(total);
+    $('#id_nominationperiod_set-TOTAL_FORMS').attr('value', total);
   }
  
 });

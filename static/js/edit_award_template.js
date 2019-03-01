@@ -18,23 +18,14 @@ $(document).ready(function(){
   $(document).on('change', '[type=checkbox]', function(event) {
     event.preventDefault();
     if(event.target.id.endsWith('DELETE') ){
-      if(($('.del_btn_formset').length) == 2){
-        $('.del_btn_formset').each(function(i, obj) {
-            $(obj).hide()
-        });
-      }
-      else{
-        $('.del_btn_formset').each(function(i, obj) {
-            $(obj).show()
-        });    
-      }
+      
       checkboxId = event.target.id;
       id_val = checkboxId.split('DELETE')[0]
       var ques_id = Number($('#'+id_val+'id').val());
       $(this).val('on')
 
       par_table = $('#'+checkboxId).closest('.formset_table');
-      par_table.hide();
+      par_table.remove();
 
       if (ques_id != 0){
         $.ajax({
@@ -49,6 +40,17 @@ $(document).ready(function(){
           }
         });
       }
+      re_calc_total()
+      if(($('.del_btn_formset').length) == 2){
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).hide()
+        });
+      }
+      else{
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).show()
+        });    
+      }
     }
   });
 
@@ -56,15 +58,16 @@ $(document).ready(function(){
     var newElement = $(selector).clone(true);
     var total = $('#id_' + type + '-TOTAL_FORMS').val();
     newElement.find(':input').each(function() {
-        var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
-        var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-        if($(this).attr('id').endsWith('qtype')){
-          $(this).val('SUBJECTIVE')
-        }
-        else if($(this).attr('id').endsWith('role')){
-          $(this).val(1)
-        }
+      var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+      var id = 'id_' + name;
+      debugger
+      $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+      if($(this).attr('id').endsWith('qtype')){
+        $(this).val('SUBJECTIVE')
+      }
+      else if($(this).attr('id').endsWith('role')){
+        $(this).val(1)
+      }
     });
     newElement.find('label').each(function() {
         var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
@@ -75,4 +78,10 @@ $(document).ready(function(){
     $(selector).after(newElement);
   }
 
+  function re_calc_total() {
+    var total = $('#id_questions_set-TOTAL_FORMS').val();
+    total--;
+    $('#id_questions_set-TOTAL_FORMS').val(total);
+    $('#id_questions_set-TOTAL_FORMS').attr('value', total);
+  }
 });
