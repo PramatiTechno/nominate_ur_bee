@@ -24,7 +24,6 @@ $(document).ready(function(){
 
   		par_table = $('#'+checkboxId).closest('.add_nomination_period');
   		par_table.remove()
-      re_calc_total()
       deleteForm('nominationperiod_set','del_btn_formset')
   		if (child_id != 0){
   			$.ajax({
@@ -75,12 +74,6 @@ $(document).ready(function(){
     $(selector).after(newElement);
   }
 
-  function re_calc_total() {
-    total = $('#id_nominationperiod_set-TOTAL_FORMS').val();
-    total--;
-    $('#id_nominationperiod_set-TOTAL_FORMS').val(total);
-    $('#id_nominationperiod_set-TOTAL_FORMS').attr('value', total);
-  }
   function re_calc_init(){
     initial_count = $('#id_nominationperiod_set-INITIAL_FORMS').val();
     initial_count--;
