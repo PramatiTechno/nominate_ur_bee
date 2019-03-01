@@ -8,10 +8,10 @@ from django.test.client import Client
 
 class AwardsTest(TestCase):
 
-	def test_awards_create(self):
-
-		def SetUp(self):
+	def SetUp(self):
 			self.client = Client()
+
+	def test_awards_create(self):
 
 		url = reverse('nominate_app:newawards')
 		data = {
