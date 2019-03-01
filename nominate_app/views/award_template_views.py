@@ -5,7 +5,6 @@ from nominate_app.models import Questions, AwardTemplate, Awards
 from django.http import HttpResponse
 from django.contrib import messages
 import json
-import pdb
 
 # Create your views here.
 
@@ -59,14 +58,8 @@ def edit_award_template(request, template_id):
       if template_form.is_valid():
           created_award = AwardTemplate.objects.filter(id=template_id).update(template_name= new_form['template_name'], is_active=is_active)
           formset = TemplateFormset(request.POST, instance=award_template)
-          pdb.set_trace()
           if formset.is_valid():
-            instances = formset.save(commit=False)
-            for obj in instances:
-                obj.award_template_id= str(award_template.id)
-                obj.save()
-            # if formset.is_valid():
-              # formset.save()
+            formset.save()
             messages.success(request, 'Award Template is updated successfully.')
             return redirect('nominate_app:award_template_index')
 
