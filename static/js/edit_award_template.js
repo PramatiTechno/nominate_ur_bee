@@ -41,7 +41,7 @@ $(document).ready(function(){
         });
       }
       re_calc_total()
-      if(($('.del_btn_formset').length) == 2){
+      if(($('.del_btn_formset').length) == 1){
         $('.del_btn_formset').each(function(i, obj) {
             $(obj).hide()
         });
