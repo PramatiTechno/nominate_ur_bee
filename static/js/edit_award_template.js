@@ -70,8 +70,10 @@ $(document).ready(function(){
       }
     });
     newElement.find('label').each(function() {
+      if ($(this).attr('for')  !== undefined ) {
         var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
         $(this).attr('for', newFor);
+      }  
     });
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
