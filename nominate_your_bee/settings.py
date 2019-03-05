@@ -81,6 +81,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'nominate_your_bee.wsgi.application'
 CAS_APPLY_ATTRIBUTES_TO_USER = True
+CAS_RENAME_ATTRIBUTES = {
+    'firstname': 'first_name',
+    'lastname': 'last_name',
+    'mail': 'email'
+}
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
