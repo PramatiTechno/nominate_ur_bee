@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
   if(($('.del_btn_formset').length) == 1){
     $('.del_btn_formset').hide()
   }
@@ -11,7 +12,13 @@ $(document).ready(function(){
     $('.del_btn_formset').each(function(i, obj) {
       $(obj).show()
     });  
+    $(".datepicker").datepicker("destroy");
     cloneMore('div.add_nomination_period:last', 'nominationperiod_set');
+  });
+
+
+  $('body').on('focus',".datepicker", function(){
+      $(this).datepicker();
   });
 
   $(document).on('change', '[type=checkbox]', function(event) {
@@ -38,13 +45,18 @@ $(document).ready(function(){
   function cloneMore(selector, type) {
     var newElement = $(selector).clone(true);
     var total = $('#id_' + type + '-TOTAL_FORMS').val();
+    
+    var start_datepicker = newElement.find('div')[7].id.replace('-' + (total-1) + '-','-' + total + '-')
+    var end_datepicker = newElement.find('div')[13].id.replace('-' + (total-1) + '-','-' + total + '-')
+
+    newElement.find('div')[7].id = start_datepicker
+    newElement.find('div')[13].id = end_datepicker  
+
     newElement.find(':input').each(function() {
         var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
         var id = 'id_' + name;
         $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-        if($(this).attr('id').endsWith('level') || $(this).attr('id').endsWith('day')){
-          $(this).val(1)
-        }
+     
     });
    
     newElement.find('label').each(function() {
@@ -53,9 +65,11 @@ $(document).ready(function(){
         $(this).attr('for', newFor);
       }
     });
+
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
+    $('.datepicker').datepicker();
   }
 
   function re_calc_total() {
@@ -64,6 +78,6 @@ $(document).ready(function(){
     $('#id_nominationperiod_set-TOTAL_FORMS').val(total);
     $('#id_nominationperiod_set-TOTAL_FORMS').attr('value', total);
   }
- 
+
 });
 

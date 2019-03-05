@@ -50,7 +50,6 @@ class Awards(models.Model):
     is_active = models.BooleanField(default = False)
     frequency = models.CharField(max_length=10, choices=choice_type, null=False, blank=False)
     description = models.CharField(max_length=200, null=True, blank=True)
-    # get_awardtype_display()
 
     class Meta:
         db_table='awards'
@@ -60,11 +59,10 @@ class Awards(models.Model):
 
 
 class NominationPeriod(models.Model):
-    CHOICES = [(str(i),str(i)) for i in range(1,32)]
     level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
     award = models.ForeignKey(Awards, on_delete=models.CASCADE)
-    start_day = models.CharField(max_length=3, choices=CHOICES, null=False, blank=False, default=1)
-    end_day = models.CharField(max_length=3, choices=CHOICES, null=False, blank=False, default=1)
+    start_day = models.DateField( null=False , blank=False )
+    end_day = models.DateField( null=False , blank=False )
 
     class Meta:
         db_table='nomination_periods'
@@ -98,4 +96,3 @@ class Questions(models.Model):
 
     def __str__(self):
         return self.qname
-

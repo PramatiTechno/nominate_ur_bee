@@ -14,6 +14,14 @@ $(document).ready(function(){
     cloneMore('div.add_nomination_period:visible:last', 'nominationperiod_set');
   });
 
+  $(document).on("focus", ".datepicker", function(){
+      $(this).datepicker({ dateFormat: 'dd/mm/yy' });
+  });
+
+  $('.datepicker').on('click', function(){
+    $(this).show();
+  });     
+
   $(document).on('change', '[type=checkbox]', function(event) {
   	 event.preventDefault();
   	if(event.target.id.endsWith('DELETE') ){
