@@ -80,8 +80,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'nominate_your_bee.wsgi.application'
+CAS_APPLY_ATTRIBUTES_TO_USER = True
 
 AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
     'django_cas_ng.backends.CASBackend'
 )
 
