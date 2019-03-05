@@ -1,5 +1,5 @@
 from django import forms  
-from nominate_app.models import Awards, NominationPeriod, AwardTemplate, Questions
+from nominate_app.models import Awards, NominationPeriod, AwardTemplate, Questions, AnswerAttachment, NominationAnswers
 from django.forms import inlineformset_factory
 
 class AwardsForm(forms.ModelForm):
@@ -61,3 +61,16 @@ class AwardQuestionForm(forms.ModelForm):
     self.fields['qtype'].widget.attrs.update({'class': 'form-control abc'})
     self.fields['role'].widget.attrs.update({'class': 'form-control abc'})
     self.fields['attachment_need'].widget.attrs.update({'class': 'form-control abc'})
+
+class NominationAnswersForm(forms.ModelForm):
+
+  class Meta:
+    model = NominationAnswers
+    fields = ('answer_option', 'answer_text' )
+
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+
+
+class AnswerAttachmentForm(forms.Form):
+    attachment_path = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
