@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
   if(($('.del_btn_formset').length) == 1){
     $('.del_btn_formset').hide()
   }
@@ -18,7 +17,7 @@ $(document).ready(function(){
 
 
   $('body').on('focus',".datepicker", function(){
-      $(this).datepicker();
+    $(this).datepicker();
   });
 
   $(document).on('change', '[type=checkbox]', function(event) {
@@ -26,15 +25,14 @@ $(document).ready(function(){
     if(event.target.id.endsWith('DELETE') ){
       if(($('.del_btn_formset').length) == 2){
         $('.del_btn_formset').each(function(i, obj) {
-            $(obj).hide()
+          $(obj).hide()
         });
       }
       else{
         $('.del_btn_formset').each(function(i, obj) {
-            $(obj).show()
+          $(obj).show()
         });    
       }
-
       var checkboxId = event.target.id;
       par_table = $('#'+checkboxId).closest('.add_nomination_period');
       par_table.remove();
@@ -44,19 +42,11 @@ $(document).ready(function(){
     
   function cloneMore(selector, type) {
     var newElement = $(selector).clone(true);
-    var total = $('#id_' + type + '-TOTAL_FORMS').val();
-    
-    var start_datepicker = newElement.find('div')[7].id.replace('-' + (total-1) + '-','-' + total + '-')
-    var end_datepicker = newElement.find('div')[13].id.replace('-' + (total-1) + '-','-' + total + '-')
-
-    newElement.find('div')[7].id = start_datepicker
-    newElement.find('div')[13].id = end_datepicker  
-
+    var total = $('#id_' + type + '-TOTAL_FORMS').val();  
     newElement.find(':input').each(function() {
-        var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
-        var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-     
+      var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+      var id = 'id_' + name;
+      $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
     });
    
     newElement.find('label').each(function() {
@@ -68,8 +58,8 @@ $(document).ready(function(){
 
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
+    newElement.find('input.datepicker').removeData('datepicker').unbind().datepicker();
     $(selector).after(newElement);
-    $('.datepicker').datepicker();
   }
 
   function re_calc_total() {
@@ -78,6 +68,4 @@ $(document).ready(function(){
     $('#id_nominationperiod_set-TOTAL_FORMS').val(total);
     $('#id_nominationperiod_set-TOTAL_FORMS').attr('value', total);
   }
-
 });
-
