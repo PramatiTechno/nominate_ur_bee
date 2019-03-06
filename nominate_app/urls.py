@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin  
 from django.urls import path  
-from nominate_app.views import award_template_views,award_index,create_award_view
+from nominate_app.views import award_template_views,award_index,create_award_view,nomination_status_view
 from django.conf import settings 
 from django.conf.urls.static import static
 
@@ -31,4 +31,6 @@ urlpatterns = [
   path('new_award_template/<award_id>/', award_template_views.new_award_template, name='new_award_template'),
   path('edit_award_template/<template_id>/', award_template_views.edit_award_template, name='edit_award_template'),
   path('question/delete/<ques_id>/', award_template_views.delete_award_template),
+  path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
+  path('nomination_status_load/<id>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
 ]

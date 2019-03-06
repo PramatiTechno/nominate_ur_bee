@@ -112,8 +112,8 @@ class NominationInstance(models.Model):
   nomination_plan = models.ForeignKey(NominationPlan, on_delete=models.CASCADE)
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
-  status = models.CharField(max_length=50, null=False, blank=False)
-  result = models.CharField(max_length=50)
+  status = models.CharField(max_length=50, null=False, blank=False, default='new')
+  result = models.CharField(max_length=50, null=True, blank=True)
 
   class Meta:
       db_table='nomination_instances'
