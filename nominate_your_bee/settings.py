@@ -89,7 +89,7 @@ CAS_RENAME_ATTRIBUTES = {
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'django_cas_ng.backends.CASBackend'
+    'nominate_app.backends.NominateCASBackend'
 )
 
 

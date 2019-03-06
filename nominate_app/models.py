@@ -1,19 +1,36 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
+
+
 # from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-class User(models.Model):
-    name = models.CharField(max_length=30)
+class UserProfile(models.Model):
+    firstname = models.CharField(max_length=30)
     email = models.EmailField(max_length=70, unique=True)
     designation = models.CharField(max_length=70)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    telephonenumber = models.CharField(validators=[phone_regex], max_length=17, blank=True) # validators should be a list
+    employeenumber = models.CharField(max_length=70)
+    jobtitle = models.CharField(max_length=70)
+    cn = models.CharField(max_length=70)
+    title = models.CharField(max_length=70)
+    lastpwdchange = models.CharField(max_length=70)
+    lastname = models.CharField(max_length=70)
+    defaultpwd = models.CharField(max_length=70)
+    baselocation = models.CharField(max_length=70)
+    uid = models.CharField(max_length=70)
+    worklocation = models.CharField(max_length=70)
+    user = models.ForeignKey(User, unique=True,on_delete=models.PROTECT)
 
     class Meta:
-        db_table='users'
+        db_table='user_profiles'
 
     def __str__(self):
-        return self.name
+        return self.email
 
 class Role(models.Model):
     choice_level = (
@@ -32,7 +49,7 @@ class Role(models.Model):
         return self.group
 
 class User_Role(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
     class Meta:
@@ -98,4 +115,5 @@ class Questions(models.Model):
 
     def __str__(self):
         return self.qname
+
 
