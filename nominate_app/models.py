@@ -24,7 +24,7 @@ class UserProfile(models.Model):
     baselocation = models.CharField(max_length=70)
     uid = models.CharField(max_length=70)
     worklocation = models.CharField(max_length=70)
-    user = models.ForeignKey(User, unique=True,on_delete=models.PROTECT)
+    user = models.OneToOneField(User,on_delete=models.PROTECT)
 
     class Meta:
         db_table='user_profiles'
