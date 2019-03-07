@@ -15,9 +15,9 @@ def edit_awards(request, award_id):
 
     query = NominationPeriod.objects.filter(award_id=award.id)
     if query.exists():
-        x=0
+      x=0
     else:
-        x=1
+      x=1
     NominationFormset = inlineformset_factory(Awards, NominationPeriod, form=NominationPeriodForm, extra=x)
     formset = NominationFormset(instance=award)
 

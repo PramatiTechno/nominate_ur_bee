@@ -10,53 +10,52 @@ class User(models.Model):
   designation = models.CharField(max_length=70)
 
   class Meta:
-      db_table='users'
+    db_table='users'
 
   def __str__(self):
-      return self.name
+    return self.name
 
 class Role(models.Model):
   choice_level = (
       ('level1', 'level1'),
       ('level2', 'level2'),
       ('level3', 'level3'),
-      )
+  )
 
   name = models.CharField(max_length=30)
   group = models.CharField(choices=choice_level, max_length=7)
 
   class Meta:
-      db_table='roles'
+    db_table='roles'
 
   def __str__(self):
-      return self.group
+    return self.group
 
 class User_Role(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
   class Meta:
-      db_table = 'user_role'
+    db_table = 'user_role'
 
 class Awards(models.Model):
   choice_type = (
       ('MONTHLY', 'Monthly'),
       ('QUATERLY', 'Quaterly'),
       ('YEARLY', 'Yearly')
-      )
+  )
   frequencies = {"": "Please select", "MONTHLY":"Monthly", "QUATERLY": "Quaterly", "YEARLY": "Yearly"}
   edit_frequencies = {"MONTHLY":"Monthly", "QUATERLY": "Quaterly", "YEARLY": "Yearly"}
   name = models.CharField(max_length=30, null=False, blank=False)
   is_active = models.BooleanField(default = False)
   frequency = models.CharField(max_length=10, choices=choice_type, null=False, blank=False)
   description = models.CharField(max_length=200, null=True, blank=True)
-    # get_awardtype_display()
 
   class Meta:
-      db_table='awards'
+    db_table='awards'
 
   def __str__(self):
-      return self.name
+    return self.name
 
 
 class NominationPeriod(models.Model):
@@ -67,7 +66,7 @@ class NominationPeriod(models.Model):
   end_day = models.CharField(max_length=3, choices=CHOICES, null=False, blank=False, default=1)
 
   class Meta:
-      db_table='nomination_periods'
+    db_table='nomination_periods'
   
 class AwardTemplate(models.Model):
   template_name = models.CharField(max_length=150, null=False, blank=False)
@@ -75,21 +74,20 @@ class AwardTemplate(models.Model):
   is_active = models.BooleanField(default = False)
 
   class Meta:
-      db_table='award_templates'
+    db_table='award_templates'
 
   def __str__(self):
-      return self.template_name
+    return self.template_name
 
 
 class Questions(models.Model):
   query_choice = (
       ('SUBJECTIVE', 'subjective'),
       ('OBJECTIVE', 'objective')
-      )
-
+  )
   class Meta:
-      db_table='award_questions'
-
+    db_table='award_questions'
+    
   qname = models.CharField(max_length=100, null=False, blank=False)
   qtype = models.CharField(max_length=100, choices=query_choice, null=False, blank=False, default='subjective')
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
@@ -97,7 +95,7 @@ class Questions(models.Model):
   attachment_need = models.BooleanField(default=False)
 
   def __str__(self):
-      return self.qname
+    return self.qname
 
 class NominationPlan(models.Model):
   level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
@@ -106,7 +104,7 @@ class NominationPlan(models.Model):
   end_date = models.DateField(max_length=20, null=False, blank=False)
 
   class Meta:
-      db_table='nomination_plans'
+    db_table='nomination_plans'
 
 class NominationInstance(models.Model):
   nomination_plan = models.ForeignKey(NominationPlan, on_delete=models.CASCADE)
@@ -116,7 +114,7 @@ class NominationInstance(models.Model):
   result = models.CharField(max_length=50)
 
   class Meta:
-      db_table='nomination_instances'
+    db_table='nomination_instances'
 
 class NominationChain(models.Model):
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
