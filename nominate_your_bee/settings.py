@@ -57,7 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_cas_ng.middleware.CASMiddleware'
+    'django_cas_ng.middleware.CASMiddleware',
+    'nominate_your_bee.middleware.AuthRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'nominate_your_bee.urls'
