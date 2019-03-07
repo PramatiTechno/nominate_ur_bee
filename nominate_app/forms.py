@@ -66,11 +66,15 @@ class NominationAnswersForm(forms.ModelForm):
 
   class Meta:
     model = NominationAnswers
-    fields = ('answer_option', 'answer_text' )
+    fields = '__all__'
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
 
 class AnswerAttachmentForm(forms.Form):
-    attachment_path = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+  attachment_path = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
+  class Meta:
+    model = AnswerAttachment
+    fields = '__all__'
