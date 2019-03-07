@@ -119,7 +119,27 @@ class NominationInstance(models.Model):
 class NominationChain(models.Model):
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
   reviewer_id = models.ForeignKey(User, on_delete=models.CASCADE)
-  reviewed_at = models.DateField(max_length=20)
+  reviewed_at = models.DateField(max_length=20, null=True, blank=True)
 
   class Meta:
-    db_table='nomination_chains'
+      db_table='nomination_chains'
+
+class NominationAnswers(models.Model):
+  nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
+  nomination_chain = models.ForeignKey(NominationChain, on_delete=models.CASCADE)
+  award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
+  question_id = models.ForeignKey(Questions, on_delete=models.CASCADE)
+  submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+  answer_option = models.BooleanField(max_length=20, null=True, blank=True)
+  answer_text = models.CharField(max_length=500, null=True, blank=True)
+
+  class Meta:
+      db_table='nomination_answers'
+
+class AnswerAttachment(models.Model):
+  answer_id = models.ForeignKey(NominationAnswers, on_delete=models.CASCADE)
+  attachment_path = models.FileField(upload_to='documents/', null=True, blank=True)
+  uploaded_at = models.DateTimeField(auto_now_add=True)
+
+  class Meta:
+      db_table='answer_attachments'
