@@ -87,12 +87,12 @@ class Questions(models.Model):
   )
   class Meta:
     db_table='award_questions'
-
-    qname = models.CharField(max_length=100, null=False, blank=False)
-    qtype = models.CharField(max_length=100, choices=query_choice, null=False, blank=False, default='subjective')
-    award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
-    attachment_need = models.BooleanField(default=False)
+    
+  qname = models.CharField(max_length=100, null=False, blank=False)
+  qtype = models.CharField(max_length=100, choices=query_choice, null=False, blank=False, default='subjective')
+  award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
+  role = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
+  attachment_need = models.BooleanField(default=False)
 
   def __str__(self):
     return self.qname
