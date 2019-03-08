@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.forms import modelformset_factory, inlineformset_factory
 from nominate_app.forms import NominationAnswersForm
 from nominate_app.models import NominationPeriod, AwardTemplate, NominationPlan, NominationInstance, NominationChain, User, Questions, NominationAnswers
-from nominate_app.functions.functions import handle_uploaded_file  
 from django.http import HttpResponse
 from django.contrib import messages
 import json
