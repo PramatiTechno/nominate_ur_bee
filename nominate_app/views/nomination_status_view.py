@@ -2,7 +2,7 @@ from django.shortcuts import render
 from nominate_app.models import Awards, AwardTemplate, NominationInstance, User
 from django.http import HttpResponse
 from django.core import serializers 
-
+from django.http import JsonResponse
 # Create your views here.
 
 def home(request):
@@ -10,18 +10,23 @@ def home(request):
 
 
 def nomination_status(request):
-    if request.method == 'GET':
-        award_forms = Awards.objects.all()
-        award_id = award_forms.first().id
-        award_template_id = AwardTemplate.objects.get(award_id=award_id, is_active=True).id
-        nomination_status = NominationInstance.objects.filter(award_template_id=award_template_id)
-    return render(request, 'nominate_app/nomination_status.html',{'nomination_status':nomination_status, 'award_forms':award_forms})
+  if request.method == 'GET':
+    awards = Awards.objects.all()
+    award_id = awards.first().id
+    award_template_id = AwardTemplate.objects.get(award_id=award_id, is_active=True).id
+    nomination_status = NominationInstance.objects.filter(award_template_id=award_template_id)
+  return render(request, 'nominate_app/nomination_status.html',{'nomination_status':nomination_status, 'award_categories':awards})
 
 def nomination_status_load(request,id):
-	award_forms = Awards.objects.all()
-	award_template_id = AwardTemplate.objects.get(award_id=id, is_active=True).id
-	load_templates = NominationInstance.objects.filter(award_template_id=award_template_id)
-	user_name = User.objects.filter(id__in=load_templates.values('user_id'))
-	import IPython;IPython.embed()
-	to_json = serializers.serialize('json', load_templates)
-	return HttpResponse(to_json, content_type='application/json')
+	award = Awards.objects.get(id=request.GET["id"])
+	data = []
+	for user in User.objects.all():
+	  record = {}
+	  award_template = AwardTemplate.objects.get(award_id=award.id, is_active=True)
+	  nominater = NominationInstance.objects.get(user_id=user.id)
+	  record['nominator_name'] = user.__dict__['name']
+	  record['nominator_status'] = nominater.__dict__['status']
+	  data.append(record)
+	return JsonResponse(data, safe=False)
+
+

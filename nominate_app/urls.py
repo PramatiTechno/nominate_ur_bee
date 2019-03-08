@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin  
 from django.urls import path  
-from nominate_app.views import award_template_views,award_index,create_award_view, nominate_process_view
+from nominate_app.views import award_template_views,award_index,create_award_view, nominate_process_view, nomination_status_view
 from django.conf import settings 
 from django.conf.urls.static import static
 
