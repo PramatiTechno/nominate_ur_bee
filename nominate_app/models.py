@@ -132,14 +132,8 @@ class NominationAnswers(models.Model):
   submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)
   answer_option = models.BooleanField(max_length=20, null=True, blank=True)
   answer_text = models.CharField(max_length=500, null=True, blank=True)
+  attachment_path = models.FileField(max_length=500, null=True, blank=True)
+  uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
       db_table='nomination_answers'
-
-class AnswerAttachment(models.Model):
-  answer_id = models.ForeignKey(NominationAnswers, on_delete=models.CASCADE)
-  attachment_path = models.FileField(upload_to='documents/', null=True, blank=True)
-  uploaded_at = models.DateTimeField(auto_now_add=True)
-
-  class Meta:
-      db_table='answer_attachments'
