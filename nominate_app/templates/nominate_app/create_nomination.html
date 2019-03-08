@@ -33,17 +33,12 @@
             {% endif %}
           </div>
           {% if question.attachment_need %}
-            <div class="col-sm-2">
-              {% for field in answer_attachment_form %}
-                <div class="form-group">
+           <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-2">
-                        <span class="text-danger small">{{ field.errors }}</span>
+                        <span class="text-danger small"></span>
                     </div>
-                    <label class="control-label col-sm-2">{{ field.label_tag }}</label>
-                    <div class="col-sm-2">{{ field }}</div>
+                    <div class="col-sm-2"><input type="file" name="{{ question.id}}_attachment_path" id="{{ question.id}}_attachment_path"></div>
                 </div>
-              {% endfor %}
-            </div>
           {% endif %}
         </div> 
 

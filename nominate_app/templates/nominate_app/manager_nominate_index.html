@@ -21,16 +21,18 @@
           <div id="collapseThree" class="collapse show" data-parent="#accordion">
             <div class="card-body">
               <div class="container">
+                {% if nomination_chain %}
                   <form>
-                  <table class="table table-borderless">
-                    <tbody>
-                        <tr class="d-flex">
-                          <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination_template.template_name }} </td>
-                          <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:create_nomination' nomination_chain.id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
-                        </tr>
-                    </tbody>
-                  </table>
-                </form>
+                    <table class="table table-borderless">
+                      <tbody>
+                          <tr class="d-flex">
+                            <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination_template.template_name }} </td>
+                            <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:create_nomination' nomination_chain.id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
+                          </tr>
+                      </tbody>
+                    </table>
+                  </form>
+                {%endif%}
               </div>
             </div>
           </div>
