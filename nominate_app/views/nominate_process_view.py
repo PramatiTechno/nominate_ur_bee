@@ -73,6 +73,6 @@ def create_nomination(request,chain_id):
     nom_inst.update(status='nomination_submitted')
 
     messages.success(request, 'Nomination submitted successfully.')
-    return render(request, 'nominate_app/manager_nominate_index.html', {'nomination_chain':nomination_chain,'nomination_instance':nomination_instance, 'nomination_template':nomination_template })
+    return redirect('nominate_app:manager_nominate_index')
 
   return render(request, 'nominate_app/create_nomination.html', {'answers_form':answers_form,'nomination_chain':nomination_chain,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'questions':questions })
