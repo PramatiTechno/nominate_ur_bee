@@ -35,10 +35,11 @@ def create_nomination(request,chain_id):
 
   if request.method == 'POST':
     new_form = request.POST.copy()
-
     dict_new_form = dict(new_form)
-    ques_answers_dict = {k.split('_')[0]: v for k, v in dict_new_form.items() if k.endswith('answer')}
 
+    # This code to be refactored. Multiple answer records submit
+
+    ques_answers_dict = {k.split('_')[0]: v for k, v in dict_new_form.items() if k.endswith('answer')}
     edit_new_form = new_form.copy()
     for key in edit_new_form.keys():
       if key.endswith('answer'):

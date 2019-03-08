@@ -23,11 +23,10 @@
           <div class="col-sm-2">
             <label class="col-form-label" for='{{question.qname}}' >{{question.qname}}</label>
           </div>
-  <!--         <input type="hidden" name="question_id" class="form-control" placeholder="" value="{{ question.id}}" required /> -->
           <div class="col-sm-4">
             {% if question.qtype == 'SUBJECTIVE'%}   
               <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="" required />
-            {% else%}
+            {% else %}
               <input type="radio" value="yes" name="answer_option">
               <input type="radio" value="no" name="answer_option">
             {% endif %}
