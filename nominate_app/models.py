@@ -125,6 +125,7 @@ class NominationChain(models.Model):
       db_table='nomination_chains'
 
 class NominationAnswers(models.Model):
+  UPLOAD_TO = 'answers/images'
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
   nomination_chain = models.ForeignKey(NominationChain, on_delete=models.CASCADE)
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
@@ -132,7 +133,7 @@ class NominationAnswers(models.Model):
   submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)
   answer_option = models.BooleanField(max_length=20, null=True, blank=True)
   answer_text = models.CharField(max_length=500, null=True, blank=True)
-  attachment_path = models.FileField(max_length=500, null=True, blank=True)
+  attachment_path = models.FileField(max_length=500, null=True, blank=True, upload_to = UPLOAD_TO)
   uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
