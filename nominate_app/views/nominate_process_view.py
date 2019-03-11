@@ -59,14 +59,17 @@ def create_nomination(request,chain_id):
    
     for ans_obj in ans_obj_List:
       qid = ans_obj['question_id']
-      files = request.FILES.getlist(qid+'_attachment_path')     
+      files = request.FILES.getlist(qid+'_attachment_path')
 
       if files:
-        path = default_storage.save(qid+'_attachment'+'.jpg', ContentFile(files[0].read()))
-        tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-        ans_obj['attachment_path'] = tmp_file
+        nn = request.FILES.copy()
+        attachment_path = nn[qid+'_attachment_path']
+        request.FILES.pop(qid+'_attachment_path')
+        request.FILES['attachment_path'] = attachment_path
+        answers_form = NominationAnswersForm(ans_obj, request.FILES)
+      else:
+        answers_form = NominationAnswersForm(ans_obj)
 
-      answers_form = NominationAnswersForm(ans_obj)
       if answers_form.is_valid():
         created_answer = answers_form.save()
 
