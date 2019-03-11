@@ -49,8 +49,10 @@ $(document).ready(function(){
         }
     });
     newElement.find('label').each(function() {
-        var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
-        $(this).attr('for', newFor);
+        if ($(this).attr('for')  !== undefined ) {
+          var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
+          $(this).attr('for', newFor);
+        }  
     });
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
@@ -58,9 +60,9 @@ $(document).ready(function(){
   }
 
   function re_calc_total() {
-    var total = $('#id_form-TOTAL_FORMS').val();
+    var total = $('#id_questions_set-TOTAL_FORMS').val();
     total--;
-    $('#id_form-TOTAL_FORMS').val(total);
-    $('#id_form-TOTAL_FORMS').attr('value', total);
+    $('#id_questions_set-TOTAL_FORMS').val(total);
+    $('#id_questions_set-TOTAL_FORMS').attr('value', total);
   }
 });

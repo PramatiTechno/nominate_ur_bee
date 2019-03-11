@@ -1,119 +1,138 @@
 {% extends 'base.html' %}
-	{% load widget_tweaks %}
-	{% block content %}
-	{% load staticfiles %}
-	<script src="{% static 'js/edit_award.js' %}"></script>
-	<div class = "container">
-		<div class="form-group">
-		<form method ="post">
-		</br>
-		{{ award_form.errors }}
-		 {% csrf_token %}
-		<div class = "row award_top_margin">
-          <div class="col-sm-10">
-            <div class="form-row float-right">
-              <label class="col-form-label" name='is_active'>Enable/Disable</label>
-              <div class="custom-control custom-switch">
-                {% if award_form.is_active %}
-                <input type="checkbox" name="is_active" class="custom-control-input" id="customSwitch1" checked="" >
-                {% else %}
-                <input type="checkbox" name="is_active" class="custom-control-input" id="customSwitch1" >
-                {% endif %}
-                <label class="custom-control-label" for="customSwitch1" ></label>
+{% load widget_tweaks %}
+{% block content %}
+{% load staticfiles %}
+<script src="{% static 'js/edit_award.js' %}"></script>
+
+<div class = "container">
+   <div class="form-group">
+      <form method ="post">
+         </br>
+         {% if award_form.errors or formset.errors %}
+         <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+               {{ award_form.errors }}
+               {{ formset.errors }}
+            </ul>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         {% endif %}
+         {% csrf_token %}
+         <div class = "row award_top_margin">
+            <div class="col-sm-10">
+               <div class="form-row float-right">
+                  <label class="col-form-label" name='is_active'>Enable/Disable</label>
+                  <div class="custom-control custom-switch">
+                     {{ award_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
+                     <label class="custom-control-label" for="customSwitch1" ></label>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class = "row award_top_margin">
+            <div class="col-sm-2">
+               <label class="col-form-label" for="name">Award Name</label>
+            </div>
+            <div class="col-sm-8">  	
+               <input type="text" name="name" class="form-control" value="{{  award.name }}" />
+            </div>
+         </div>
+         <div class = "row award_top_margin">
+            <div class="col-sm-2">
+               <label class="col-form-label" for="name">Frequency</label>
+            </div>
+            <div class="col-sm-3">
+               <select class="form-control" id="exampleSelect1" name="frequency" required>
+                  {% for k, v in frequencies %}
+                  {% if k == award.frequency %}
+                  <option selected="selected" value="{{ k }}">{{ v }}</option>
+                  {% else %}
+                  <option value="{{ k }}">{{ v }}</option>
+                  {% endif %}
+                  {% endfor %}
+               </select>
+            </div>
+         </div>
+         <div class = "row award_top_margin">
+            <div class="col-sm-2">
+               <label class="col-form-label" for="name">Description</label>
+            </div>
+            <div class="col-sm-6">
+               <textarea class="form-control descript" rows="5" name="description">{{ award.description }}</textarea>  	
+            </div>
+         </div>
+         {{ formset.management_form }}
+         {% for form in formset.forms %}
+         <div class = "row award_top_margin add_nomination_period">
+            {{ form.id }}
+            <div class="col-sm-2">
+              <div class="form-row">
+                <label class="col-form-label" for="name">Level</label>
               </div>
             </div>
-          </div>
-        </div>
-		<div class = "row award_top_margin">
-		  <div class="col-sm-2">
-		  	<label class="col-form-label" for="name">Award Name</label>
-		  </div>
-		  <div class="col-sm-8">  	
-		    <input type="text" name="name" class="form-control" value="{{  award.name }}" />
-		  </div>
-		</div> 
+            <div class="col-sm-2">
+              <div class="form-group">
+                {{ form.level|attr:"class:form-control" }}
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-row">
+                <label class="col-form-label" for="name">Start Date</label>
+                <div class="form-group">
+                  <div class='input-group date' id='datepicker-0-start_day'>
+                    {{ form.start_day|attr:"class:form-control datepicker" }}
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+           
+            <div class="col-sm-4">
+              <div class="form-row">
+                <label class="col-form-label" for="name">End Date</label>	
+                  <div class="form-group">
+                    <div class='input-group date' id='datepicker-0-end_day'>
+                      {{ form.end_day|attr:"class:form-control datepicker" }}
+                      <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+                    </div>
+                  </div>  
+                  <span class="fa del_btn_formset remove_nomination">
+                    <label><span class="fa fa-minus">
+                     {{ form.DELETE | attr:"class:hide_checkbox"}}
+                    </span>
+                    </label>
+                  </span>  
+                </div>
+              </div>
+            </div>
+          {% endfor %} 	
+         <div class = "row award_top_margin justify-content-md-center">
+            <div class="col-sm-2">
+               <button type="button" class="btn btn-primary add_more">Add More</button>
+            </div>
+         </div>
+         <br>	
+         <div class ="row award_top_margin justify-content-md-center">
+            <div class="col-sm-4">
+               <button type="button" class="btn btn-danger">Cancel</button>
+               <button type="submit" class="btn btn-success">Update</button>
+            </div>
+         </div>
+      </form>
+   </div>
+</div>
 
-		<div class = "row award_top_margin">
-		  <div class="col-sm-2">
-		  	<label class="col-form-label" for="name">Frequency</label>
-		  </div>
-		  <div class="col-sm-3">  	
-		    <select class="form-control" id="exampleSelect1" name="frequency" required>
-		      {% for k, v in frequencies %}
-		        {% if k == award.frequency %}
-		          <option selected="selected" value="{{ k }}">{{ v }}</option>
-		        {% else %}
-		          <option value="{{ k }}">{{ v }}</option>
-		        {% endif %}
-		      {% endfor %}
-		    </select>
-		  </div>
-		</div> 
-
-		<div class = "row award_top_margin">
-		  <div class="col-sm-2">
-		  	<label class="col-form-label" for="name">Description</label>
-		  </div>
-		  <div class="col-sm-6">
-		  	<textarea class="form-control descript" rows="5" name="description">{{ award.description }}</textarea>  	
-		  </div>
-		</div>
-			  {{ formset.management_form }}
-			  {% for form in formset.forms %}
-				  <div class = "row award_top_margin add_nomination_period">
-				  		{{ form.id }}
-						<div class="col-sm-2"> 	
-					    <div class="form-group">
-						    {{ form.level|attr:"class:form-control" }}
-						  </div>
-						</div>
-						<div class="col-sm-3"> 	
-							<div class="form-row">
-								<label class="col-form-label" for="name">Start Date</label>
-							  <div class="form-group">
-							    {{ form.start_day|attr:"class:form-control" }}
-						    </div> 
-						  </div>
-						</div>
-					  <div class="col-sm-1"> 	
-			        <div class="form-row">
-								<label class="col-form-label" for="name">To</label>
-						  </div>		
-						</div>		
-						<div class="col-sm-3"> 
-						  <div class="form-row">
-								<label class="col-form-label" for="name">End Date</label>	
-								<div class="form-group">
-							    {{ form.end_day|attr:"class:form-control" }}
-						    </div>
-						    <span class="fa del_btn_formset remove_nomination">
-			                  <label for='{{form.DELETE}}'>Delete</label>
-			                 {{ form.DELETE|attr:"class:image-checkbox" }}
-			                </span>  
-							</div>
-						</div>
-					</div>
-			{% endfor %} 	
-	        <div class = "row award_top_margin justify-content-md-center">
-	        	<div class="col-sm-2">
-				  	  <button type="button" class="btn btn-primary add_more">Add More</button>
-				    </div>
-				  </div>   
-				  <br>	
-
-			  <div class ="row award_top_margin justify-content-md-center">
-			  	<div class="col-sm-4">
-				  	<button type="button" class="btn btn-danger">Cancel</button>
-				  	<button type="submit" class="btn btn-success">Success</button>
-				  </div>
-				</div>
-			</form>
-		</div>
-	</div>
-	<style>
-	  .was-validated .form-control:valid{
-		  background-image: none;
-		  border-color: #ced4da;
-		}
-  </style>
+<style>
+  .was-validated .form-control:valid{
+    background-image: none;
+    border-color: #ced4da;
+  }
+</style>
 {% endblock %}
+

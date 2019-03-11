@@ -16,3 +16,9 @@
 .hide_checkbox{
   display: none;
 }
+.award-checkbox{
+  display: none;
+}
+.attachment_checkbox{
+  margin-top: 11px;
+}

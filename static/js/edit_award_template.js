@@ -18,23 +18,15 @@ $(document).ready(function(){
   $(document).on('change', '[type=checkbox]', function(event) {
     event.preventDefault();
     if(event.target.id.endsWith('DELETE') ){
-      if(($('.del_btn_formset').length) == 2){
-        $('.del_btn_formset').each(function(i, obj) {
-            $(obj).hide()
-        });
-      }
-      else{
-        $('.del_btn_formset').each(function(i, obj) {
-            $(obj).show()
-        });    
-      }
+      
       checkboxId = event.target.id;
       id_val = checkboxId.split('DELETE')[0]
       var ques_id = Number($('#'+id_val+'id').val());
       $(this).val('on')
 
       par_table = $('#'+checkboxId).closest('.formset_table');
-      par_table.hide();
+      par_table.remove();
+      deleteForm('questions_set','del_btn_formset')
 
       if (ques_id != 0){
         $.ajax({
@@ -48,6 +40,17 @@ $(document).ready(function(){
 
           }
         });
+        re_calc_init()
+      }
+      if(($('.del_btn_formset').length) == 1){
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).hide()
+        });
+      }
+      else{
+        $('.del_btn_formset').each(function(i, obj) {
+            $(obj).show()
+        });    
       }
     }
   });
@@ -56,23 +59,52 @@ $(document).ready(function(){
     var newElement = $(selector).clone(true);
     var total = $('#id_' + type + '-TOTAL_FORMS').val();
     newElement.find(':input').each(function() {
-        var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
-        var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-        if($(this).attr('id').endsWith('qtype')){
-          $(this).val('SUBJECTIVE')
-        }
-        else if($(this).attr('id').endsWith('role')){
-          $(this).val(1)
-        }
+      var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
+      var id = 'id_' + name;
+      $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+      if($(this).attr('id').endsWith('qtype')){
+        $(this).val('SUBJECTIVE')
+      }
+      else if($(this).attr('id').endsWith('role')){
+        $(this).val(1)
+      }
     });
     newElement.find('label').each(function() {
+      if ($(this).attr('for')  !== undefined ) {
         var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
         $(this).attr('for', newFor);
+      }  
     });
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
   }
 
+  function re_calc_init(){
+    initial_count = $('#id_questions_set-INITIAL_FORMS').val();
+    initial_count--;
+    $('#id_questions_set-INITIAL_FORMS').val(initial_count);
+    $('#id_questions_set-INITIAL_FORMS').attr('value', initial_count);
+  }
+  function deleteForm(prefix, btn) {
+    var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    if (total > 1){
+        var forms = $('.formset_table');
+        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        for (var i=0, formCount=forms.length; i<formCount; i++) {
+            $(forms.get(i)).find(':input').each(function() {
+                updateElementIndex(this, prefix, i);
+            });
+        }
+    }
+    return false;
+}
+
+function updateElementIndex(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+)');
+    var replacement = prefix + '-' + ndx;
+    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    if (el.id) el.id = el.id.replace(id_regex, replacement);
+    if (el.name) el.name = el.name.replace(id_regex, replacement);
+}
 });

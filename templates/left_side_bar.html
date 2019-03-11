@@ -6,8 +6,8 @@
     <div class="nav navbar-nav navbar-collapse collapse flex-column" id="navbar_wex">
       <a href="{% url 'nominate_app:view_awards' %}" class="nav-link {% if request.path == "/view_awards/" %}active{% endif %}">Awards</a>
       <a href="{% url 'nominate_app:award_template_index' %}" class="nav-link {% if request.path == "/award_template_index/" %}active{% endif %}">Award Templates</a>
-      <a href="#nomination" class="nav-link" data-toggle="tab">Nomination Status</a>
-      <a href="#nominee" class="nav-link" data-toggle="tab">Nominate</a>
+      <a href="{% url 'nominate_app:nomination_status' %}" class="nav-link {% if request.path == "/nomination_status/" %}active{% endif %}">Nomination Status</a>
+      <a href="{% url 'nominate_app:manager_nominate_index' %}" class="nav-link {% if request.path == "/manager_nominate_index/" %}active{% endif %}">Nominate</a>
       <a href="#nomination" class="nav-link" data-toggle="tab">Nominations</a>
       <a href="#nominee" class="nav-link">Reviews</a>
       <a href="#result" class="nav-link" data-toggle="tab">Results</a>
@@ -15,3 +15,5 @@
     </div>
   </nav>
 </div>
+
+
