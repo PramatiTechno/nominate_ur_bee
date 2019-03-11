@@ -29,7 +29,7 @@
               <input type="radio" value="no" name="answer.answer_option">
             {% endif %}
             {% if answer.attachment_path %}   
-              <img src="127.0.0.1:8000/home/anijasarathomas/my_work/pool_project/nominate_your_bee/media/{{answer.attachment_path}}" />
+              <img src="{{answer.attachment_path.url}}" alt="answer option" height="310" width="310" />
             {% endif %}
           </div>
 
