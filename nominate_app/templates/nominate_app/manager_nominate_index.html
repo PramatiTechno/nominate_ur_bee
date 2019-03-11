@@ -13,12 +13,12 @@
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
       <div id="accordion-todo_nominations">
         <div class="card">
-          <div class="card-header" data-toggle="collapse" href="#collapseThree">
+          <div class="card-header" data-toggle="collapse" href="#collapseThree-todo_nominations">
             <a class="collapsed card-link" >
             Submit Nominations
             </a>
           </div>
-          <div id="collapseThree" class="collapse show" data-parent="#accordion">
+          <div id="collapseThree-todo_nominations" class="collapse show" data-parent="#accordion">
             <div class="card-body">
               <div class="container">
                 {% if todo_nomination_chain %}
@@ -42,12 +42,12 @@
       </div>
       <div id="accordion-done_nominations">
         <div class="card">
-          <div class="card-header" data-toggle="collapse" href="#collapseThree">
+          <div class="card-header" data-toggle="collapse" href="#collapseThree-done_nominations">
             <a class="collapsed card-link" >
             Submitted Nominations
             </a>
           </div>
-          <div id="collapseThree" class="collapse show" data-parent="#accordion">
+          <div id="collapseThree-done_nominations" class="collapse show" data-parent="#accordion">
             <div class="card-body">
               <div class="container">
                 {% if done_nominations %}
