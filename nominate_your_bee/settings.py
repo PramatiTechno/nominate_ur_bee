@@ -30,7 +30,7 @@ SECRET_KEY = '$eew7_t+*^%jg$v!fokk#q8kas0=mk3!=o7*h)!k7x#=ng1*w-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ldap.dev","localhost","nominate-your-bee.dev"]
+ALLOWED_HOSTS = ["ldap.dev","localhost","nominate-your-bee.test"]
 
 
 # Application definition
