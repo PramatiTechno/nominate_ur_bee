@@ -129,7 +129,7 @@ class NominationAnswers(models.Model):
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
   nomination_chain = models.ForeignKey(NominationChain, on_delete=models.CASCADE)
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-  question_id = models.ForeignKey(Questions, on_delete=models.CASCADE)
+  question = models.ForeignKey(Questions, on_delete=models.CASCADE)
   submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)
   answer_option = models.BooleanField(max_length=20, null=True, blank=True)
   answer_text = models.CharField(max_length=500, null=True, blank=True)

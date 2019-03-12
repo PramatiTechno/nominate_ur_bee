@@ -15,15 +15,23 @@ from django.conf import settings
 def manager_nominate_index(request):
   # current_user = request.user
   current_user = User.objects.get(id=1)
-  nomination_chain = NominationChain.objects.filter(nomination_instance__status='new').filter(reviewer_id=current_user.id).select_related('nomination_instance').first()
-  if nomination_chain:
-    nomination_instance = nomination_chain.nomination_instance
-    nomination_template = nomination_instance.award_template
+  todo_nomination_chain = NominationChain.objects.filter(nomination_instance__status='new', reviewer_id=current_user.id).select_related('nomination_instance').first()
+  if todo_nomination_chain:
+    todo_nomination_instance = todo_nomination_chain.nomination_instance
+    todo_nomination_template = todo_nomination_instance.award_template
   else:
-    nomination_instance = ''
-    nomination_template = ''
+    todo_nomination_instance = ''
+    todo_nomination_template = ''
 
-  return render(request, 'nominate_app/manager_nominate_index.html', {'nomination_chain':nomination_chain,'nomination_instance':nomination_instance, 'nomination_template':nomination_template })
+  done_nominations = NominationChain.objects.filter(nomination_instance__status='nomination_submitted',reviewer_id=current_user.id).select_related('nomination_instance').first()
+  if done_nominations:
+    done_nomination_instance = done_nominations.nomination_instance
+    done_nomination_template = done_nomination_instance.award_template
+  else:
+    done_nomination_instance = ''
+    done_nomination_instance = ''
+
+  return render(request, 'nominate_app/manager_nominate_index.html', {'todo_nomination_chain':todo_nomination_chain,'todo_nomination_instance':todo_nomination_instance, 'todo_nomination_template':todo_nomination_template, 'done_nominations':done_nominations, 'done_nomination_template':done_nomination_template })
 
 
 def create_nomination(request,chain_id):
@@ -46,10 +54,10 @@ def create_nomination(request,chain_id):
         new_form.pop(key)
 
     ans_obj_List = []
-    for key,value in ques_answers_dict.items():
+    for qid,answer in ques_answers_dict.items():
       ans_form1 = new_form.copy()
-      ans_form1['question_id'] = key
-      ans_form1['answer_text'] = value
+      ans_form1['question'] = qid
+      ans_form1['answer_text'] = answer
       ans_form1['nomination_chain'] = chain_id
       # current_user = request.user
       # ans_form1['submitted_by'] = current_user.id
@@ -58,7 +66,7 @@ def create_nomination(request,chain_id):
 
    
     for ans_obj in ans_obj_List:
-      qid = ans_obj['question_id']
+      qid = ans_obj['question']
       files = request.FILES.getlist(qid+'_attachment_path')
 
       if files:
@@ -80,3 +88,12 @@ def create_nomination(request,chain_id):
     return redirect('nominate_app:manager_nominate_index')
 
   return render(request, 'nominate_app/create_nomination.html', {'answers_form':answers_form,'nomination_chain':nomination_chain,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'questions':questions })
+
+def view_nomination(request,chain_id):
+  answers_form = NominationAnswersForm(instance=NominationAnswers())
+  nomination_chain = NominationChain.objects.get(id=chain_id)
+  nomination_instance = nomination_chain.nomination_instance
+  nomination_template = nomination_instance.award_template
+  nom_answers = NominationAnswers.objects.filter(nomination_instance_id =nomination_instance,award_template_id=nomination_template)
+
+  return render(request, 'nominate_app/view_nomination.html', {'answers_form':answers_form,'nomination_chain':nomination_chain, 'nomination_template':nomination_template, 'nomination_answers': nom_answers })
