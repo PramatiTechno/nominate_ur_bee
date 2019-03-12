@@ -6,8 +6,6 @@ from django.http import HttpResponse
 from django.contrib import messages
 import json
 import os
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 from django.conf import settings
 
 # Create your views here.
@@ -15,23 +13,12 @@ from django.conf import settings
 def manager_nominate_index(request):
   # current_user = request.user
   current_user = User.objects.get(id=1)
-  todo_nomination_chain = NominationChain.objects.filter(nomination_instance__status='new', reviewer_id=current_user.id).select_related('nomination_instance').first()
-  if todo_nomination_chain:
-    todo_nomination_instance = todo_nomination_chain.nomination_instance
-    todo_nomination_template = todo_nomination_instance.award_template
-  else:
-    todo_nomination_instance = ''
-    todo_nomination_template = ''
 
-  done_nominations = NominationChain.objects.filter(nomination_instance__status='nomination_submitted',reviewer_id=current_user.id).select_related('nomination_instance').first()
-  if done_nominations:
-    done_nomination_instance = done_nominations.nomination_instance
-    done_nomination_template = done_nomination_instance.award_template
-  else:
-    done_nomination_instance = ''
-    done_nomination_instance = ''
+  todo_nomination_chains = NominationChain.objects.filter(nomination_instance__status='new', reviewer_id=current_user.id).select_related('nomination_instance').order_by('id')
 
-  return render(request, 'nominate_app/manager_nominate_index.html', {'todo_nomination_chain':todo_nomination_chain,'todo_nomination_instance':todo_nomination_instance, 'todo_nomination_template':todo_nomination_template, 'done_nominations':done_nominations, 'done_nomination_template':done_nomination_template })
+  done_nominations = NominationChain.objects.filter(nomination_instance__status='nomination_submitted',reviewer_id=current_user.id).select_related('nomination_instance').order_by('id')
+
+  return render(request, 'nominate_app/manager_nominate_index.html', {'todo_nomination_chains':todo_nomination_chains, 'done_nominations':done_nominations })
 
 
 def create_nomination(request,chain_id):
@@ -39,7 +26,7 @@ def create_nomination(request,chain_id):
   nomination_chain = NominationChain.objects.get(id=chain_id)
   nomination_instance = nomination_chain.nomination_instance
   nomination_template = nomination_instance.award_template
-  questions = Questions.objects.filter(award_template = nomination_template)
+  questions = Questions.objects.filter(award_template = nomination_template).order_by('id')
 
   if request.method == 'POST':
     new_form = request.POST.copy()
@@ -94,6 +81,6 @@ def view_nomination(request,chain_id):
   nomination_chain = NominationChain.objects.get(id=chain_id)
   nomination_instance = nomination_chain.nomination_instance
   nomination_template = nomination_instance.award_template
-  nom_answers = NominationAnswers.objects.filter(nomination_instance_id =nomination_instance,award_template_id=nomination_template)
+  nom_answers = NominationAnswers.objects.filter(nomination_instance_id =nomination_instance,award_template_id=nomination_template).order_by('-id')
 
   return render(request, 'nominate_app/view_nomination.html', {'answers_form':answers_form,'nomination_chain':nomination_chain, 'nomination_template':nomination_template, 'nomination_answers': nom_answers })
