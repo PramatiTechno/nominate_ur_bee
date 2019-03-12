@@ -15,7 +15,7 @@ from django.conf import settings
 def manager_nominate_index(request):
   # current_user = request.user
   current_user = User.objects.get(id=1)
-  todo_nomination_chain = NominationChain.objects.filter(nomination_instance__status='new').filter(reviewer_id=current_user.id).select_related('nomination_instance').first()
+  todo_nomination_chain = NominationChain.objects.filter(nomination_instance__status='new', reviewer_id=current_user.id).select_related('nomination_instance').first()
   if todo_nomination_chain:
     todo_nomination_instance = todo_nomination_chain.nomination_instance
     todo_nomination_template = todo_nomination_instance.award_template
@@ -23,7 +23,7 @@ def manager_nominate_index(request):
     todo_nomination_instance = ''
     todo_nomination_template = ''
 
-  done_nominations = NominationChain.objects.filter(nomination_instance__status='nomination_submitted').filter(reviewer_id=current_user.id).select_related('nomination_instance').first()
+  done_nominations = NominationChain.objects.filter(nomination_instance__status='nomination_submitted',reviewer_id=current_user.id).select_related('nomination_instance').first()
   if done_nominations:
     done_nomination_instance = done_nominations.nomination_instance
     done_nomination_template = done_nomination_instance.award_template
@@ -54,10 +54,10 @@ def create_nomination(request,chain_id):
         new_form.pop(key)
 
     ans_obj_List = []
-    for key,value in ques_answers_dict.items():
+    for qid,answer in ques_answers_dict.items():
       ans_form1 = new_form.copy()
-      ans_form1['question'] = key
-      ans_form1['answer_text'] = value
+      ans_form1['question'] = qid
+      ans_form1['answer_text'] = answer
       ans_form1['nomination_chain'] = chain_id
       # current_user = request.user
       # ans_form1['submitted_by'] = current_user.id
