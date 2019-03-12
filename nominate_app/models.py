@@ -50,6 +50,7 @@ class Awards(models.Model):
   is_active = models.BooleanField(default = False)
   frequency = models.CharField(max_length=10, choices=choice_type, null=False, blank=False)
   description = models.CharField(max_length=200, null=True, blank=True)
+  created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
     db_table='awards'
@@ -64,6 +65,7 @@ class NominationPeriod(models.Model):
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
+  created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
     db_table='nomination_periods'
@@ -72,6 +74,7 @@ class AwardTemplate(models.Model):
   template_name = models.CharField(max_length=150, null=False, blank=False)
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
   is_active = models.BooleanField(default = False)
+  created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
     db_table='award_templates'
@@ -93,6 +96,7 @@ class Questions(models.Model):
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
   role = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
   attachment_need = models.BooleanField(default=False)
+  created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   def __str__(self):
     return self.qname
@@ -102,6 +106,7 @@ class NominationPlan(models.Model):
   nomination_period = models.ForeignKey(NominationPeriod, on_delete=models.CASCADE)
   start_date = models.DateField(max_length=20, null=False, blank=False)
   end_date = models.DateField(max_length=20, null=False, blank=False)
+  created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
     db_table='nomination_plans'
@@ -112,6 +117,7 @@ class NominationInstance(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   status = models.CharField(max_length=50, null=False, blank=False, default='new')
   result = models.CharField(max_length=50, null=True, blank=True)
+  created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
     db_table='nomination_instances'
@@ -120,6 +126,7 @@ class NominationChain(models.Model):
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
   reviewer_id = models.ForeignKey(User, on_delete=models.CASCADE)
   reviewed_at = models.DateField(max_length=20, null=True, blank=True)
+  created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
       db_table='nomination_chains'
@@ -131,6 +138,7 @@ class NominationAnswers(models.Model):
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
   question = models.ForeignKey(Questions, on_delete=models.CASCADE)
   submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)
+  submitted_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
   answer_option = models.BooleanField(max_length=20, null=True, blank=True)
   answer_text = models.CharField(max_length=500, null=True, blank=True)
   attachment_path = models.FileField(max_length=500, null=True, blank=True, upload_to = UPLOAD_TO)
