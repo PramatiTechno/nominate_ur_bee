@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class UserProfile(models.Model):
-    firstname = models.CharField(max_length=30)
     email = models.EmailField(max_length=70, unique=True)
     designation = models.CharField(max_length=70)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -19,7 +18,6 @@ class UserProfile(models.Model):
     cn = models.CharField(max_length=70)
     title = models.CharField(max_length=70)
     lastpwdchange = models.CharField(max_length=70)
-    lastname = models.CharField(max_length=70)
     defaultpwd = models.CharField(max_length=70)
     baselocation = models.CharField(max_length=70)
     uid = models.CharField(max_length=70)
@@ -32,8 +30,25 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.email
 
+    @property
+    def is_admin(self):
+      user = self.user
+      return User_Role.objects.get(user= user).role.name.lower() == 'admin'
+
+    @property
+    def is_manager(self):
+      user = self.user
+      return User_Role.objects.get(user= user).role.name.lower() == 'manager'
+
+    @property
+    def is_tech_jury(self):
+      user = self.user
+      return User_Role.objects.get(user= user).role.name.lower() == 'technical jury member'
+
+
 class Role(models.Model):
   choice_level = (
+      ('level0', 'level0'),
       ('level1', 'level1'),
       ('level2', 'level2'),
       ('level3', 'level3'),
@@ -49,7 +64,7 @@ class Role(models.Model):
     return self.group
 
 class User_Role(models.Model):
-  user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
   role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
   class Meta:
