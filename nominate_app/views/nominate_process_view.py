@@ -11,8 +11,7 @@ from django.conf import settings
 # Create your views here.
 
 def manager_nominate_index(request):
-  # current_user = request.user
-  current_user = User.objects.get(id=1)
+  current_user = User.objects.get(id=request.user.id)
 
   todo_nomination_chains = NominationChain.objects.filter(nomination_instance__status='new', reviewer_id=current_user.id).select_related('nomination_instance').order_by('id')
 
@@ -81,6 +80,6 @@ def view_nomination(request,chain_id):
   nomination_chain = NominationChain.objects.get(id=chain_id)
   nomination_instance = nomination_chain.nomination_instance
   nomination_template = nomination_instance.award_template
-  nom_answers = NominationAnswers.objects.filter(nomination_instance_id =nomination_instance,award_template_id=nomination_template).order_by('-id')
+  nom_answers = NominationAnswers.objects.filter(nomination_instance_id =nomination_instance,award_template_id=nomination_template).order_by('id')
 
   return render(request, 'nominate_app/view_nomination.html', {'answers_form':answers_form,'nomination_chain':nomination_chain, 'nomination_template':nomination_template, 'nomination_answers': nom_answers })
