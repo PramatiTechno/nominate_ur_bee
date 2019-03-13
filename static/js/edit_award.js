@@ -65,7 +65,7 @@ $(document).ready(function(){
     newElement.find(':input').each(function() {
         var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
         var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        $(this).attr({'name': name, 'id': id}).val('').prop('checked', false);
         // if($(this).attr('id').endsWith('level') || $(this).attr('id').endsWith('day')){
         //   $(this).val(1)
         // }
