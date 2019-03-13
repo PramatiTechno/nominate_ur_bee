@@ -31,7 +31,7 @@ class Role(models.Model):
   def __str__(self):
     return self.group
 
-class User_Role(models.Model):
+class UserRole(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
@@ -64,6 +64,7 @@ class NominationPeriod(models.Model):
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
+  is_template = models.BooleanField(default=False)
 
   class Meta:
     db_table='nomination_periods'
@@ -107,18 +108,16 @@ class NominationPlan(models.Model):
     db_table='nomination_plans'
 
 class NominationInstance(models.Model):
-  nomination_plan = models.ForeignKey(NominationPlan, on_delete=models.CASCADE)
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
   status = models.CharField(max_length=50, null=False, blank=False, default='new')
   result = models.CharField(max_length=50, null=True, blank=True)
 
   class Meta:
     db_table='nomination_instances'
 
-class NominationChain(models.Model):
+class NominationSubmitter(models.Model):
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
-  reviewer_id = models.ForeignKey(User, on_delete=models.CASCADE)
+  reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
   reviewed_at = models.DateField(max_length=20, null=True, blank=True)
 
   class Meta:
@@ -126,7 +125,7 @@ class NominationChain(models.Model):
 
 class NominationAnswers(models.Model):
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
-  nomination_chain = models.ForeignKey(NominationChain, on_delete=models.CASCADE)
+  nomination_chain = models.ForeignKey(NominationSubmitter, on_delete=models.CASCADE)
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
   question_id = models.ForeignKey(Questions, on_delete=models.CASCADE)
   submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -143,3 +142,26 @@ class AnswerAttachment(models.Model):
 
   class Meta:
       db_table='answer_attachments'
+
+class NominationPeriodFrequency(models.Model):
+  level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
+  award = models.ForeignKey(Awards, on_delete=models.CASCADE)
+  start_day = models.DateField(max_length=20, null=False, blank=False)
+  end_day = models.DateField(max_length=20, null=False, blank=False)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+
+  class Meta:
+    db_table='nomination_period_frequency' 
+
+class NominationTimeSlot(models.Model):
+  level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
+  award = models.ForeignKey(Awards, on_delete=models.CASCADE)
+  start_day = models.DateField(max_length=20, null=False, blank=False)
+  end_day = models.DateField(max_length=20, null=False, blank=False)
+  nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+  
+  class Meta:
+    db_table='nomination_time_slot'          
