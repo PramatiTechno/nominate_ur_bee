@@ -53,6 +53,11 @@ $(document).ready(function(){
         });    
       }
     }
+    else if (event.target.id.endsWith('-attachment_need')) {
+      checkboxId = event.target.id;
+      $(this).attr('value', this.checked ? 1 : 0);
+      $(this).val(this.checked ? 1 : 0);
+    }
   });
 
   function cloneMore(selector, type) {
@@ -61,7 +66,7 @@ $(document).ready(function(){
     newElement.find(':input').each(function() {
       var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
       var id = 'id_' + name;
-      $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+      $(this).attr({'name': name, 'id': id}).val('').prop('checked', false);
       if($(this).attr('id').endsWith('qtype')){
         $(this).val('SUBJECTIVE')
       }

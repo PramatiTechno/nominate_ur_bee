@@ -40,7 +40,7 @@ $(document).ready(function(){
     newElement.find(':input').each(function() {
         var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
         var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+        $(this).attr({'name': name, 'id': id}).val('').prop('checked', false);
         if($(this).attr('id').endsWith('qtype')){
           $(this).val('SUBJECTIVE')
         }
@@ -65,4 +65,14 @@ $(document).ready(function(){
     $('#id_questions_set-TOTAL_FORMS').val(total);
     $('#id_questions_set-TOTAL_FORMS').attr('value', total);
   }
+
+  $(document).on('change', '[type=checkbox]', function(event) {
+    if (event.target.id.endsWith('-attachment_need')) {
+      event.preventDefault();
+      checkboxId = event.target.id;
+      $(this).attr('value', this.checked ? 1 : 0);
+      $(this).val(this.checked ? 1 : 0);
+    }
+  });
+
 });
