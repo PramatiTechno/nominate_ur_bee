@@ -30,7 +30,8 @@ SECRET_KEY = '$eew7_t+*^%jg$v!fokk#q8kas0=mk3!=o7*h)!k7x#=ng1*w-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ldap.dev","localhost","nominate-your-bee.test"]
+ALLOWED_HOSTS = ["ldap.dev","localhost","nominate-your-bee.test",
+"127.0.0.1","172.17.10.110","0.0.0.0"]
 
 
 # Application definition
@@ -152,11 +153,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT=os.path.join(BASE_DIR, 'static/filee/')
 
 STATICFILES_DIRS = (
   os.path.join(BASE_DIR, "static"),
 )
-
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 

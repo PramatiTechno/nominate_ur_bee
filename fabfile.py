@@ -27,7 +27,7 @@ def exists(file, dir):
 
 # git tasks
 @task
-def pull(ctx, branch="dev"):
+def pull(ctx, branch="deploy"):
     # check if ctx is Connection object or Context object
     # if Connection object then calling method from program
     # else calling directly from terminal
@@ -122,9 +122,9 @@ def deploy(ctx):
         sys.exit("Failed to get connection")
     clone(conn)
     with conn.cd(PROJECT_PATH):
-        print("checkout to dev branch...")
-        checkout(conn, branch="dev")
-        print("pulling latest code from dev branch...")
+        print("checkout to deploy branch...")
+        checkout(conn, branch="deploy")
+        print("pulling latest code from deploy branch...")
         pull(conn)
         print("migrating database....")
         migrate(conn)
