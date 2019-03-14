@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'nominate_app',
     'django_nose',
     'widget_tweaks',
-    'django_cas_ng'
+    'django_cas_ng',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -114,6 +115,10 @@ DATABASES = {
     }  
 }
 
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators

@@ -7,7 +7,7 @@
   <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
       {% for award in award_categories %}
-        <a class="nav-item nav-link tab_forms {% if forloop.counter == 1 %} active {% endif %}" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" value={{ form.id }}>{{ award.name|title }}</a>
+        <a class="nav-item nav-link tab_forms {% if forloop.counter == 1 %} active {% endif %}" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" value='{{ award.id }}'>{{ award.name|title }}</a>
       {% empty %}
         <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">No Awards Found</a>
       {% endfor %}
@@ -26,8 +26,8 @@
         <tbody>
           {% for form in nomination_status %}
             <tr class="row">
-              <td class="col-sm-8">{{ form.user.name|title }}</td>
-              <td class="col-sm-4">{{ form.status|title }} </td>
+              <td class="col-sm-8 user_name">{{ form.user.username|title }}</td>
+              <td class="col-sm-4 status">{{ form.status|title }} </td>
             </tr>
           {% empty %}
             No record found  
