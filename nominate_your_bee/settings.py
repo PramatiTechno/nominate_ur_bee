@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'nominate_app',
     'django_nose',
     'widget_tweaks',
-    'django_cas_ng'
+    'django_cas_ng',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,10 @@ DATABASES = {
     }  
 }
 
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -163,3 +168,10 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
