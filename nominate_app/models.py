@@ -33,17 +33,17 @@ class UserProfile(models.Model):
     @property
     def is_admin(self):
       user = self.user
-      return User_Role.objects.get(user= user).role.name.lower() == 'admin'
+      return UserRole.objects.get(user= user).role.name.lower() == 'admin'
 
     @property
     def is_manager(self):
       user = self.user
-      return User_Role.objects.get(user= user).role.name.lower() == 'manager'
+      return UserRole.objects.get(user= user).role.name.lower() == 'manager'
 
     @property
     def is_tech_jury(self):
       user = self.user
-      return User_Role.objects.get(user= user).role.name.lower() == 'technical jury member'
+      return UserRole.objects.get(user= user).role.name.lower() == 'technical jury member'
 
 
 class Role(models.Model):
@@ -63,12 +63,12 @@ class Role(models.Model):
   def __str__(self):
     return self.group
 
-class User_Role(models.Model):
+class UserRole(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
   class Meta:
-    db_table = 'user_role'
+    db_table = 'user_roles'
 
 class Awards(models.Model):
   choice_type = (
@@ -97,6 +97,7 @@ class NominationPeriod(models.Model):
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
+  is_template = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
@@ -145,9 +146,7 @@ class NominationPlan(models.Model):
     db_table='nomination_plans'
 
 class NominationInstance(models.Model):
-  nomination_plan = models.ForeignKey(NominationPlan, on_delete=models.CASCADE)
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
   status = models.CharField(max_length=50, null=False, blank=False, default='new')
   result = models.CharField(max_length=50, null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -155,19 +154,19 @@ class NominationInstance(models.Model):
   class Meta:
     db_table='nomination_instances'
 
-class NominationChain(models.Model):
+class NominationSubmitter(models.Model):
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
-  reviewer_id = models.ForeignKey(User, on_delete=models.CASCADE)
+  reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
   reviewed_at = models.DateField(max_length=20, null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
-      db_table='nomination_chains'
+    db_table='nomination_submitters'
 
 class NominationAnswers(models.Model):
   UPLOAD_TO = 'answers/images'
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
-  nomination_chain = models.ForeignKey(NominationChain, on_delete=models.CASCADE)
+  nomination_chain = models.ForeignKey(NominationSubmitter, on_delete=models.CASCADE)
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
   question = models.ForeignKey(Questions, on_delete=models.CASCADE)
   submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -178,4 +177,28 @@ class NominationAnswers(models.Model):
   uploaded_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
-      db_table='nomination_answers'
+    db_table='nomination_answers'
+
+class NominationPeriodFrequency(models.Model):
+  level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
+  award = models.ForeignKey(Awards, on_delete=models.CASCADE)
+  start_day = models.DateField(max_length=20, null=False, blank=False)
+  end_day = models.DateField(max_length=20, null=False, blank=False)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+
+  class Meta:
+    db_table='nomination_period_frequency' 
+
+class NominationTimeSlot(models.Model):
+  level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
+  award = models.ForeignKey(Awards, on_delete=models.CASCADE)
+  start_day = models.DateField(max_length=20, null=False, blank=False)
+  end_day = models.DateField(max_length=20, null=False, blank=False)
+  nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+  
+  class Meta:
+    db_table='nomination_time_slots'          
+

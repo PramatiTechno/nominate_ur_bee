@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from nominate_app.models import Awards, AwardTemplate, NominationInstance, User, Role, User_Role
+from nominate_app.models import Awards, AwardTemplate, NominationInstance, User, Role, UserRole
 from django.http import HttpResponse
 from django.core import serializers 
 from django.http import JsonResponse
@@ -21,7 +21,7 @@ def nomination_status_load(request,id):
   award = Awards.objects.get(id=id)
   data = []
   role = Role.objects.filter(name='Manager').first()
-  user_roles = User_Role.objects.filter(role=role)
+  user_roles = UserRole.objects.filter(role=role)
   for user_role in user_roles:
     record = {}
     user = user_role.user
