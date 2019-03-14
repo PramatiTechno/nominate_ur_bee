@@ -15,12 +15,12 @@ $(document).ready(function(){
           }
         else
         {
-        $('#nomination_status_table').html('');
-        for (i = 0; i <= length-1 ; i++) 
-          {
-            data='<tr class="row"><td class="col-sm-8"> '+ json[i].nominator_name +' </td><td class="col-sm-8"> '+ json[i].nominator_status +' </td></tr>'
-            $('#nomination_status_table').append(data);
-          }
+          $('#nomination_status_table').html('');
+          for (i = 0; i <= length-1 ; i++) 
+            {
+              data='<tr class="row"><td class="col-sm-8 user_name"> '+ json[i].nominator_name +' </td><td class="col-sm-4 status"> '+ json[i].nominator_status +' </td></tr>'
+              $('#nomination_status_table').append(data);
+            }
         }  
       }
     });                                     
