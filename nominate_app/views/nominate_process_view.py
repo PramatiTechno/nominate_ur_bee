@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect 
 from django.forms import modelformset_factory, inlineformset_factory
 from nominate_app.forms import NominationAnswersForm
-from nominate_app.models import NominationPeriod, AwardTemplate, NominationPlan, NominationInstance, NominationSubmitter, User, Questions, NominationAnswers
+from nominate_app.models import NominationPeriod, AwardTemplate, NominationTimeSlot, NominationInstance, NominationSubmitter, User, Questions, NominationAnswers
 from django.http import HttpResponse
 from django.contrib import messages
 import json
 import os
 from django.conf import settings
+from datetime import datetime
 
 # Create your views here.
 
@@ -69,6 +70,8 @@ def create_nomination(request,chain_id):
 
     nom_inst = NominationInstance.objects.filter(id= nomination_instance.id)
     nom_inst.update(status='nomination_submitted')
+    nomination_submitter = NominationSubmitter.objects.filter(id= chain_id)
+    nomination_submitter.update(reviewed_at=datetime.now())
 
     messages.success(request, 'Nomination submitted successfully.')
     return redirect('nominate_app:manager_nominate_index')

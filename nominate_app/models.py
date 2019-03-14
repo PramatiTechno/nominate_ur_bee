@@ -134,17 +134,6 @@ class Questions(models.Model):
   def __str__(self):
     return self.qname
 
-class NominationPlan(models.Model):
-  
-  level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
-  nomination_period = models.ForeignKey(NominationPeriod, on_delete=models.CASCADE)
-  start_date = models.DateField(max_length=20, null=False, blank=False)
-  end_date = models.DateField(max_length=20, null=False, blank=False)
-  created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-
-  class Meta:
-    db_table='nomination_plans'
-
 class NominationInstance(models.Model):
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
   status = models.CharField(max_length=50, null=False, blank=False, default='new')
