@@ -33,17 +33,17 @@ class UserProfile(models.Model):
     @property
     def is_admin(self):
       user = self.user
-      return User_Role.objects.get(user= user).role.name.lower() == 'admin'
+      return UserRole.objects.get(user= user).role.name.lower() == 'admin'
 
     @property
     def is_manager(self):
       user = self.user
-      return User_Role.objects.get(user= user).role.name.lower() == 'manager'
+      return UserRole.objects.get(user= user).role.name.lower() == 'manager'
 
     @property
     def is_tech_jury(self):
       user = self.user
-      return User_Role.objects.get(user= user).role.name.lower() == 'technical jury member'
+      return UserRole.objects.get(user= user).role.name.lower() == 'technical jury member'
 
 
 class Role(models.Model):
@@ -68,7 +68,7 @@ class UserRole(models.Model):
   role = models.ForeignKey(Role, on_delete=models.CASCADE)
 
   class Meta:
-    db_table = 'user_role'
+    db_table = 'user_roles'
 
 class Awards(models.Model):
   choice_type = (
@@ -161,7 +161,7 @@ class NominationSubmitter(models.Model):
   created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
   class Meta:
-      db_table='nomination_chains'
+    db_table='nomination_submitters'
 
 class NominationAnswers(models.Model):
   UPLOAD_TO = 'answers/images'
@@ -178,14 +178,6 @@ class NominationAnswers(models.Model):
 
   class Meta:
     db_table='nomination_answers'
-
-class AnswerAttachment(models.Model):
-  answer_id = models.ForeignKey(NominationAnswers, on_delete=models.CASCADE)
-  attachment_path = models.FileField(upload_to='documents/', null=True, blank=True)
-  uploaded_at = models.DateTimeField(auto_now_add=True)
-
-  class Meta:
-    db_table='answer_attachments'
 
 class NominationPeriodFrequency(models.Model):
   level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
@@ -208,5 +200,5 @@ class NominationTimeSlot(models.Model):
   updated_at = models.DateTimeField(auto_now=True)
   
   class Meta:
-    db_table='nomination_time_slot'          
+    db_table='nomination_time_slots'          
 

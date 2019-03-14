@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect 
 from django.forms import modelformset_factory, inlineformset_factory
 from nominate_app.forms import NominationAnswersForm
-from nominate_app.models import NominationPeriod, AwardTemplate, NominationPlan, NominationInstance, NominationChain, User, Questions, NominationAnswers
+from nominate_app.models import NominationPeriod, AwardTemplate, NominationPlan, NominationInstance, NominationSubmitter, User, Questions, NominationAnswers
 from django.http import HttpResponse
 from django.contrib import messages
 import json
@@ -13,16 +13,16 @@ from django.conf import settings
 def manager_nominate_index(request):
   current_user = User.objects.get(id=request.user.id)
 
-  todo_nomination_chains = NominationChain.objects.filter(nomination_instance__status='new', reviewer_id=current_user.id).select_related('nomination_instance').order_by('id')
+  todo_nomination_chains = NominationSubmitter.objects.filter(nomination_instance__status='new', reviewer_id=current_user.id).select_related('nomination_instance').order_by('id')
 
-  done_nominations = NominationChain.objects.filter(nomination_instance__status='nomination_submitted',reviewer_id=current_user.id).select_related('nomination_instance').order_by('id')
+  done_nominations = NominationSubmitter.objects.filter(nomination_instance__status='nomination_submitted',reviewer_id=current_user.id).select_related('nomination_instance').order_by('id')
 
   return render(request, 'nominate_app/manager_nominate_index.html', {'todo_nomination_chains':todo_nomination_chains, 'done_nominations':done_nominations })
 
 
 def create_nomination(request,chain_id):
   answers_form = NominationAnswersForm(instance=NominationAnswers())
-  nomination_chain = NominationChain.objects.get(id=chain_id)
+  nomination_chain = NominationSubmitter.objects.get(id=chain_id)
   nomination_instance = nomination_chain.nomination_instance
   nomination_template = nomination_instance.award_template
   questions = Questions.objects.filter(award_template = nomination_template).order_by('id')
@@ -77,7 +77,7 @@ def create_nomination(request,chain_id):
 
 def view_nomination(request,chain_id):
   answers_form = NominationAnswersForm(instance=NominationAnswers())
-  nomination_chain = NominationChain.objects.get(id=chain_id)
+  nomination_chain = NominationSubmitter.objects.get(id=chain_id)
   nomination_instance = nomination_chain.nomination_instance
   nomination_template = nomination_instance.award_template
   nom_answers = NominationAnswers.objects.filter(nomination_instance_id =nomination_instance,award_template_id=nomination_template).order_by('id')
