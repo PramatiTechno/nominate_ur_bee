@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+<div class = "container">
+  <div class="form-group">
+      {% csrf_token %}
+      <div class = "row award_top_margin">
+        <div class="col-sm-8">    
+          {{ nomination_template.template_name }}
+        </div>
+      </div> 
+      <br>
+      {% for answer in nomination_answers %}
+      <div class="form">
+        <div class = "row award_top_margin ">
+          <div class="col-sm-2">
+            <label class="col-form-label" for='{{answer.question}}' >{{answer.question}}</label>
+          </div>
+          <div class="col-sm-4">
+            {% if answer.answer_text %}   
+              <input type="text" name="answer_text" class="form-control" placeholder="" value="{{answer.answer_text|slugify}}" disabled />
+            {% else %}
+              <input type="radio" value="yes" name="answer.answer_option">
+              <input type="radio" value="no" name="answer.answer_option">
+            {% endif %}
+            {% if answer.attachment_path %}   
+              <img src="{{answer.attachment_path.url}}" alt="answer option" height="310" width="310" />
+            {% endif %}
+          </div>
+
+        </div> 
+
+      </div>   
+      {% endfor %} 
+
+  </div>
+</div>
+{% endblock %}

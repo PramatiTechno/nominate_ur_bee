@@ -23,3 +23,4 @@ wcwidth==0.1.7
 redis==2.10.3
 celery==3.1.18
 kombu==3.0.37
+python-cas==1.4.0

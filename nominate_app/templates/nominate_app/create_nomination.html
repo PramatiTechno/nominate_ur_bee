@@ -8,9 +8,9 @@
 <script src="{% static 'js/award_templates.js' %}"></script>
 <div class = "container">
   <div class="form-group">
-    <form method="post" id="needs-validation" novalidate enctype="multipart/form-data">
+    <form method="post"  enctype="multipart/form-data">
       {% csrf_token %}
-      <input type="hidden" name="name" class="form-control" placeholder="" value="{{ nomination_instance.id}}" required />
+      <input type="hidden" name="nomination_instance" class="form-control" placeholder="" value="{{ nomination_instance.id}}" required />
       <div class = "row award_top_margin">
         <div class="col-sm-8">    
           {{ nomination_template.template_name }}
@@ -23,27 +23,21 @@
           <div class="col-sm-2">
             <label class="col-form-label" for='{{question.qname}}' >{{question.qname}}</label>
           </div>
-          <input type="hidden" name="question_id" class="form-control" placeholder="" value="{{ question.id}}" required />
           <div class="col-sm-4">
             {% if question.qtype == 'SUBJECTIVE'%}   
-              <input type="text" name="answer_text" class="form-control" placeholder="" value="" required />
-            {% else%}
+              <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="" required />
+            {% else %}
               <input type="radio" value="yes" name="answer_option">
               <input type="radio" value="no" name="answer_option">
             {% endif %}
           </div>
           {% if question.attachment_need %}
-            <div class="col-sm-2">
-              {% for field in answer_attachment_form %}
-                <div class="form-group">
+           <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-2">
-                        <span class="text-danger small">{{ field.errors }}</span>
+                        <span class="text-danger small"></span>
                     </div>
-                    <label class="control-label col-sm-2">{{ field.label_tag }}</label>
-                    <div class="col-sm-2">{{ field }}</div>
+                    <div class="col-sm-2"><input type="file" name="{{ question.id}}_attachment_path" id="{{ question.id}}_attachment_path"></div>
                 </div>
-              {% endfor %}
-            </div>
           {% endif %}
         </div> 
 
