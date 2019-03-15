@@ -33,7 +33,7 @@ DEBUG = True
 ALLOWED_HOSTS = ["ldap.dev","localhost","nominate-your-bee.test",
 "127.0.0.1","172.17.10.110","0.0.0.0"]
 
-#CAS_ROOT_PROXIED_AS = "http://172.17.10.110"
+CAS_ROOT_PROXIED_AS = os.environ['SERVER_NAME']
 
 # Application definition
 
@@ -159,7 +159,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT=os.path.join(BASE_DIR, 'static/filee/')
+STATIC_ROOT=os.path.join(BASE_DIR, 'static/compiled/')
 
 STATICFILES_DIRS = (
   os.path.join(BASE_DIR, "static"),
