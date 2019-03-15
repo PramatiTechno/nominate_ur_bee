@@ -100,25 +100,25 @@ class Awards(models.Model):
       new_nomination_period_requency.save() 
 
   def rake_task_for_award(self):
-    awards = Awards.objects.filter(frequency= 'MONTHLY')
-    for award in awards:
-      monthly_template = AwardTemplate.objects.filter(award_id= award.id, is_active= True).first()
-      # We can replace '#' by month to test e.g 1,2,3 etc.... 
-      monthly_levels = NominationPeriodFrequency.objects.filter(start_day__month=4)
-      if monthly_levels:
-        nomination_instance = NominationInstance(award_template_id= monthly_template.id)
-        nomination_instance.save() 
-        for monthly_level in monthly_levels:
-          if monthly_level.start_day == datetime.strptime('2019-04-01', '%Y-%m-%d').date():
-            for user in User.objects.all():
-              if UserRole.objects.get(user_id=user.id).role.group == monthly_level.level.group:
-                nomination_period = NominationTimeSlot(start_day= monthly_level.start_day, end_day= monthly_level.end_day, level_id= monthly_level.level_id, award_id= monthly_level.award_id, nomination_instance= nomination_instance)
-                nomination_period.save() # set created by
-                nomination_submitter = NominationSubmitter(nomination_instance= nomination_instance , reviewer= user)
-                nomination_submitter.save()
-          # creating record for next month
-          new_nomination_period_requency = NominationPeriodFrequency(start_day= monthly_level.start_day + relativedelta(months=+1) , end_day= monthly_level.end_day + relativedelta(months=+1), level_id= monthly_level.level_id, award_id= monthly_level.award_id)
-          new_nomination_period_requency.save()
+    award = self
+
+    monthly_template = AwardTemplate.objects.filter(award_id= award.id, is_active= True).first()
+    # We can replace '#' by month to test e.g 1,2,3 etc.... 
+    monthly_levels = NominationPeriodFrequency.objects.filter(start_day__month=4)
+    if monthly_levels:     
+      for monthly_level in monthly_levels:
+        if monthly_level.start_day == datetime.strptime('2019-04-01', '%Y-%m-%d').date():
+          for user in User.objects.all():
+            if UserRole.objects.get(user_id=user.id).role.group == monthly_level.level.group:
+              nomination_instance = NominationInstance(award_template_id= monthly_template.id,user=user)
+              nomination_instance.save() 
+              nomination_period = NominationTimeSlot(start_day= monthly_level.start_day, end_day= monthly_level.end_day, level_id= monthly_level.level_id, award_id= monthly_level.award_id, nomination_instance= nomination_instance)
+              nomination_period.save() # set created by
+              nomination_submitter = NominationSubmitter(nomination_instance= nomination_instance , reviewer= user)
+              nomination_submitter.save()
+        # creating record for next month
+        new_nomination_period_requency = NominationPeriodFrequency(start_day= monthly_level.start_day + relativedelta(months=+1) , end_day= monthly_level.end_day + relativedelta(months=+1), level_id= monthly_level.level_id, award_id= monthly_level.award_id)
+        new_nomination_period_requency.save()
 
 class NominationPeriod(models.Model):
   CHOICES = [(str(i),str(i)) for i in range(1,32)]

@@ -12,7 +12,7 @@ def home(request):
 def nomination_status(request):
   if request.method == 'GET':
     awards = Awards.objects.all()
-    award_id = awards.first().id
+    award_id = awards.last().id
     award_template_id = AwardTemplate.objects.get(award_id=award_id, is_active=True).id
     nomination_status = NominationInstance.objects.filter(award_template_id=award_template_id)
   return render(request, 'nominate_app/nomination_status.html',{'nomination_status':nomination_status, 'award_categories':awards})
