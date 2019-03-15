@@ -33,6 +33,7 @@ class NominationPeriodForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.fields['level'].empty_label = None
+    self.initial['level'] = '2'
     self.fields['start_day'].widget.attrs.update({'class': 'form-control def'})
     self.fields['end_day'].widget.attrs.update({'class': 'form-control ghi'})
 
@@ -57,10 +58,11 @@ class AwardQuestionForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.fields['role'].empty_label = None
-    self.fields['qname'].widget.attrs.update({'class': 'form-control def', 'placeholder': "Enter Question"})
-    self.fields['qtype'].widget.attrs.update({'class': 'form-control abc'})
-    self.fields['role'].widget.attrs.update({'class': 'form-control abc'})
-    self.fields['attachment_need'].widget.attrs.update({'class': 'form-control abc'})
+    self.initial['level'] = '2'
+    self.fields['qname'].widget.attrs.update({'class': 'form-control', 'placeholder': "Enter Question"})
+    self.fields['qtype'].widget.attrs.update({'class': 'form-control'})
+    self.fields['role'].widget.attrs.update({'class': 'form-control'})
+    self.fields['attachment_need'].widget.attrs.update({'class': 'form-control'})
 
 class NominationAnswersForm(forms.ModelForm):
 

@@ -104,7 +104,7 @@ class Awards(models.Model):
 
     monthly_template = AwardTemplate.objects.filter(award_id= award.id, is_active= True).first()
     # We can replace '#' by month to test e.g 1,2,3 etc.... 
-    monthly_levels = NominationPeriodFrequency.objects.filter(start_day__month=4)
+    monthly_levels = NominationPeriodFrequency.objects.filter(start_day__month=4,award=award)
     if monthly_levels:     
       for monthly_level in monthly_levels:
         if monthly_level.start_day == datetime.strptime('2019-04-01', '%Y-%m-%d').date():
