@@ -2,48 +2,48 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
-
+from dateutil.relativedelta import *
+from datetime import datetime
 
 # from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
+  
 class UserProfile(models.Model):
-    email = models.EmailField(max_length=70, unique=True)
-    designation = models.CharField(max_length=70)
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    telephonenumber = models.CharField(validators=[phone_regex], max_length=17, blank=True) # validators should be a list
-    employeenumber = models.CharField(max_length=70)
-    jobtitle = models.CharField(max_length=70)
-    cn = models.CharField(max_length=70)
-    title = models.CharField(max_length=70)
-    lastpwdchange = models.CharField(max_length=70)
-    defaultpwd = models.CharField(max_length=70)
-    baselocation = models.CharField(max_length=70)
-    uid = models.CharField(max_length=70)
-    worklocation = models.CharField(max_length=70)
-    user = models.OneToOneField(User,on_delete=models.PROTECT)
+  email = models.EmailField(max_length=70, unique=True)
+  designation = models.CharField(max_length=70)
+  phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+  telephonenumber = models.CharField(validators=[phone_regex], max_length=17, blank=True) # validators should be a list
+  employeenumber = models.CharField(max_length=70)
+  jobtitle = models.CharField(max_length=70)
+  cn = models.CharField(max_length=70)
+  title = models.CharField(max_length=70)
+  lastpwdchange = models.CharField(max_length=70)
+  defaultpwd = models.CharField(max_length=70)
+  baselocation = models.CharField(max_length=70)
+  uid = models.CharField(max_length=70)
+  worklocation = models.CharField(max_length=70)
+  user = models.OneToOneField(User,on_delete=models.PROTECT)
+  #members = models.ManyToManyField(Person, through='Membership')
 
-    class Meta:
-        db_table='user_profiles'
+  class Meta:
+      db_table='user_profiles'
 
-    def __str__(self):
-        return self.email
+  def __str__(self):
+      return self.email
 
-    @property
-    def is_admin(self):
-      user = self.user
-      return UserRole.objects.get(user= user).role.name.lower() == 'admin'
+  def is_admin(self):
+    user = self.user
+    return UserRole.objects.get(user= user).role.name.lower() == 'admin'
 
-    @property
-    def is_manager(self):
-      user = self.user
-      return UserRole.objects.get(user= user).role.name.lower() == 'manager'
+  def is_manager(self):
+    user = self.user
+    return UserRole.objects.get(user= user).role.name.lower() == 'manager'
 
-    @property
-    def is_tech_jury(self):
-      user = self.user
-      return UserRole.objects.get(user= user).role.name.lower() == 'technical jury member'
+  def is_tech_jury(self):
+    user = self.user
+    return UserRole.objects.get(user= user).role.name.lower() == 'technical jury member'
 
 
 class Role(models.Model):
@@ -90,6 +90,35 @@ class Awards(models.Model):
   def __str__(self):
     return self.name
 
+  def save_nomination_period_requency(self):
+    monthly_levels = NominationPeriod.objects.filter(award=self.id)
+    frequency = NominationPeriodFrequency.objects.filter(award= self)
+    if frequency.exists():
+      frequency.delete()
+    for monthly_level in monthly_levels:
+      new_nomination_period_requency = NominationPeriodFrequency(start_day= monthly_level.start_day, end_day= monthly_level.end_day, level_id= monthly_level.level_id, award_id= monthly_level.award_id)
+      new_nomination_period_requency.save() 
+
+  def rake_task_for_award(self):
+    awards = Awards.objects.filter(frequency= 'MONTHLY')
+    for award in awards:
+      monthly_template = AwardTemplate.objects.filter(award_id= award.id, is_active= True).first()
+      # We can replace '#' by month to test e.g 1,2,3 etc.... 
+      monthly_levels = NominationPeriodFrequency.objects.filter(start_day__month=4)
+      if monthly_levels:
+        nomination_instance = NominationInstance(award_template_id= monthly_template.id)
+        nomination_instance.save() 
+        for monthly_level in monthly_levels:
+          if monthly_level.start_day == datetime.strptime('2019-04-01', '%Y-%m-%d').date():
+            for user in User.objects.all():
+              if UserRole.objects.get(user_id=user.id).role.group == monthly_level.level.group:
+                nomination_period = NominationTimeSlot(start_day= monthly_level.start_day, end_day= monthly_level.end_day, level_id= monthly_level.level_id, award_id= monthly_level.award_id, nomination_instance= nomination_instance)
+                nomination_period.save() # set created by
+                nomination_submitter = NominationSubmitter(nomination_instance= nomination_instance , reviewer= user)
+                nomination_submitter.save()
+          # creating record for next month
+          new_nomination_period_requency = NominationPeriodFrequency(start_day= monthly_level.start_day + relativedelta(months=+1) , end_day= monthly_level.end_day + relativedelta(months=+1), level_id= monthly_level.level_id, award_id= monthly_level.award_id)
+          new_nomination_period_requency.save()
 
 class NominationPeriod(models.Model):
   CHOICES = [(str(i),str(i)) for i in range(1,32)]
