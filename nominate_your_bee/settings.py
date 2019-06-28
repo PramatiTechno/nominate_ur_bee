@@ -31,7 +31,7 @@ SECRET_KEY = '$eew7_t+*^%jg$v!fokk#q8kas0=mk3!=o7*h)!k7x#=ng1*w-'
 DEBUG = True
 
 ALLOWED_HOSTS = ["ldap.dev","localhost","nominate-your-bee.test",
-"127.0.0.1","172.17.10.110","0.0.0.0"]
+"127.0.0.1","172.17.10.110","0.0.0.0","3.94.165.134"]
 
 CAS_ROOT_PROXIED_AS = os.environ['SERVER_NAME']
 
