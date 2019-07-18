@@ -9,9 +9,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from IPython import embed
 
-# Create your views here
-class Award
-def edit(request, award_id):
+# Create your views here.
+def edit_awards(request, award_id):
   award = Awards.objects.get(pk=award_id)
   award_form = AwardsActiveForm(instance=award)
   query = NominationPeriod.objects.filter(award_id=award.id)
@@ -35,7 +34,7 @@ def edit(request, award_id):
         return redirect('nominate_app:view_awards')
   return render(request, 'nominate_app/edit_award.html', {'formset':formset, 'award':award, 'award_form':award_form, 'frequencies': Awards.edit_frequencies.items() })
 
-def delete(request, nom_id):
+def award_delete(request, nom_id):
   nomination_period = NominationPeriod.objects.get(pk=nom_id)
   nomination_period.delete()
   return HttpResponse('')
