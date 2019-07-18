@@ -86,6 +86,9 @@ class Awards(models.Model):
 
   class Meta:
     db_table='awards'
+    permissions = (
+           ("award_crud", "can have all the access"),
+     )
 
   def __str__(self):
     return self.name
