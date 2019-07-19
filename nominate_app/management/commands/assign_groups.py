@@ -10,13 +10,13 @@ class Command(BaseCommand):
 
         # add_award = Permission.objects.filter(codename='add_awards')[0]
         permissions = Permission.objects.filter(content_type__app_label='nominate_app')
-        group, created = Group.objects.get_or_create(name='Admin')
+        group, created = Group.objects.get_or_create(name='Admin', group='level0')
         if created:
             group.permissions.add(*permissions.filter(content_type__model='awards'))
 
-        group, created = Group.objects.get_or_create(name='Manager')
-        group, created = Group.objects.get_or_create(name='Technical Jury Member')
-        group, created = Group.objects.get_or_create(name='Directorial Board Member')
+        group, created = Group.objects.get_or_create(name='Manager',  group='level1')
+        group, created = Group.objects.get_or_create(name='Technical Jury Member',  group='level2')
+        group, created = Group.objects.get_or_create(name='Directorial Board Member',  group='level3')
 
     def handle(self, *args, **options):
         self._create_groups()
