@@ -4,10 +4,13 @@ from nominate_app.forms import TemplateForm, AwardQuestionForm
 from nominate_app.models import Questions, AwardTemplate, Awards
 from django.http import HttpResponse
 from django.contrib import messages
+from nominate_app.utils import group_required
 import json
 
 # Create your views here.
 
+
+@group_required('Admin', raise_exception=True)
 def new_award_template(request,award_id):
   award = AwardTemplate()
   award_form = TemplateForm(instance=award)
@@ -29,6 +32,7 @@ def new_award_template(request,award_id):
         return redirect('nominate_app:award_template_index')
   return render(request, 'nominate_app/new_award_template.html', {'formset':formset,'award_form':award_form })
 
+@group_required('Admin', raise_exception=True)
 def edit_award_template(request, template_id):
   award_template = AwardTemplate.objects.get(id = template_id)
   template_form = TemplateForm(instance=award_template)
@@ -59,6 +63,7 @@ def edit_award_template(request, template_id):
     formset = TemplateFormset(instance=award_template,queryset=questions)
   return render(request, 'nominate_app/edit_award_template.html', {'formset':formset,'template_form':template_form })
 
+@group_required('Admin', raise_exception=True)
 def delete_award_template(request, ques_id):
   questions = Questions.objects.filter(id=ques_id)
   if questions.exists():

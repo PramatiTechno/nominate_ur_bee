@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission, User
+from django.contrib.contenttypes.models import ContentType
 
 class Command(BaseCommand):
     args = ''
@@ -7,12 +8,11 @@ class Command(BaseCommand):
 
     def _create_groups(self):
 
-        add_award = Permission.objects.filter(codename='add_awards')[0]
-
-        group, created = Group.objects.get_or_create(name='admin')
+        # add_award = Permission.objects.filter(codename='add_awards')[0]
+        permissions = Permission.objects.filter(content_type__app_label='nominate_app')
+        group, created = Group.objects.get_or_create(name='Admin')
         if created:
-            group.permissions.add(add_award)
-            # logger.info('admin Group created')
+            group.permissions.add(*permissions.filter(content_type__model='awards'))
 
         group, created = Group.objects.get_or_create(name='Manager')
         group, created = Group.objects.get_or_create(name='Technical Jury Member')
