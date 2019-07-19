@@ -21,7 +21,13 @@ def manager_nominate_index(request):
   return render(request, 'nominate_app/manager_nominate_index.html', {'todo_nomination_chains':todo_nomination_chains, 'done_nominations':done_nominations })
 
 
+def store_nomination(request, nomination_instance_id):
+  current_nomination = NominationSubmitter.objects.get(nomination_instance_id = nomination_instance_id)
+  current_nomination.submit_later = 1
+  current_nomination.save()
+
 def create_nomination(request,chain_id):
+  
   answers_form = NominationAnswersForm(instance=NominationAnswers())
   nomination_chain = NominationSubmitter.objects.get(id=chain_id)
   nomination_instance = nomination_chain.nomination_instance
