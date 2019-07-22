@@ -1,15 +1,16 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from dateutil.relativedelta import *
 from datetime import datetime
-
+from IPython import embed
 # from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-  
+Group.add_to_class('group', models.CharField(max_length=30, default='level0'))    
+
 class UserProfile(models.Model):
   email = models.EmailField(max_length=70, unique=True)
   designation = models.CharField(max_length=70)
@@ -33,17 +34,22 @@ class UserProfile(models.Model):
   def __str__(self):
       return self.email
 
-  def is_admin(self):
-    user = self.user
-    return UserRole.objects.get(user= user).role.name.lower() == 'admin'
+  def get_group_name(self):
+    return self.user.groups.all()[0].name.lower()
 
-  def is_manager(self):
-    user = self.user
-    return UserRole.objects.get(user= user).role.name.lower() == 'manager'
+  # def is_admin(self):
+  #   user = self.user
+  #   embed()
+    
+  #   return UserRole.objects.get(user= user).role.name.lower() == 'admin'
 
-  def is_tech_jury(self):
-    user = self.user
-    return UserRole.objects.get(user= user).role.name.lower() == 'technical jury member'
+  # def is_manager(self):
+  #   user = self.user
+  #   return UserRole.objects.get(user= user).role.name.lower() == 'manager'
+
+  # def is_tech_jury(self):
+  #   user = self.user
+  #   return UserRole.objects.get(user= user).role.name.lower() == 'technical jury member'
 
 
 class Role(models.Model):
@@ -86,6 +92,9 @@ class Awards(models.Model):
 
   class Meta:
     db_table='awards'
+    permissions = (
+           ("award_crud", "can have all the access"),
+     )
 
   def __str__(self):
     return self.name
@@ -122,7 +131,7 @@ class Awards(models.Model):
 
 class NominationPeriod(models.Model):
   CHOICES = [(str(i),str(i)) for i in range(1,32)]
-  level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
+  level = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
@@ -156,7 +165,7 @@ class Questions(models.Model):
   qname = models.CharField(max_length=100, null=False, blank=False)
   qtype = models.CharField(max_length=100, choices=query_choice, null=False, blank=False, default='subjective')
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-  role = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
+  role = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
   attachment_need = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
@@ -199,7 +208,7 @@ class NominationAnswers(models.Model):
     db_table='nomination_answers'
 
 class NominationPeriodFrequency(models.Model):
-  level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
+  level = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
@@ -210,7 +219,7 @@ class NominationPeriodFrequency(models.Model):
     db_table='nomination_period_frequency' 
 
 class NominationTimeSlot(models.Model):
-  level = models.ForeignKey(Role, on_delete=models.CASCADE, null=False, blank=False)
+  level = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)

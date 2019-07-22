@@ -6,8 +6,12 @@ from nominate_app.forms import AwardsForm, AwardsActiveForm, NominationPeriodFor
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
+from nominate_app.utils import group_required
+from IPython import embed
 
 # Create your views here.
+@group_required('Admin', raise_exception=True)
 def edit_awards(request, award_id):
   award = Awards.objects.get(pk=award_id)
   award_form = AwardsActiveForm(instance=award)
@@ -32,11 +36,14 @@ def edit_awards(request, award_id):
         return redirect('nominate_app:view_awards')
   return render(request, 'nominate_app/edit_award.html', {'formset':formset, 'award':award, 'award_form':award_form, 'frequencies': Awards.edit_frequencies.items() })
 
+@group_required('Admin', raise_exception=True)
 def award_delete(request, nom_id):
   nomination_period = NominationPeriod.objects.get(pk=nom_id)
   nomination_period.delete()
   return HttpResponse('')
 
+
+@group_required('Admin', raise_exception=True)
 def awards(request):
   award = Awards()
   award_form = AwardsForm(instance=award)
