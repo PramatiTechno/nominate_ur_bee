@@ -36,6 +36,7 @@ urlpatterns = [
   path('manager_nominate_index/', nominate_process_view.manager_nominate_index, name='manager_nominate_index'),
   path('create_nomination/<chain_id>/', nominate_process_view.create_nomination, name='create_nomination'),
   path('view_nomination/<chain_id>/', nominate_process_view.view_nomination, name='view_nomination'),
+  path('store_nomination/<nomination_instance_id>/', nominate_process_view.store_nomination, name='store_nomination'),
 ]
 
 if settings.DEBUG:

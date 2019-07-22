@@ -183,16 +183,23 @@ class NominationInstance(models.Model):
     db_table='nomination_instances'
 
 class NominationSubmitter(models.Model):
+  submit_choice =( 
+    ("SAVE", 1),
+    ("SUBMIT", 0)
+  )
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
   reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
   reviewed_at = models.DateField(max_length=20, null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+  submit_later =  models.IntegerField(choices=submit_choice, default=0)
 
   class Meta:
     db_table='nomination_submitters'
 
 class NominationAnswers(models.Model):
+  
   UPLOAD_TO = 'answers/images'
+  
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
   nomination_chain = models.ForeignKey(NominationSubmitter, on_delete=models.CASCADE)
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
