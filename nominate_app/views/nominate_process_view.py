@@ -35,7 +35,10 @@ def create_nomination(request,chain_id):
   nomination_chain = NominationSubmitter.objects.get(id=chain_id)
   nomination_instance = nomination_chain.nomination_instance
   nomination_template = nomination_instance.award_template
-  questions = Questions.objects.filter(award_template = nomination_template).order_by('id')
+  if request.user.groups.filter(name='Admin').exists():
+    questions = Questions.objects.filter(award_template = nomination_template).order_by('id')
+  else:
+    questions = Questions.objects.filter(award_template = nomination_template, role__in=request.user.groups.all()).order_by('id')
   new_form = request.POST.copy()
   dict_new_form = dict(new_form)
   ques_answers_dict = {k.split('_')[0]: v for k, v in dict_new_form.items() if k.endswith('answer')}
