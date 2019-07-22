@@ -48,9 +48,10 @@
       <div class ="row award_top_margin justify-content-md-center">
         <div class="col-sm-4">
           <button type="button" class="btn btn-danger">Cancel</button>
-          <button type="submit" class="btn btn-success">Submit</button>
-          <button type="button" class="btn btn-primary"     onclick="location.href='{% url 'nominate_app:store_nomination' nomination_instance.id %}'"
-          id="save_form">Save</button>
+          <button type="submit" class="btn btn-success" name="action" value="submit">Submit</button>
+          <button type="submit" class="btn btn-primary" name="action" value="save">Save</button>
+          <!-- <button type="button" class="btn btn-primary"     onclick="location.href='{% url 'nominate_app:store_nomination' nomination_instance.id %}'"
+          id="save_form">Save</button> -->
         </div>  
       </div>    
     </form> 
