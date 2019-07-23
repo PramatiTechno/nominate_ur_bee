@@ -42,6 +42,37 @@
           </div>
         </div>
       </div>
+      <div id="accordion-saved_nominations">
+        <div class="card">
+          <div class="card-header" data-toggle="collapse" href="#collapseThree-todo_nominations">
+            <a class="collapsed card-link" >
+            Saved Nominations
+            </a>
+          </div>
+          <div id="collapseThree-todo_nominations" class="collapse show" data-parent="#accordion">
+            <div class="card-body">
+              <div class="container">
+                {% if saved_nominations %}
+                 {% for nomination_chain in saved_nominations %}
+                    <form>
+                      <table class="table table-borderless">
+                        <tbody>
+                            <tr class="d-flex">
+                              <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination_chain.nomination_instance.award_template }} </td>
+                              <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:create_nomination' nomination_chain.id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </form>
+                  {% endfor %}
+                {% else %}
+                  No Nomination instances available.
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="accordion-done_nominations">
         <div class="card">
           <div class="card-header" data-toggle="collapse" href="#collapseThree-done_nominations">
