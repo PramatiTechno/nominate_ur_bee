@@ -25,10 +25,19 @@
           </div>
           <div class="col-sm-4">
             {% if question.qtype == 'SUBJECTIVE'%}   
+              {% if question.nominationanswers_set.count > 0 %}
+              <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="{{ question.nominationanswers_set.first.answer_text }}" required />
+              {% else %}
               <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="" required />
+              {% endif %}
             {% else %}
-              <input type="radio" value="yes" name="answer_option">
-              <input type="radio" value="no" name="answer_option">
+                {% if question.nominationanswers_set.first.answer_text == 'yes' %}
+                  <input type="radio" value="yes" name="{{question.id}}_answer_option" checked> Yes   
+                  <input type="radio" value="no" name="{{question.id}}_answer_option"> No
+                {% else %}
+                  <input type="radio" value="yes" name="{{question.id}}_answer_option"> Yes
+                  <input type="radio" value="no" name="{{question.id}}_answer_option" checked> No
+                {% endif %}
             {% endif %}
           </div>
           {% if question.attachment_need %}
