@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<br>
+<div class="container">
+	<h4> Award: {{award.name}} </h4>
+	<h5> Nomination: {{nomination.template_name}}</h5>
+	{% for instance, detail in instances.items %}
+	<div class="card">
+  		<div class="card-body">
+    		<h5 class="card-title">Nominated by: {{instance.user.email}}</h5>
+    		<h6 class="card-subtitle mb-2 text-muted">Submitted on: {{detail.submitted_at}}</h6>
+    		<div class="card-text">
+    		{% for answer in detail.answers %}
+    			<p>Question: {{answer.question}}</p>
+    			<p>Answer: {{answer.answer_text}}</p>
+    		{% endfor %}
+    		</div>
+    		<a href="#" class="card-link">Like</a>
+    		<a href="#" class="card-link">Comment</a>
+  		</div>
+	</div>
+	<hr>
+	{% endfor %}
+</div>
+
+{% endblock %}
