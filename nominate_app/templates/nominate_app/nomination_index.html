@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<br>
+<div class="container">
+
+{% if nomination_list %}
+	<ul class="list-group">
+  {% for nomination in nomination_list %}
+	  <li class="list-group-item">
+	  	<a href="{% url 'nominate_app:nomination_detail' nomination.id %}" class="nav-link {% if request.path == "/nomination_detail/" %}active{% endif %}">
+	  		<div class="row">
+	  			<div class="col-md-8">{{nomination.template_name}}</div>
+	  			<div class="col-md-4">Award: {{nomination.award.name}}</div>
+	  		</div>
+	  	</a>
+		</li>
+	{% endfor %}
+{% else %}
+	No Nomination available.
+{% endif %}
+	</ul>
+
+</div>
+
+{% endblock %}
