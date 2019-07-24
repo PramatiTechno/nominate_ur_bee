@@ -1,5 +1,5 @@
 from django import forms  
-from nominate_app.models import Awards, NominationPeriod, AwardTemplate, Questions, NominationAnswers
+from nominate_app.models import *
 from django.forms import inlineformset_factory
 
 class AwardsForm(forms.ModelForm):
@@ -23,6 +23,17 @@ class AwardsActiveForm(forms.ModelForm):
     model = Awards
     fields = '__all__'
 
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ['text']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['text'].widget.attrs.update({'class': 'form-control comment-text', 'rows':1, 'placeholder': "comment.."})
+        self.fields['text'].label=''
 
 class NominationPeriodForm(forms.ModelForm):
 
