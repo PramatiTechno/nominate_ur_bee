@@ -15,21 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin  
 from django.urls import path  
-from nominate_app.views import award_template_views,award_index,create_award_view, nominate_process_view, nomination_status_view
+from nominate_app.views import awards,award_templates, award_template_views,nominate_process_view, nomination_status_view
 from django.conf import settings 
 from django.conf.urls.static import static
 
 app_name = 'nominate_app'
 urlpatterns = [
-  path('', award_index.home, name='home'),
-  path('newawards/', create_award_view.awards, name='newawards'),
-  path('view_awards/', award_index.view_awards, name='view_awards'),
-  path('edit_awards/<award_id>/', create_award_view.edit_awards, name='edit_awards'),
-  path('award_template_index/', award_index.award_template_index, name='award_template_index'),
-  path('award_template_load/<id>/', award_index.award_template_load, name='award_template_load'),
-  path('delete/<nom_id>/', create_award_view.award_delete),
-  path('new_award_template/<award_id>/', award_template_views.new_award_template, name='new_award_template'),
-  path('edit_award_template/<template_id>/', award_template_views.edit_award_template, name='edit_award_template'),
+  path('', awards.index, name='home'),
+  path("awards/",awards.index,name="awards"),
+  path("awards/new/",awards.new,name="new_award"),
+  path("awards/<award_id>/edit/",awards.edit,name="edit_award"),
+  path('awards/<award_id>/', awards.award,name="award"),
+  path('award_templates/', award_templates.home,name="award_templates_home"),
+  path("awards/<award_id>/award_templates/",award_templates.index,name="award_templates_index"),
+  path("awards/<award_id>/award_templates/new/",award_templates.new,name="new_template"),
+  path("awards/<award_id>/award_templates/<award_template_id>/edit/",award_templates.edit,name="edit_award_template"),
+  path('awards/<award_id>/award_templates/<award_template_id>/', award_templates.award_template,name="award_template"),
   path('question/delete/<ques_id>/', award_template_views.delete_award_template),
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
   path('nomination_status_load/<id>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),

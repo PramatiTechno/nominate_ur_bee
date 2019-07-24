@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from nominate_app.models import Awards, AwardTemplate, NominationInstance, User, Role, UserRole
+from nominate_app.models import Awards, AwardTemplate, NominationInstance, User
 from django.http import HttpResponse
 from django.core import serializers 
 from django.http import JsonResponse
