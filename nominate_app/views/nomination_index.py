@@ -12,7 +12,7 @@ class NominationIndexView(View):
 	template_name='nominate_app/nomination_index.html'
 	context_object_name = 'nomination_list'
 	def get(self, request):
-		submitted_instances = NominationInstance.objects.filter(status='nomination_submitted')
+		submitted_instances = NominationInstance.objects.all()
 		submitted_nominations = AwardTemplate.objects.filter(id__in=submitted_instances)
 		return render(request, self.template_name, {self.context_object_name: submitted_nominations})
 
@@ -28,7 +28,7 @@ class NominationDetailView(View):
 	def get(self, request, award_template_id):
 		award_template = AwardTemplate.objects.get(id=award_template_id)
 		award = award_template.award
-		submitted_instances = NominationInstance.objects.filter(award_template_id=award_template, status='nomination_submitted')
+		submitted_instances = NominationInstance.objects.filter(award_template_id=award_template)
 		form = CommentForm()
 		instance_answers = {}
 		for instance in submitted_instances:
@@ -49,9 +49,9 @@ class CommentList(View):
 	def post(self, request, award_template_id, nomination_instance_id):
 		nomination_instance = get_object_or_404(NominationInstance, id=nomination_instance_id)
 		form = CommentForm()
-		# form = CommentForm(request.POST)
-		# if form.is_valid():
-		# comment = form.save(commit=False)
+		form = CommentForm(request.POST)
+		if form.is_valid():
+		  comment = form.save(commit=False)
 		comment = Comment()
 		comment.nomination = nomination_instance
 		comment.text = request.POST['comment']

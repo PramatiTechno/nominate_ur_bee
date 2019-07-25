@@ -13,9 +13,6 @@ class AwardsForm(forms.ModelForm):
     self.fields['name'].widget.attrs.update({'class': 'form-control def', 'placeholder': "Enter Award Name"})
     self.fields['frequency'].widget.attrs.update({'class': 'form-control abc'})
     self.fields['description'].widget.attrs.update({'class': 'form-control ghi', 'placeholder': "what's this award for ??"})
-        
-
-
 
 class AwardsActiveForm(forms.ModelForm):
 

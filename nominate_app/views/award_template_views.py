@@ -6,9 +6,16 @@ from django.http import HttpResponse
 from django.contrib import messages
 from nominate_app.utils import group_required
 import json
+from IPython import embed
 from django.utils import timezone
-# Create your views here.
 
+
+# Create your views here.
+def home(request):
+  if request.user.groups.filter(name="Admin").exists():
+    return redirect('nominate_app:awards')
+  else:
+    return redirect('nominate_app:manager_nominate_index')
 
 @group_required('Admin', raise_exception=True)
 def new_award_template(request,award_id):

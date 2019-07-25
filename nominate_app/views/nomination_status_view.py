@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from nominate_app.models import Awards, AwardTemplate, NominationInstance, User, Role, UserRole
+from nominate_app.models import Awards, AwardTemplate, NominationInstance, User
 from django.http import HttpResponse
 from django.core import serializers 
 from django.http import JsonResponse
+from IPython import embed
 # Create your views here.
 
 def home(request):
@@ -12,9 +13,15 @@ def home(request):
 def nomination_status(request):
   if request.method == 'GET':
     awards = Awards.objects.all()
-    award_id = awards.last().id
-    award_template_id = AwardTemplate.objects.get(award_id=award_id, is_active=True).id
-    nomination_status = NominationInstance.objects.filter(award_template_id=award_template_id)
+    if awards.count()==0:
+      nomination_status = []
+    else:
+      award_id = awards.first().id
+      award_template_id = AwardTemplate.objects.filter(award_id=award_id).values_list('id', flat=True)
+      try:
+        nomination_status = NominationInstance.objects.filter(pk__in=[award_template_id])
+      except:
+        nomination_status = []
   return render(request, 'nominate_app/nomination_status.html',{'nomination_status':nomination_status, 'award_categories':awards})
 
 def nomination_status_load(request,id):
