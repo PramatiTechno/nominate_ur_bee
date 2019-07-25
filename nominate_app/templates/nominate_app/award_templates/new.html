@@ -60,9 +60,24 @@
           </div>
           <div class="col-sm-3"> 
             <div class="form-group">
-              {{ form.qtype|attr:"class:form-control" }}
+              {{ form.qtype|attr:"class:form-control objective-type" }}
             </div>
+            <div class="objective-type-container" id="id_questions_set-0-objective-container">
+                <div class="form-group">
+                    <div class='input-group row'>
+                      <div class='col-sm-10'>
+                          <input type="text" class='form-control' id='id_questions_set-0-objectives' name='questions_set-0-objectives'/>
+                      </div>
+                      <div class='col-sm-2'>
+                          <input type="button"  value='Remove' class='objective-cancel'  name='objective-cancel'/>
+                      </div>
+                    </div>
+                    
+                    <input type="button" class='objective-add-button' name='objective-button'  value='Add Choice' />
+                </div>
+            </div> 
           </div>
+        </div>
           <div class="col-sm-2"> 
             <div class="form-row">
               <label class="col-form-label" for='{{form.role}' >Level</label> 

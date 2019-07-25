@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, Group
 from dateutil.relativedelta import *
 from datetime import datetime
 from IPython import embed
+from django.contrib.postgres.fields import ArrayField
 # from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
@@ -108,7 +109,7 @@ class Questions(models.Model):
   attachment_need = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-
+  options = ArrayField(models.CharField(max_length=100, blank=True), size=20, default=list)
   def __str__(self):
     return self.qname
 
