@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from nominate_app.utils import group_required
 import json
-
+from django.utils import timezone
 # Create your views here.
 
 
@@ -23,12 +23,22 @@ def new_award_template(request,award_id):
     award_form = TemplateForm(request.POST)
     formset = TemplateFormset(request.POST)
     if award_form.is_valid():
-      created_award = award_form.save(commit=False)
-      formset = TemplateFormset(request.POST, instance=created_award)
       if formset.is_valid():
-        created_award.save()
-        formset.save()
-        messages.success(request, 'Award Template created successfully.')
+        content = request.POST
+        created_award = award_form.save()
+        for i in range(int(content['questions_set-TOTAL_FORMS'])):
+          qtype = content['questions_set-{0}-qtype'.format(i)]
+          if qtype == "SUBJECTIVE":
+            question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
+            attachment_need=False, created_at=timezone.now(), award_template_id = created_award.id, \
+            role_id=content['questions_set-{0}-role'.format(i)])
+            question.save()
+          else:
+            question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
+            attachment_need=False, created_at=timezone.now(), award_template_id = created_award.id, \
+            role_id=content['questions_set-{0}-role'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)))
+            question.save()
+          messages.success(request, 'Award Template created successfully.')
         return redirect('nominate_app:award_template_index')
   return render(request, 'nominate_app/new_award_template.html', {'formset':formset,'award_form':award_form })
 
@@ -44,6 +54,7 @@ def edit_award_template(request, template_id):
   TemplateFormset = inlineformset_factory(AwardTemplate, Questions, form=AwardQuestionForm, extra=x)
   formset = TemplateFormset(instance=award_template,queryset=questions)
   if request.method == 'POST':
+
     new_form = request.POST.copy()
     new_form['award'] = str(award_template.award_id)
     request.POST = new_form

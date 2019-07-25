@@ -6,6 +6,9 @@
 
 {% load staticfiles %}
 
+
+
+
 <div class = "container">
   <div class="form-group">
       {% csrf_token %}
@@ -25,8 +28,14 @@
             {% if answer.answer_text %}   
               <input type="text" name="answer_text" class="form-control" placeholder="" value="{{answer.answer_text|slugify}}" disabled />
             {% else %}
-              <input type="radio" value="yes" name="answer.answer_option">
-              <input type="radio" value="no" name="answer.answer_option">
+
+              {%if answer.answer_option == "yes" %}
+                <input type="radio" value="yes" name="answer.answer_option" checked> Yes
+                <input type="radio" value="no" name="answer.answer_option"> No
+              {% else %}
+                  <input type="radio" value="yes" name="answer.answer_option"> Yes
+                  <input type="radio" value="no" name="answer.answer_option" checked> No
+              {% endif %}
             {% endif %}
             {% if answer.attachment_path %}   
               <img src="{{answer.attachment_path.url}}" alt="answer option" height="310" width="310" />

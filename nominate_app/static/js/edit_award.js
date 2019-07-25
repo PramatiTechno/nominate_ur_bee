@@ -2,6 +2,8 @@ $('#add_more').click(function() {
     cloneMore('div.table:last', 'nominationperiod_set');
 });
 
+
+
 $(document).on('change', '[type=checkbox]', function(event) {
 	event.preventDefault();
 	var checkboxId = event.target.id;
