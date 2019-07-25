@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 
 app_name = 'nominate_app'
 urlpatterns = [
-  path('', awards.index, name='home'),
+  path('', award_template_views.home, name='home'),
   path("awards/",awards.index,name="awards"),
   path("awards/new/",awards.new,name="new_award"),
   path("awards/<award_id>/edit/",awards.edit,name="edit_award"),
