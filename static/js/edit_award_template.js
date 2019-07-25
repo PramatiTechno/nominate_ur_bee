@@ -1,5 +1,11 @@
-$(document).ready(function(){
 
+
+$(document).ready(function(){
+  $('.objective-type').each(function(i, element){
+    if(element.value == "SUBJECTIVE")
+      $(this).parent().next().hide()
+  })
+  
  if(($('.del_btn_formset').length) == 1){
     $('.del_btn_formset').hide()
   }
@@ -13,6 +19,16 @@ $(document).ready(function(){
         $(obj).show()
     });  
     cloneMore('div.add_template_questions:visible:last', 'questions_set');
+  });
+
+  $(".objective-type").on('change', function(event){
+    if(this.selectedIndex == 1){
+      
+      $(this).parent().next().show()
+
+    }else{
+      $(this).parent().next().hide()
+    }
   });
 
   $(document).on('change', '[type=checkbox]', function(event) {
@@ -80,9 +96,35 @@ $(document).ready(function(){
         $(this).attr('for', newFor);
       }  
     });
+    newElement.find('.objective-type-container').each(function(){
+      var container_id = $(this).attr('id').replace('-' + (total-1) + '-','-' + total + '-');
+      $(this).attr('id', container_id)
+    });
+    newElement.find('.objective-add-button').each(function(){
+      $(this).attr('value', "Add Choice")
+    });
+    newElement.find('.objective-cancel').each(function(){
+      $(this).attr('value', "Remove")
+    });
+    newElement.find('.input-group').each(function(){
+      id = $(this).children().first().children().attr('id');
+      
+      if($(this).parent().children().length != 2){
+        $(this).remove()
+      }else{
+        inputText =$(this).children().first().children()
+        oldName = inputText.attr('name')
+        temp = oldName.split('-');
+        temp[1] = "" + total
+        newName = temp.join('-')
+        inputText.attr('name', newName)
+      }
+      
+    });
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
     $(selector).after(newElement);
+    $("#id_questions_set-"+ (total-1) +"-objective-container").hide()
   }
 
   function re_calc_init(){
@@ -105,6 +147,26 @@ $(document).ready(function(){
     return false;
 }
 
+$('.objective-add-button').click(function(){
+  parentElement = $(this).prev().clone(true)
+  newElement = $(parentElement).children().first().children()
+  oldId = $(newElement).attr('id')
+  dconstructedId = oldId.split('-') 
+  dconstructedId[1] = "" + (parseInt(dconstructedId[1]) + 1)
+  newId = dconstructedId.join("-")
+  $(newElement).val('');
+  $(newElement).attr('id',newId)
+  $(this).before(parentElement)
+});
+
+$('.objective-cancel').click(function(){
+
+  if($(this).parent().parent().parent().children().length !=2){
+    $(this).parent().parent().remove()
+  }
+
+});
+
 function updateElementIndex(el, prefix, ndx) {
     var id_regex = new RegExp('(' + prefix + '-\\d+)');
     var replacement = prefix + '-' + ndx;
@@ -112,4 +174,6 @@ function updateElementIndex(el, prefix, ndx) {
     if (el.id) el.id = el.id.replace(id_regex, replacement);
     if (el.name) el.name = el.name.replace(id_regex, replacement);
 }
+
+
 });
