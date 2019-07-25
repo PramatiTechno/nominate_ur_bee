@@ -109,7 +109,7 @@ class Questions(models.Model):
   attachment_need = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  options = ArrayField(models.CharField(max_length=100, blank=True), size=20, default=list)
+  options = ArrayField(models.CharField(max_length=100, blank=True), size=20,blank=True,null=True)
   def __str__(self):
     return self.qname
 

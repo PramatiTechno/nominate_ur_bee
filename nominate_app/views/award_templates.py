@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from nominate_app.utils import group_required
 from IPython import embed
+from django.utils import timezone
 import json
  
 @group_required('Admin', raise_exception=True)
@@ -42,7 +43,6 @@ def index(request,award_id):
       'load_templates': templates
     })
   elif request.method == 'POST':
-    award = Awards.objects.get(id=award_id)
     award_template = AwardTemplate()
     award_form = TemplateForm(instance=award_template)
     TemplateFormset = inlineformset_factory(AwardTemplate, Questions, form=AwardQuestionForm, extra=1)
@@ -53,12 +53,23 @@ def index(request,award_id):
     award_form = TemplateForm(request.POST)
     formset = TemplateFormset(request.POST)
     if award_form.is_valid():
-      created_award = award_form.save(commit=False)
-      formset = TemplateFormset(request.POST, instance=created_award)
       if formset.is_valid():
-        created_award.save()
-        formset.save()
-        messages.success(request, 'Award Template created successfully.')
+        award = Awards.objects.get(id=award_id)
+        content = request.POST
+        created_award = award_form.save()
+        for i in range(int(content['questions_set-TOTAL_FORMS'])):
+          qtype = content['questions_set-{0}-qtype'.format(i)]
+          if qtype == "SUBJECTIVE":
+            question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
+            attachment_need=False, created_at=timezone.now(), award_template_id = created_award.id, \
+            role_id=content['questions_set-{0}-role'.format(i)])
+            question.save()
+          else:
+            question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
+            attachment_need=False, created_at=timezone.now(), award_template_id = created_award.id, \
+            role_id=content['questions_set-{0}-role'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)))
+            question.save()
+          messages.success(request, 'Award Template created successfully.')
         return redirect('nominate_app:award_templates_index', award_id=award.id)
 
 def new(request,award_id):
