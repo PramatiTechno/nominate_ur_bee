@@ -1,0 +1,10 @@
+<nav class="navbar navbar-expand-md navbar-dark sticky-top" id="sidebar">
+  <h3 class="navbar-brand">LOGO</h3> 
+  <h3 class="mx-auto navbar-brand">Nominate your bee</h3>
+    {% if user.is_authenticated %}
+    <p>{{ user.username }}</p>
+    <p><a href="/logout">Logout</a></p>
+    {% else %}
+    <p><a href="/login">Login</a></p>
+    {% endif %}
+</nav>

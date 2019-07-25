@@ -1,0 +1,21 @@
+
+{% block content %}
+    
+    {% for comment in instance.comments.all %}
+        <div class="comment row">
+            <div class="col-md-8">
+                <strong>{{ comment.author }}</strong>
+                <p>{{ comment.text|linebreaks }}</p>
+            </div>
+            <div class="date col-md-4">
+                <h6 class="text-muted">{{ comment.created_date }}</h6>
+                {% if not comment.approved_comment %}
+                    <a class="btn btn-default" href="{% url 'nominate_app:comment_remove' instance_id=instance.id comment_id=comment.id %}"><span class="glyphicon glyphicon-remove"></span></a>
+                    <a class="btn btn-default" href="{% url 'nominate_app:comment_approve' instance_id=instance.id comment_id=comment.id %}"><span class="glyphicon glyphicon-ok"></span></a>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <p>No comments here yet :(</p>
+    {% endfor %}
+{% endblock %}

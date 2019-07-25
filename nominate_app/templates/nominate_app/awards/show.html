@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+{% load staticfiles %}
+<script src="{% static 'js/edit_award.js' %}"></script>
+
+<div class = "container">
+   <div class="form-group">
+         </br>
+         <div class = "row award_top_margin">
+            <div class="col-sm-10">
+               <div class="form-row float-right">
+                  <label class="col-form-label" name='is_active'>Enable/Disable</label>
+                  <div class="custom-control custom-switch">
+                     {{ award_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
+                     <label class="custom-control-label" for="customSwitch1" ></label>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class = "row award_top_margin">
+            <div class="col-sm-2">
+               <label class="col-form-label" for="name">Award Name</label>
+            </div>
+            <div class="col-sm-8">  	
+               {{  award.name }}
+            </div>
+         </div>
+         <div class = "row award_top_margin">
+            <div class="col-sm-2">
+               <label class="col-form-label" for="name">Frequency</label>
+            </div>
+            <div class="col-sm-3">
+              {{award.frequency}}
+            </div>
+         </div>
+         <div class = "row award_top_margin">
+            <div class="col-sm-2">
+               <label class="col-form-label" for="name">Description</label>
+            </div>
+            <div class="col-sm-6">
+               {{ award.description }}  	
+            </div>
+         </div>
+
+         <div class = "row award_top_margin justify-content-md-center">
+            <div class="col-sm-2">
+               <button type="button" onclick="location.href='{% url 'nominate_app:awards' %}'" class="btn btn-primary add_more">Back</button>
+            </div>
+         </div>
+         <br>	
+
+   </div>
+</div>
+
+<style>
+  .was-validated .form-control:valid{
+    background-image: none;
+    border-color: #ced4da;
+  }
+</style>
+{% endblock %}
+

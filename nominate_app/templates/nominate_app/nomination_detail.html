@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+<script type="text/javascript">
+    $(function() { // shortcut for onDocumentReady
+        $('.comment_section').hide()
+
+        // When you click an "a" tag who is child of an item with class "subcategory_list"…
+        $('.comment-link').on('click', function() {
+            var instance_id = this.attributes.value.value
+            var comment_section = $(this).parent('div').find('.comment-section')
+            if (comment_section.is(':visible')) {
+                comment_section.hide()
+                return false;
+            }else{
+                comment_section.show()
+            }
+            $.ajax({
+                type: "GET",
+                url: "nomination_instance/" + instance_id + "/add_comment/", 
+                success : function(data) {
+                    console.log("our data",data);
+                    comment_section.html(data)
+                 },
+                error: function(response) {
+                    console.log("error",response)
+                }
+            });
+            return false;
+        });
+        $('.post-form').on('submit', function() {
+            var instance_id = $(this).find('.send')[0].attributes.value.value
+            var comment_text = $(this).find('.comment-text').val()
+            var comment_section = $(this).parent('div').find('.comment-section')
+            var csrf = $(this).find('input').val()
+            $.ajax({
+                type: "POST",
+                url: "nomination_instance/" + instance_id + "/add_comment/", 
+                data: {
+                    comment: comment_text,
+                    'csrfmiddlewaretoken' : csrf
+                },
+                success : function(data) {
+                    console.log("our data",data);
+                    comment_section.html(data)
+                },
+                error: function(response) {
+                    // Handle ajax errors here
+                    console.log("error",response)
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<br>
+<div class="container">
+	<h4> Award: {{award.name}} </h4>
+	<h5> Nomination: {{nomination.template_name}}</h5>
+	{% for instance, detail in instances.items %}
+	<div class="card">
+  		<div class="card-body">
+    		<h5 class="card-title">Nominated by: {{instance.user.email}}</h5>
+    		<h6 class="card-subtitle mb-2 text-muted">Submitted on: {{detail.submitted_at}}</h6>
+    		<div class="card-text">
+    		{% for answer in detail.answers %}
+    			<p>Question: {{answer.question}}</p>
+    			<p>Answer: {{answer.answer_text}}</p>
+    		{% endfor %}
+    		</div>
+    		<a href="" class="card-link">Like</a>
+    		<a href="" class="card-link comment-link" value = "{{instance.id}}">Comments</a>
+            <form method="POST" class="post-form">{% csrf_token %}
+                <div class="row">
+                    <div class="col-md-10">{{ form.text }}</div>
+                    <span class="token">{% csrf_token %} </span>
+                    <div class="col-md-2"><button type="submit" class="send btn btn-default" value="{{instance.id}}">Send</button></div>
+                </div>
+            </form>
+            <div class="comment-section">
+<!--                 {% include 'nominate_app/nomination_comments.html' with form=form instance=instance %}
+ -->        </div>
+  		</div>
+	</div>
+	<hr>
+	{% endfor %}
+</div>
+
+{% endblock %}

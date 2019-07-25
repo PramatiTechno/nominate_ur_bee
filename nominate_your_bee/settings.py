@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import dotenv
+# from django.contrib.messages import constants as message_constants
 
+
+dotenv.read_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env")))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,8 +30,10 @@ SECRET_KEY = '$eew7_t+*^%jg$v!fokk#q8kas0=mk3!=o7*h)!k7x#=ng1*w-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["ldap.dev","localhost","nominate-your-bee.test",
+"127.0.0.1","172.17.10.110","0.0.0.0","3.94.165.134"]
 
+CAS_ROOT_PROXIED_AS = os.environ['SERVER_NAME']
 
 # Application definition
 
@@ -38,7 +45,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles', 
     'django.contrib.postgres',
-    'nominate_app'  
+    'nominate_app',
+    'django_nose',
+    'widget_tweaks',
+    'django_cas_ng',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -49,14 +60,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cas_ng.middleware.CASMiddleware',
+    'nominate_your_bee.middleware.AuthRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'nominate_your_bee.urls'
+CAS_SERVER_URL = "https://cev3-test.pramati.com/cas/login"
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,6 +84,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'nominate_your_bee.wsgi.application'
+CAS_APPLY_ATTRIBUTES_TO_USER = True
+CAS_RENAME_ATTRIBUTES = {
+    'firstname': 'first_name',
+    'lastname': 'last_name',
+    'mail': 'email'
+}
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'nominate_app.backends.NominateCASBackend'
+)
 
 
 # Database
@@ -88,10 +113,14 @@ DATABASES = {
         'USER': os.environ['DB_USER'],
         'PASSWORD': os.environ['CORE_PASSWORD'],
         'HOST': os.environ['CORE_HOST'], 
-        'PORT':''  
+        'PORT': os.environ['DB_PORT']  
     }  
 }
 
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -130,3 +159,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT=os.path.join(BASE_DIR, 'static/compiled/')
+
+STATICFILES_DIRS = (
+  os.path.join(BASE_DIR, "static"),
+)
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
