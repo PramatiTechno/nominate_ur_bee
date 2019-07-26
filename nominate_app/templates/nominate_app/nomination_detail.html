@@ -2,11 +2,11 @@
 {% block content %}
 <script type="text/javascript">
     $(function() { // shortcut for onDocumentReady
-        $('.comment_section').hide()
+        $('.comment-section').hide()
 
         // When you click an "a" tag who is child of an item with class "subcategory_list"…
         $('.comment-link').on('click', function() {
-            var instance_id = this.attributes.value.value
+            var instance_id = $(this).attr('value')
             var comment_section = $(this).parent('div').find('.comment-section')
             if (comment_section.is(':visible')) {
                 comment_section.hide()
@@ -16,7 +16,7 @@
             }
             $.ajax({
                 type: "GET",
-                url: "nomination_instance/" + instance_id + "/add_comment/", 
+                url: "nomination_instance/" + instance_id + "/comment/", 
                 success : function(data) {
                     console.log("our data",data);
                     comment_section.html(data)
@@ -27,24 +27,26 @@
             });
             return false;
         });
+
         $('.post-form').on('submit', function() {
-            var instance_id = $(this).find('.send')[0].attributes.value.value
-            var comment_text = $(this).find('.comment-text').val()
+            var instance_id = $(this).find('.send').attr('value')
+            var comment_text_field = $(this).find('.comment-text')
             var comment_section = $(this).parent('div').find('.comment-section')
             var csrf = $(this).find('input').val()
             $.ajax({
                 type: "POST",
-                url: "nomination_instance/" + instance_id + "/add_comment/", 
+                url: "nomination_instance/" + instance_id + "/comment/", 
                 data: {
-                    comment: comment_text,
+                    comment: comment_text_field.val(),
                     'csrfmiddlewaretoken' : csrf
                 },
                 success : function(data) {
-                    console.log("our data",data);
+                    console.log("success");
                     comment_section.html(data)
+                    comment_section.show()
+                    comment_text_field.val('')
                 },
                 error: function(response) {
-                    // Handle ajax errors here
                     console.log("error",response)
                 }
             });
@@ -81,8 +83,8 @@
                 </div>
             </form>
             <div class="comment-section">
-<!--                 {% include 'nominate_app/nomination_comments.html' with form=form instance=instance %}
- -->        </div>
+              <!-- from template comment -->
+            </div>
   		</div>
 	</div>
 	<hr>
