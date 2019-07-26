@@ -60,19 +60,24 @@ class CommentList(View):
 		
 		return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'form': form, 'instance': nomination_instance}))
 
+	def delete(self, request, award_template_id, nomination_instance_id, comment_id):
+		nomination_instance = get_object_or_404(NominationInstance, id=nomintion_instance_id)
+		form = CommentForm()
+		comment = get_object_or_404(Comment, id=comment_id)
+		comment.delete()
+		return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'form': form, 'instance': nomination_instance}))
 
-def comment_approve(request, instance_id, comment_id):
+
+def comment_approve(request, nomination_instance_id, comment_id):
 	nomination_instance = get_object_or_404(NominationInstance, id=instance_id)
 	form = CommentForm()
 	comment = get_object_or_404(Comment, id=comment_id)
 	comment.approve()
-	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 	return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'form': form, 'instance': nomination_instance}))
 
-def comment_remove(request, instance_id, comment_id):
-	nomination_instance = get_object_or_404(NominationInstance, id=instance_id)
+def comment_remove(request, award_template_id, nomination_instance_id, comment_id):
+	nomination_instance = get_object_or_404(NominationInstance, id=nomination_instance_id)
 	form = CommentForm()
 	comment = get_object_or_404(Comment, id=comment_id)
 	comment.delete()
-	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 	return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'form': form, 'instance': nomination_instance}))

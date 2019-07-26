@@ -10,6 +10,11 @@ class Migration(migrations.Migration):
 
     initial = True
 
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('auth', '0010_group_group'),
+    ]
+
     operations = [
         migrations.CreateModel(
             name='Awards',
@@ -46,6 +51,11 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(default='new', max_length=50)),
                 ('result', models.CharField(blank=True, max_length=50, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
+                ('submitted_at', models.DateTimeField(blank=True, null=True)),
+                ('answer_option', models.BooleanField(blank=True, max_length=20, null=True)),
+                ('answer_text', models.CharField(blank=True, max_length=500, null=True)),
+                ('attachment_path', models.FileField(blank=True, max_length=500, null=True, upload_to='answers/images')),
+                ('uploaded_at', models.DateTimeField(blank=True, null=True)),
                 ('award_template', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='nominate_app.AwardTemplate')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
