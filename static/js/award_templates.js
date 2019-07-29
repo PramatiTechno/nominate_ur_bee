@@ -19,7 +19,7 @@ $('.objective-add-button').click(function(){
 
 
 $(".objective-type").on('change', function(event){
-  if(this.selectedIndex == 1){
+  if(this.selectedIndex != 0){
     
     $(this).parent().next().show()
 
@@ -119,31 +119,6 @@ $('.objective-cancel').click(function(){
     $(selector).after(newElement);
     $("#id_questions_set-"+ (total-1) +"-objective-container").hide()
   }
-  // function cloneMore(selector, type) {
-  //   var newElement = $(selector).clone(true);
-  //   var total = $('#id_' + type + '-TOTAL_FORMS').val();
-  //   newElement.find(':input').each(function() {
-  //       var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
-  //       var id = 'id_' + name;
-  //       $(this).attr({'name': name, 'id': id}).val('').prop('checked', false);
-  //       if($(this).attr('id').endsWith('qtype')){
-  //         $(this).val('SUBJECTIVE')
-  //       }
-  //       else if($(this).attr('id').endsWith('role')){
-  //         $(this).val(1)
-  //       }
-  //   });
-  //   newElement.find('label').each(function() {
-  //       if ($(this).attr('for')  !== undefined ) {
-  //         var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
-  //         $(this).attr('for', newFor);
-  //       }  
-  //   });
-  //   total++;
-  //   $('#id_' + type + '-TOTAL_FORMS').val(total);
-  //   $(selector).after(newElement);
-  // }
-
   function re_calc_total() {
     var total = $('#id_questions_set-TOTAL_FORMS').val();
     total--;

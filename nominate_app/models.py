@@ -6,11 +6,17 @@ from dateutil.relativedelta import *
 from datetime import datetime
 from IPython import embed
 from django.contrib.postgres.fields import ArrayField
+from safedelete.models import SafeDeleteModel
+from safedelete.models import SOFT_DELETE
+import safedelete.managers as managers
+import safedelete
 # from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
 Group.add_to_class('group', models.CharField(max_length=30, default='level0'))    
+class SafeDeleteQuestionsManager(managers.SafeDeleteManager):
+  _safedelete_visibility = safedelete.managers.DELETED_INVISIBLE
 
 class UserProfile(models.Model):
   email = models.EmailField(max_length=70, unique=True)
@@ -94,11 +100,14 @@ class AwardTemplate(models.Model):
   def __str__(self):
     return self.template_name
 
-class Questions(models.Model):
+class Questions(SafeDeleteModel):
+  _safedelete_policy = SOFT_DELETE
   query_choice = (
       ('SUBJECTIVE', 'subjective'),
-      ('OBJECTIVE', 'objective')
+      ('OBJECTIVE', 'objective'),
+      ('MULTIPLE-CHOICE', 'multiple-choice')
   )
+  objects = SafeDeleteQuestionsManager()
   class Meta:
     db_table='award_questions'
     
@@ -110,8 +119,16 @@ class Questions(models.Model):
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   options = ArrayField(models.CharField(max_length=100, blank=True), size=20,blank=True,null=True)
+
   def __str__(self):
     return self.qname
+  # def __eq__(self, other):
+  #   if self.qname == other.qname and self.qtype == other.qtype and self.options == other.options \
+  #     and self.award_template_id == other.award_template_id and self.role_id == other.role_id:
+  #     return True
+  #   else:
+  #     return False
+    
 
 class NominationInstance(models.Model):
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)

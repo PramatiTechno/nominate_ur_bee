@@ -96,12 +96,12 @@ def create_nomination(request,chain_id):
           condition1 = Q(nomination_instance_id=nomination_instance.id)
           condition2 = Q(question_id=ans['question'])
           na = NominationAnswers.objects.get(condition1 & condition2)
-          na.answer_text = ans['answer_text'][0]
+          na.answer_text = ", ".join(ans['answer_text'])
           na.answer_option = ans['option']
           na.save()
         except Exception as e:
           print(e)
-          na = NominationAnswers(answer_option=ans['option'], answer_text=ans['answer_text'][0], uploaded_at=timezone.now(), award_template_id=ans['award_template'], nomination_chain_id=ans['nomination_chain'],nomination_instance_id=ans['nomination_instance'], question_id=ans['question'], submitted_by=request.user)
+          na = NominationAnswers(answer_option=ans['option'], answer_text=", ".join(ans['answer_text']), uploaded_at=timezone.now(), award_template_id=ans['award_template'], nomination_chain_id=ans['nomination_chain'],nomination_instance_id=ans['nomination_instance'], question_id=ans['question'], submitted_by=request.user)
           na.save()
         current_nomination = NominationSubmitter.objects.get(nomination_instance_id=nomination_instance.id)
         current_nomination.submit_later = 1
@@ -114,15 +114,16 @@ def create_nomination(request,chain_id):
     elif request.POST['action'] == 'submit':
 
       for ans in ans_obj_List:
+        
         try:
           condition1 = Q(nomination_instance_id=nomination_instance.id)
           condition2 = Q(question_id=ans['question'])
           na = NominationAnswers.objects.get(condition1 & condition2)
-          na.answer_text = ans['answer_text'][0]
+          na.answer_text = ", ".join(ans['answer_text'])
           na.answer_option = ans['option']
           na.save()
         except:
-          na = NominationAnswers(submitted_at=timezone.now(), answer_option=ans['option'], answer_text=ans['answer_text'][0], uploaded_at=timezone.now(), award_template_id=ans['award_template'], nomination_chain_id=ans['nomination_chain'],nomination_instance_id=ans['nomination_instance'], question_id=ans['question'], submitted_by=request.user)
+          na = NominationAnswers(submitted_at=timezone.now(), answer_option=ans['option'], answer_text=", ".join(ans['answer_text']), uploaded_at=timezone.now(), award_template_id=ans['award_template'], nomination_chain_id=ans['nomination_chain'],nomination_instance_id=ans['nomination_instance'], question_id=ans['question'], submitted_by=request.user)
           na.save()
 
         nom_inst = NominationInstance.objects.filter(id= nomination_instance.id)[0]
@@ -136,7 +137,6 @@ def create_nomination(request,chain_id):
         messages.success(request, 'Nomination submitted successfully.')
       return redirect('nominate_app:manager_nominate_index')
   
-
   return render(request, 'nominate_app/create_nomination.html', {'answers_form':answers_form,'nomination_chain':nomination_chain,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'questions':questions })
 
 
@@ -147,5 +147,5 @@ def view_nomination(request,chain_id):
   nomination_instance = nomination_chain.nomination_instance
   nomination_template = nomination_instance.award_template
   nom_answers = NominationAnswers.objects.filter(nomination_instance_id =nomination_instance,award_template_id=nomination_template).order_by('id')
-
+  
   return render(request, 'nominate_app/view_nomination.html', {'answers_form':answers_form,'nomination_chain':nomination_chain, 'nomination_template':nomination_template, 'nomination_answers': nom_answers })

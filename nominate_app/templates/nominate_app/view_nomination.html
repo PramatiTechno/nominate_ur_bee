@@ -26,7 +26,7 @@
           </div>
           <div class="col-sm-4">
             {% if answer.answer_text %}   
-              <input type="text" name="answer_text" class="form-control" placeholder="" value="{{answer.answer_text|slugify}}" disabled />
+              <input type="text" name="answer_text" class="form-control" placeholder="" value="{{answer.answer_text}}" disabled />
             {% else %}
 
               {%if answer.answer_option == "yes" %}

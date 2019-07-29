@@ -65,11 +65,16 @@ class AwardQuestionForm(forms.ModelForm):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    from IPython import embed
+
     self.fields['role'].empty_label = None
     self.initial['level'] = '2'
     self.fields['qname'].widget.attrs.update({'class': 'form-control', 'placeholder': "Enter Question"})
-    self.initial['qtype'] = "--------"
+    if self.instance.qtype == "OBJECTIVE":
+      self.initial['qtype'] = "OBJECTIVE"
+    elif self.instance.qtype == "MULTIPLE-CHOICE":
+      self.initial['qtype'] = "MULTIPLE-CHOICE"
+    else:
+      self.initial['qtype'] = "SUBJECTIVE"
     self.fields['qtype'].widget.attrs.update({'class': 'form-control objective-type'})
     self.fields['role'].widget.attrs.update({'class': 'form-control'})
     self.fields['attachment_need'].widget.attrs.update({'class': 'form-control'})
