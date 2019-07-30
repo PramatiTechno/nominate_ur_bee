@@ -7,6 +7,7 @@ from django.contrib import messages
 from nominate_app.utils import group_required
 from IPython import embed
 from django.utils import timezone
+from functools import partial, wraps
 import json
  
 @group_required('Admin', raise_exception=True)
@@ -76,8 +77,9 @@ def index(request,award_id):
 def new(request,award_id):
   award_template = AwardTemplate()
   award_form = TemplateForm(instance=award_template)
+  
   TemplateFormset = inlineformset_factory(AwardTemplate, Questions, form=AwardQuestionForm, extra=1)
-  formset = TemplateFormset(instance=award_template)
+  formset = TemplateFormset(instance=award_template, form_kwargs={'award_id': award_id})
   award = Awards.objects.get(id=award_id)
   return render(request, 'nominate_app/award_templates/new.html', {'formset':formset,'award_form':award_form,'award': award })
 
@@ -91,7 +93,7 @@ def edit(request,award_id,award_template_id):
     else:
       x=1
     TemplateFormset = inlineformset_factory(AwardTemplate, Questions, form=AwardQuestionForm, extra=x)
-    formset = TemplateFormset(instance=award_template,queryset=questions)
+    formset = TemplateFormset(instance=award_template,queryset=questions, form_kwargs={'award_id': award_id})
     return render(request, 'nominate_app/award_templates/edit.html', {'formset':formset,'template_form':template_form,'award': award,'award_template': award_template, 'questions': questions })
 
  
