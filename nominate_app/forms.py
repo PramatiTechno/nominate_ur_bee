@@ -41,7 +41,11 @@ class NominationPeriodForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.fields['level'].empty_label = None
-    self.initial['level'] = '2'
+    choices = [choice for choice in self.fields['level'].choices]
+    admin_group = Group.objects.get(name="Admin")
+    choices.remove((admin_group.id, admin_group.name))
+    self.fields['level'].choices = choices
+    self.initial['level'] = Group.objects.get(name="Manager").id
     self.fields['start_day'].widget.attrs.update({'class': 'form-control def'})
     self.fields['end_day'].widget.attrs.update({'class': 'form-control ghi'})
 
@@ -64,12 +68,27 @@ class AwardQuestionForm(forms.ModelForm):
     fields = ('qname', 'qtype', 'role', 'attachment_need')
 
   def __init__(self, *args, **kwargs):
+    if "award_id" in kwargs:
+      award_id = kwargs.pop('award_id')
+    else:
+      award_id = None
     super().__init__(*args, **kwargs)
-    from IPython import embed
     self.fields['role'].empty_label = None
+    level_ids = [np.level_id for np in NominationPeriod.objects.filter(award_id=award_id)] 
+    choices =[ choice for choice in self.fields['role'].choices ]
+    temp_choices = dict(choices)
+    updated_choices = []
+    for level_id in level_ids:
+      updated_choices.append((level_id, temp_choices[level_id]))
+    self.fields['role'].choices = updated_choices
     self.initial['level'] = '2'
     self.fields['qname'].widget.attrs.update({'class': 'form-control', 'placeholder': "Enter Question"})
-    self.initial['qtype'] = "--------"
+    if self.instance.qtype == "OBJECTIVE":
+      self.initial['qtype'] = "OBJECTIVE"
+    elif self.instance.qtype == "MULTIPLE-CHOICE":
+      self.initial['qtype'] = "MULTIPLE-CHOICE"
+    else:
+      self.initial['qtype'] = "SUBJECTIVE"
     self.fields['qtype'].widget.attrs.update({'class': 'form-control objective-type'})
     self.fields['role'].widget.attrs.update({'class': 'form-control'})
     self.fields['attachment_need'].widget.attrs.update({'class': 'form-control'})
