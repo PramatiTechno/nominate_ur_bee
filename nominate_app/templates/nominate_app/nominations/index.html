@@ -27,7 +27,7 @@
                       <table class="table table-borderless">
                         <tbody>
                             <tr class="d-flex">
-                              <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination.award_template.template_name }} </td>
+                              <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination.award_template.template_name }}<p>Starts on {{nomination.start_day}}</p> </td>
                               <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:new_nomination_instance' nomination.id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
                             </tr>
                         </tbody>

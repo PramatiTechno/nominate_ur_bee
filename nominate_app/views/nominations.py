@@ -15,7 +15,7 @@ from datetime import datetime
 
 def index(request):
   current_user = User.objects.get(id=request.user.id)
-  nominations = Nomination.objects.filter(group__in=[8])#,start_day__gt= datetime.today(),end_day__lt= datetime.today() )#list(map(lambda g: g.id,current_user.groups.all())))
+  nominations = Nomination.objects.filter(group__in=list(map(lambda x: x['id'],current_user.groups.values()))) #,start_day__gt= datetime.today(),end_day__lt= datetime.today() )#list(map(lambda g: g.id,current_user.groups.all()))) 
   new_nominations,saved_nominations,submitted_nominations = [],[],[]
   for nomination in nominations:
       if nomination.nominationinstance_set.count() == 0:
