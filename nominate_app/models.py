@@ -204,3 +204,13 @@ class Comment(models.Model):
     def __str__(self):
         return self.text       
 
+
+class Like(models.Model):
+  nomination = models.ForeignKey('NominationInstance', on_delete=models.CASCADE, related_name='likes')
+  voter = models.ForeignKey(User, on_delete=models.CASCADE)
+  created_date = models.DateTimeField(default=timezone.now)
+
+  class Meta:
+    db_table='nomination_likes'
+
+

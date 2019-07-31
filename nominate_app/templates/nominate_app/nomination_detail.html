@@ -28,6 +28,32 @@
             return false;
         });
 
+        $('.like-link').on('click', function(){
+            var instance_id = $(this).attr('value')
+            var like_btn = $(this)
+            var like_count = like_btn.parent().find('.like-count')
+            var like_count_val = like_count.html()
+            $.ajax({
+                type: "GET",
+                url: "nomination_instance/" + instance_id + "/like/", 
+                success : function(data) {
+                    if (data.value === "like"){
+                        like_btn.html("Liked")
+                        like_count.html("You and " + like_count_val)
+                    }else{
+                        like_btn.html("Like")
+                        like_count.html(like_count_val.replace("You and ", ""))
+                    }
+                    console.log("our data",data);
+                 },
+                error: function(response) {
+                    console.log("error",response)
+                }
+            });
+            return false;
+
+        })
+
         $('.post-form').on('submit', function() {
             var instance_id = $(this).find('.send').attr('value')
             var comment_text_field = $(this).find('.comment-text')
@@ -56,7 +82,6 @@
     });
 </script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
 <br>
 <div class="container">
@@ -73,8 +98,11 @@
     			<p>Answer: {{answer.answer_text}}</p>
     		{% endfor %}
     		</div>
-    		<a href="" class="card-link">Like</a>
-    		<a href="" class="card-link comment-link" value = "{{instance.id}}">Comments</a>
+            <a href="" class="card-link like-count" value = "{{instance.id}}">{% if detail.liked %}You and {{ instance.likes.count }} {% else %} {{ instance.likes.count }} {% endif %}liked</a> <br>
+            
+    		  <a href="" class="card-link like-link" value = "{{instance.id}}">{% if detail.liked %}Liked{% else %}Like{% endif %} </a>
+              
+    		<a href="" class="card-link comment-link" value = "{{instance.id}}">Comments({{ instance.comments.count }})</a>
             <form method="POST" class="post-form">{% csrf_token %}
                 <div class="row">
                     <div class="col-md-10">{{ form.text }}</div>
