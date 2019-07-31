@@ -36,12 +36,12 @@ class NominationPeriodForm(forms.ModelForm):
 
   class Meta:
     model = NominationPeriod
-    fields = ('level', 'start_day', 'end_day')
+    fields = ('group', 'start_day', 'end_day')
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    self.fields['level'].empty_label = None
-    self.initial['level'] = '2'
+    self.fields['group'].empty_label = None
+    self.initial['group'] = '2'
     self.fields['start_day'].widget.attrs.update({'class': 'form-control def'})
     self.fields['end_day'].widget.attrs.update({'class': 'form-control ghi'})
 
@@ -58,20 +58,19 @@ class TemplateForm(forms.ModelForm):
 
 
 class AwardQuestionForm(forms.ModelForm):
-
   class Meta:
     model = Questions
-    fields = ('qname', 'qtype', 'role', 'attachment_need')
+    fields = ('qname', 'qtype', 'group', 'attachment_need')
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
     from IPython import embed
-    self.fields['role'].empty_label = None
-    self.initial['level'] = '2'
+    self.fields['group'].empty_label = None
+    self.initial['group'] = '2'
     self.fields['qname'].widget.attrs.update({'class': 'form-control', 'placeholder': "Enter Question"})
     self.initial['qtype'] = "--------"
     self.fields['qtype'].widget.attrs.update({'class': 'form-control objective-type'})
-    self.fields['role'].widget.attrs.update({'class': 'form-control'})
+    self.fields['group'].widget.attrs.update({'class': 'form-control'})
     self.fields['attachment_need'].widget.attrs.update({'class': 'form-control'})
 
 class NominationAnswersForm(forms.ModelForm):

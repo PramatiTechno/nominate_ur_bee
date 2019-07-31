@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block content %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<br>
+<div class="container">
+<!--<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Team of Month</a>
+      <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Gold Class</a>
+    </div>
+  </nav> -->
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+      <div id="accordion-new_nominations">
+        <div class="card">
+          <div class="card-header" data-toggle="collapse" href="#collapseThree-new_nominations">
+            <a class="collapsed card-link" >
+            Submit Nominations
+            </a>
+          </div>
+          <div id="collapseThree-new_nominations" class="collapse show" data-parent="#accordion">
+            <div class="card-body">
+              <div class="container">
+                {% if new_nominations %}
+                 {% for nomination in new_nominations %}
+                    <form>
+                      <table class="table table-borderless">
+                        <tbody>
+                            <tr class="d-flex">
+                              <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination.award_template.template_name }} </td>
+                              <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:new_nomination_instance' nomination.id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </form>
+                  {% endfor %}
+                {% else %}
+                  No Nomination instances available.
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="accordion-saved_nominations">
+        <div class="card">
+          <div class="card-header" data-toggle="collapse" href="#collapseThree-new_nominations">
+            <a class="collapsed card-link" >
+            Saved Nominations
+            </a>
+          </div>
+          <div id="collapseThree-new_nominations" class="collapse show" data-parent="#accordion">
+            <div class="card-body">
+              <div class="container">
+                {% if saved_nominations %}
+                 {% for nomination in saved_nominations %}
+                   
+                    <form>
+                      <table class="table table-borderless">
+                        <tbody>
+                            <tr class="d-flex">
+                              <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination.award_template.template_name }} </td>
+                              <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:edit_nomination_instance' nomination.id nomination.nomination_instance_id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </form>
+                  {% endfor %}
+                {% else %}
+                  No Nomination available.
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="accordion-submitted_nominations">
+        <div class="card">
+          <div class="card-header" data-toggle="collapse" href="#collapseThree-submitted_nominations">
+            <a class="collapsed card-link" >
+            Submitted Nominations
+            </a>
+          </div>
+          <div id="collapseThree-submitted_nominations" class="collapse show" data-parent="#accordion">
+            <div class="card-body">
+              <div class="container">
+                {% if submitted_nominations %}
+                  {% for nomination in submitted_nominations %}
+                    <form>
+                      <table class="table table-borderless">
+                        <tbody>
+                            <tr class="d-flex">
+                              <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination.award_template.template_name }} </td>
+                              <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:nomination_instance' nomination.id nomination.nomination_instance_id %}'" type="button" class="btn btn-success" value = "View Nomination"></td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </form>
+                  {% endfor %}
+                {% else %}
+                  No submitted nominations available.
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+      <div id="accordion">
+        <div class="card">
+          <div class="card-header" data-toggle="collapse" href="#collapseThree">
+            <a class="collapsed card-link" >
+              Submit Nominations
+            </a>
+          </div>
+          <div id="collapseThree" class="collapse show" data-parent="#accordion">
+            <div class="card-body">
+              <div class="container">
+                No Nomination instances available.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

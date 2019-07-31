@@ -14,7 +14,7 @@ from django.contrib.auth.models import Group
 from django_cas_ng.middleware import HttpResponseRedirect
 from django_cas_ng.signals import cas_user_authenticated
 from django.contrib.auth.models import AnonymousUser
-from nominate_app.models import UserProfile #, UserRole, Role
+from nominate_app.models import UserProfile
 from IPython import embed
 
 from .utils import get_cas_client

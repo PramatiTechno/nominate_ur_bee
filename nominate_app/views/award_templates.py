@@ -62,12 +62,12 @@ def index(request,award_id):
           if qtype == "SUBJECTIVE":
             question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
             attachment_need=False, created_at=timezone.now(), award_template_id = created_award.id, \
-            role_id=content['questions_set-{0}-role'.format(i)])
+            group_id=content['questions_set-{0}-group'.format(i)])
             question.save()
           else:
             question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
             attachment_need=False, created_at=timezone.now(), award_template_id = created_award.id, \
-            role_id=content['questions_set-{0}-role'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)))
+            group_id=content['questions_set-{0}-group'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)))
             question.save()
           messages.success(request, 'Award Template created successfully.')
         return redirect('nominate_app:award_templates_index', award_id=award.id)
