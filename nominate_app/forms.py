@@ -40,11 +40,15 @@ class NominationPeriodForm(forms.ModelForm):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
+
     self.fields['group'].empty_label = None
-    self.initial['group'] = '2'
+    choices = [choice for choice in self.fields['group'].choices]
+    admin_group = Group.objects.get(name="Admin")
+    choices.remove((admin_group.id, admin_group.name))
+    self.fields['group'].choices = choices
+    self.initial['group'] = Group.objects.get(name="Manager").id
     self.fields['start_day'].widget.attrs.update({'class': 'form-control def'})
     self.fields['end_day'].widget.attrs.update({'class': 'form-control ghi'})
-
 
 class TemplateForm(forms.ModelForm):
 
@@ -63,12 +67,29 @@ class AwardQuestionForm(forms.ModelForm):
     fields = ('qname', 'qtype', 'group', 'attachment_need')
 
   def __init__(self, *args, **kwargs):
+    if "award_id" in kwargs:
+      award_id = kwargs.pop('award_id')
+    else:
+      award_id = None
     super().__init__(*args, **kwargs)
-    from IPython import embed
+
     self.fields['group'].empty_label = None
-    self.initial['group'] = '2'
+    group_ids = [np.group_id for np in NominationPeriod.objects.filter(award_id=award_id)] 
+    choices =[ choice for choice in self.fields['group'].choices ]
+    temp_choices = dict(choices)
+    updated_choices = []
+    for group_id in group_ids:
+      updated_choices.append((group_id, temp_choices[group_id]))
+    self.fields['group'].choices = updated_choices
+    self.initial['group'] = Group.objects.get(name="Manager").id
+
     self.fields['qname'].widget.attrs.update({'class': 'form-control', 'placeholder': "Enter Question"})
-    self.initial['qtype'] = "--------"
+    if self.instance.qtype == "OBJECTIVE":
+      self.initial['qtype'] = "OBJECTIVE"
+    elif self.instance.qtype == "MULTIPLE-CHOICE":
+      self.initial['qtype'] = "MULTIPLE-CHOICE"
+    else:
+      self.initial['qtype'] = "SUBJECTIVE"
     self.fields['qtype'].widget.attrs.update({'class': 'form-control objective-type'})
     self.fields['group'].widget.attrs.update({'class': 'form-control'})
     self.fields['attachment_need'].widget.attrs.update({'class': 'form-control'})

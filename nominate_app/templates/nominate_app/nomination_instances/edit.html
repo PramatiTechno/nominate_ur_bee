@@ -30,14 +30,25 @@
               {% else %}
               <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="" required />
               {% endif %}
-            {% else %}
-                {% if question.nominationanswers_set.first.answer_text == 'yes' %}
-                  <input type="radio" value="yes" name="{{question.id}}_answer_option" checked> Yes   
-                  <input type="radio" value="no" name="{{question.id}}_answer_option"> No
+            {% endif %}
+            {% if question.qtype == 'OBJECTIVE' %}
+                {% for option in question.options %}
+                  {% if option in question.nominationanswers_set.first.answer_text %}
+                    <input type="radio" value="{{ option }}" name="{{question.id}}_answer_option" checked> {{ option }}   
+                  {% else %}
+                    <input type="radio" value="{{ option }}" name="{{question.id}}_answer_option"> {{ option }}   
+                  {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if question.qtype == 'MULTIPLE-CHOICE' %}
+              {% for option in question.options %}
+                {% if option in question.nominationanswers_set.first.answer_text %}
+                  <input type="checkbox" value="{{ option }}" name="{{question.id}}_answer_option" checked> {{ option }}   
                 {% else %}
-                  <input type="radio" value="yes" name="{{question.id}}_answer_option"> Yes
-                  <input type="radio" value="no" name="{{question.id}}_answer_option" checked> No
+                  <input type="checkbox" value="{{ option }}" name="{{question.id}}_answer_option" > {{ option }}   
                 {% endif %}
+              {% endfor %}
             {% endif %}
           </div>
           {% if question.attachment_need %}

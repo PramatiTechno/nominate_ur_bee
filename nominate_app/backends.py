@@ -145,7 +145,7 @@ class NominateCASBackend(ModelBackend):
                         userprofile["user"] = user
                     obj, created = UserProfile.objects.get_or_create(**userprofile)
                     # send the obj to create user role relationship.
-                    self.create_user_role(obj)
+                    # self.create_user_role(obj)
 
             # send the `cas_user_authenticated` signal
             cas_user_authenticated.send(

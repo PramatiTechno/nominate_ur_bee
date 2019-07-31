@@ -7,6 +7,7 @@ from django.contrib import messages
 from nominate_app.utils import group_required
 from IPython import embed
 from django.utils import timezone
+from functools import partial, wraps
 import json
  
 @group_required('Admin', raise_exception=True)
@@ -60,6 +61,7 @@ def index(request,award_id):
         for i in range(int(content['questions_set-TOTAL_FORMS'])):
           qtype = content['questions_set-{0}-qtype'.format(i)]
           if qtype == "SUBJECTIVE":
+
             question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
             attachment_need=False, created_at=timezone.now(), award_template_id = created_award.id, \
             group_id=content['questions_set-{0}-group'.format(i)])
@@ -75,23 +77,24 @@ def index(request,award_id):
 def new(request,award_id):
   award_template = AwardTemplate()
   award_form = TemplateForm(instance=award_template)
+  
   TemplateFormset = inlineformset_factory(AwardTemplate, Questions, form=AwardQuestionForm, extra=1)
-  formset = TemplateFormset(instance=award_template)
+  formset = TemplateFormset(instance=award_template, form_kwargs={'award_id': award_id})
   award = Awards.objects.get(id=award_id)
   return render(request, 'nominate_app/award_templates/new.html', {'formset':formset,'award_form':award_form,'award': award })
 
 def edit(request,award_id,award_template_id):
-  award = Awards.objects.get(id=award_id)
-  award_template = AwardTemplate.objects.get(id = award_template_id)
-  template_form = TemplateForm(instance=award_template)
-  questions = Questions.objects.filter(award_template_id=award_template.id)
-  if questions.exists():
-    x=0
-  else:
-    x=1
-  TemplateFormset = inlineformset_factory(AwardTemplate, Questions, form=AwardQuestionForm, extra=x)
-  formset = TemplateFormset(instance=award_template,queryset=questions)
-  return render(request, 'nominate_app/award_templates/edit.html', {'formset':formset,'template_form':template_form,'award': award,'award_template': award_template })
+    award = Awards.objects.get(id=award_id)
+    award_template = AwardTemplate.objects.get(id = award_template_id)
+    template_form = TemplateForm(instance=award_template)
+    questions = Questions.objects.filter(award_template_id=award_template.id)
+    if questions.exists():
+      x=0
+    else:
+      x=1
+    TemplateFormset = inlineformset_factory(AwardTemplate, Questions, form=AwardQuestionForm, extra=x)
+    formset = TemplateFormset(instance=award_template,queryset=questions, form_kwargs={'award_id': award_id})
+    return render(request, 'nominate_app/award_templates/edit.html', {'formset':formset,'template_form':template_form,'award': award,'award_template': award_template, 'questions': questions })
 
  
 @group_required('Admin', raise_exception=True)
@@ -106,30 +109,51 @@ def award_template(request,award_id,award_template_id):
     if request.method == 'GET':
       return render(request, 'nominate_app/award_templates/show.html', {'award':award })
     elif method == 'put': 
+      from IPython import embed
+      
       award_template = AwardTemplate.objects.get(id = award_template_id)
-      template_form = TemplateForm(instance=award_template)
       questions = Questions.objects.filter(award_template_id=award_template.id)
       if questions.exists():
         x=0
       else:
         x=1
-      TemplateFormset = inlineformset_factory(AwardTemplate, Questions, form=AwardQuestionForm, extra=x)
-      formset = TemplateFormset(instance=award_template,queryset=questions)
       new_form = request.POST.copy()
       new_form['award'] = str(award_template.award_id)
       request.POST = new_form
       is_active = request.POST.get('is_active',False)
       if is_active == 'on':
         is_active = True
-      template_form = TemplateForm(request.POST)
-      formset = TemplateFormset(request.POST)
-      if template_form.is_valid():
-        created_award = AwardTemplate.objects.filter(id=award_template_id).update(template_name= new_form['template_name'], is_active=is_active)
-        formset = TemplateFormset(request.POST, instance=award_template)
-        if formset.is_valid():
-          formset.save()
-          messages.success(request, 'Award Template is updated successfully.')
-          return redirect('nominate_app:award_templates_index', award_id=award.id)
+      created_award = AwardTemplate.objects.filter(id=award_template_id).update(template_name= new_form['template_name'], is_active=is_active)
+      content = request.POST
+      prev_qids = [ question.id for question in questions ]
+      for i in range(int(content['questions_set-TOTAL_FORMS'])):
+        qtype = content['questions_set-{0}-qtype'.format(i)]
+        qid = content.get('questions_set-{0}-id'.format(i), None)
+        if qid:
+          qid = int(qid)
+          prev_qids.remove(qid)
+          question = Questions.objects.get(id=qid)
+          question.qname = content['questions_set-{0}-qname'.format(i)]
+          question.role_id = int(content['questions_set-{0}-role'.format(i)])
+          question.updated_at = timezone.now()
+          if qtype == "SUBJECTIVE":
+            question.qtype = "SUBJECTIVE"
+            question.options = None
+          else:
+            question.qtype = qtype
+            question.options = content.getlist('questions_set-{0}-objectives'.format(qid))
+          question.save()
+        else:
+          question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=content['questions_set-{0}-qtype'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)), \
+            role_id=content['questions_set-{0}-role'.format(i)], created_at=timezone.now(),award_template_id=award_template_id, updated_at=timezone.now())
+          question.save()
+          pass
+      for pqid in prev_qids:
+        deleted_question = Questions.objects.get(id=pqid)
+        deleted_question.delete()
+
+        messages.success(request, 'Award Template is updated successfully.')
+      return redirect('nominate_app:award_templates_index', award_id=award.id)
     elif method == 'delete':
       if award_template.delete():
          messages.success(request, 'Award is deleted successfully')

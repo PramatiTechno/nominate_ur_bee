@@ -7,11 +7,18 @@ $(document).ready(function() {
         .hide();
   });
 
-  if ($(".del_btn_formset").length == 1) {
-    $(".del_btn_formset").hide();
-  } else {
-    $(".del_btn_formset").each(function(i, obj) {
-      $(obj).show();
+$(document).ready(function(){
+  $('.objective-type').each(function(i, element){
+    if(element.value == "SUBJECTIVE")
+      $(this).parent().next().hide()
+  })
+  
+ if(($('.del_btn_formset').length) == 1){
+    $('.del_btn_formset').hide()
+  }
+  else{
+    $('.del_btn_formset').each(function(i, obj) {
+        $(obj).show()
     });
   }
   $("#add_more").click(function() {
@@ -21,17 +28,17 @@ $(document).ready(function() {
     cloneMore("div.add_template_questions:visible:last", "questions_set");
   });
 
-  $(".objective-type").on("change", function(event) {
-    if (this.selectedIndex == 1) {
-      $(this)
-        .parent()
-        .next()
-        .show();
-    } else {
-      $(this)
-        .parent()
-        .next()
-        .hide();
+  $(".objective-type").on('change', function(event){
+    if(this.selectedIndex != 0){
+      id = $(this).attr('id').split('-')[1]
+      $('input[name="questions_set-'+ id +'-objectives"]').attr('required', true);
+
+      $(this).parent().next().show()
+
+    }else{
+      id = $(this).attr('id').split('-')[1]
+      $(this).parent().next().hide()
+      $('input[name="questions_set-'+ id +'-objectives"]').attr('required', false);
     }
   });
 
@@ -149,8 +156,9 @@ $(document).ready(function() {
     total++;
     $("#id_" + type + "-TOTAL_FORMS").val(total);
     $(selector).after(newElement);
-    $("#id_questions_set-" + (total - 1) + "-objective-container").hide();
-  }
+    $("#id_questions_set-"+ (total-1) +"-objective-container").hide()
+    $('input[name="questions_set-'+ (total-1) +'-objectives"]').removeAttr('required');
+    }
 
   function re_calc_init() {
     initial_count = $("#id_questions_set-INITIAL_FORMS").val();

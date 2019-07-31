@@ -80,6 +80,7 @@ def index(request,nomination_id):
         messages.success(request, 'Nomination saved successfully.')
       elif request.POST['action'] == 'submit':
         nomination_instance.status = 2
+        nomination_instance.submitted_at = datetime.now()
         nomination_instance.save()
         messages.success(request, 'Nomination submitted successfully.')
       return redirect('nominate_app:nominations')
