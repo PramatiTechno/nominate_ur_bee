@@ -9,6 +9,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from nominate_app.utils import group_required
 from IPython import embed
+
+def home(request):
+  if request.user.groups.filter(name="Admin").exists():
+    return redirect('nominate_app:awards')
+  else:
+    return redirect('nominate_app:nominations')
  
 @group_required('Admin', raise_exception=True)
 def index(request):

@@ -7,7 +7,6 @@ class Command(BaseCommand):
     help = 'Run to create groups and grant permissions'
 
     def _create_groups(self):
-
         # add_award = Permission.objects.filter(codename='add_awards')[0]
         permissions = Permission.objects.filter(content_type__app_label='nominate_app')
         group, created = Group.objects.get_or_create(name='Admin', group='level0')

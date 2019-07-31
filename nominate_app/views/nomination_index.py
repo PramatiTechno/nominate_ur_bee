@@ -13,7 +13,9 @@ class NominationIndexView(View):
 	context_object_name = 'nomination_list'
 	def get(self, request):
 		submitted_instances = NominationInstance.objects.all()
-		submitted_nominations = AwardTemplate.objects.filter(id__in=submitted_instances)
+		submitted_instances_ids = list(map(lambda x: x.nomination.award_template_id,submitted_instances))
+		submitted_nominations = AwardTemplate.objects.filter(id__in=submitted_instances_ids)
+		
 		return render(request, self.template_name, {self.context_object_name: submitted_nominations})
 
 # def get_nomination_index(request):
@@ -28,13 +30,14 @@ class NominationDetailView(View):
 	def get(self, request, award_template_id):
 		award_template = AwardTemplate.objects.get(id=award_template_id)
 		award = award_template.award
-		submitted_instances = NominationInstance.objects.filter(award_template_id=award_template, status="nomination_submitted")
+		nominations = Nomination.objects.filter(award_template_id=award_template)
+		submitted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2)
 		form = CommentForm()
 		instance_answers = {}
 		for instance in submitted_instances:
 			instance_answers[instance] = {
 				'answers': NominationAnswers.objects.filter(nomination_instance_id=instance, submitted_by_id=instance.user),
-				'submitted_at': str(instance.nominationsubmitter_set.values().filter(reviewer_id=instance.user)[0]['reviewed_at']),
+				'submitted_at': str(instance.submitted_at),
 				'liked': False
 			}
 			for like in instance.likes.all():

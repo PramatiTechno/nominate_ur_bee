@@ -36,19 +36,19 @@ class NominationPeriodForm(forms.ModelForm):
 
   class Meta:
     model = NominationPeriod
-    fields = ('level', 'start_day', 'end_day')
+    fields = ('group', 'start_day', 'end_day')
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    self.fields['level'].empty_label = None
-    choices = [choice for choice in self.fields['level'].choices]
+
+    self.fields['group'].empty_label = None
+    choices = [choice for choice in self.fields['group'].choices]
     admin_group = Group.objects.get(name="Admin")
     choices.remove((admin_group.id, admin_group.name))
-    self.fields['level'].choices = choices
-    self.initial['level'] = Group.objects.get(name="Manager").id
+    self.fields['group'].choices = choices
+    self.initial['group'] = Group.objects.get(name="Manager").id
     self.fields['start_day'].widget.attrs.update({'class': 'form-control def'})
     self.fields['end_day'].widget.attrs.update({'class': 'form-control ghi'})
-
 
 class TemplateForm(forms.ModelForm):
 
@@ -62,10 +62,9 @@ class TemplateForm(forms.ModelForm):
 
 
 class AwardQuestionForm(forms.ModelForm):
-
   class Meta:
     model = Questions
-    fields = ('qname', 'qtype', 'role', 'attachment_need')
+    fields = ('qname', 'qtype', 'group', 'attachment_need')
 
   def __init__(self, *args, **kwargs):
     if "award_id" in kwargs:
@@ -73,15 +72,17 @@ class AwardQuestionForm(forms.ModelForm):
     else:
       award_id = None
     super().__init__(*args, **kwargs)
-    self.fields['role'].empty_label = None
-    level_ids = [np.level_id for np in NominationPeriod.objects.filter(award_id=award_id)] 
-    choices =[ choice for choice in self.fields['role'].choices ]
+
+    self.fields['group'].empty_label = None
+    group_ids = [np.group_id for np in NominationPeriod.objects.filter(award_id=award_id)] 
+    choices =[ choice for choice in self.fields['group'].choices ]
     temp_choices = dict(choices)
     updated_choices = []
-    for level_id in level_ids:
-      updated_choices.append((level_id, temp_choices[level_id]))
-    self.fields['role'].choices = updated_choices
-    self.initial['level'] = '2'
+    for group_id in group_ids:
+      updated_choices.append((group_id, temp_choices[group_id]))
+    self.fields['group'].choices = updated_choices
+    self.initial['group'] = Group.objects.get(name="Manager").id
+
     self.fields['qname'].widget.attrs.update({'class': 'form-control', 'placeholder': "Enter Question"})
     if self.instance.qtype == "OBJECTIVE":
       self.initial['qtype'] = "OBJECTIVE"
@@ -90,7 +91,7 @@ class AwardQuestionForm(forms.ModelForm):
     else:
       self.initial['qtype'] = "SUBJECTIVE"
     self.fields['qtype'].widget.attrs.update({'class': 'form-control objective-type'})
-    self.fields['role'].widget.attrs.update({'class': 'form-control'})
+    self.fields['group'].widget.attrs.update({'class': 'form-control'})
     self.fields['attachment_need'].widget.attrs.update({'class': 'form-control'})
 
 class NominationAnswersForm(forms.ModelForm):
