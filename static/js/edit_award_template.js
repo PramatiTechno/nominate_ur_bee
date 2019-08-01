@@ -1,12 +1,3 @@
-$(document).ready(function() {
-  $(".objective-type").each(function(i, element) {
-    if (element.value == "SUBJECTIVE")
-      $(this)
-        .parent()
-        .next()
-        .hide();
-  });
-
 $(document).ready(function(){
   $('.objective-type').each(function(i, element){
     if(element.value == "SUBJECTIVE")

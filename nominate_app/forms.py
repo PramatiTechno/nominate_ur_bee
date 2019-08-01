@@ -10,7 +10,10 @@ class AwardsForm(forms.ModelForm):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    self.fields['name'].widget.attrs.update({'class': 'form-control def', 'placeholder': "Enter Award Name"})
+    if args:
+      self.initial['name'] = args[0]['name']
+      self.initial['frequency'] = args[0]['frequency']
+    self.fields['name'].widget.attrs.update({'class': 'form-control def', 'value': "Enter Award Name"})
     self.fields['frequency'].widget.attrs.update({'class': 'form-control abc'})
     self.fields['description'].widget.attrs.update({'class': 'form-control ghi', 'placeholder': "what's this award for ??"})
 
@@ -45,8 +48,17 @@ class NominationPeriodForm(forms.ModelForm):
     choices = [choice for choice in self.fields['group'].choices]
     admin_group = Group.objects.get(name="Admin")
     choices.remove((admin_group.id, admin_group.name))
+
     self.fields['group'].choices = choices
-    self.initial['group'] = Group.objects.get(name="Manager").id
+    if self.instance.group_id:
+      self.initial['group'] = self.instance.group_id  
+    else:
+      self.initial['group'] = Group.objects.get(name="Manager").id
+    if self.instance.start_day and self.instance.end_day:
+      sday = self.instance.start_day
+      eday = self.instance.end_day
+      self.initial['start_day'] = sday.strftime('%m/%d/%Y')
+      self.initial['end_day'] = eday.strftime('%m/%d/%Y')
     self.fields['start_day'].widget.attrs.update({'class': 'form-control def'})
     self.fields['end_day'].widget.attrs.update({'class': 'form-control ghi'})
 
@@ -81,8 +93,10 @@ class AwardQuestionForm(forms.ModelForm):
     for group_id in group_ids:
       updated_choices.append((group_id, temp_choices[group_id]))
     self.fields['group'].choices = updated_choices
-    self.initial['group'] = Group.objects.get(name="Manager").id
-
+    if self.instance.group_id:
+      self.initial['group'] = self.instance.group_id  
+    else:
+      self.initial['group'] = Group.objects.get(name="Manager").id
     self.fields['qname'].widget.attrs.update({'class': 'form-control', 'placeholder': "Enter Question"})
     if self.instance.qtype == "OBJECTIVE":
       self.initial['qtype'] = "OBJECTIVE"
