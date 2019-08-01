@@ -12,6 +12,7 @@ import json
  
 @group_required('Admin', raise_exception=True)
 def home(request):
+  
   if Awards.objects.count()==0:
     awards=[]
     templates=[]
@@ -134,7 +135,7 @@ def award_template(request,award_id,award_template_id):
           prev_qids.remove(qid)
           question = Questions.objects.get(id=qid)
           question.qname = content['questions_set-{0}-qname'.format(i)]
-          question.role_id = int(content['questions_set-{0}-role'.format(i)])
+          question.group_id = int(content['questions_set-{0}-group'.format(i)])
           question.updated_at = timezone.now()
           if qtype == "SUBJECTIVE":
             question.qtype = "SUBJECTIVE"
@@ -145,7 +146,7 @@ def award_template(request,award_id,award_template_id):
           question.save()
         else:
           question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=content['questions_set-{0}-qtype'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)), \
-            role_id=content['questions_set-{0}-role'.format(i)], created_at=timezone.now(),award_template_id=award_template_id, updated_at=timezone.now())
+            group_id=content['questions_set-{0}-group'.format(i)], created_at=timezone.now(),award_template_id=award_template_id, updated_at=timezone.now())
           question.save()
           pass
       for pqid in prev_qids:
@@ -155,6 +156,7 @@ def award_template(request,award_id,award_template_id):
         messages.success(request, 'Award Template is updated successfully.')
       return redirect('nominate_app:award_templates_index', award_id=award.id)
     elif method == 'delete':
+
       if award_template.delete():
          messages.success(request, 'Award is deleted successfully')
          return redirect('nominate_app:award_templates_index', award_id=award.id)

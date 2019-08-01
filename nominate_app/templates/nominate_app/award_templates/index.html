@@ -40,17 +40,18 @@
     <div id="collapseThree" class="collapse show" data-parent="#accordion">
       <div class="card-body">
         <div class="container">
-          <form>
             <table class="table table-borderless" id="templates_table">
               <tbody>
+
                 {% for lt in load_templates %}
                 <tr class="d-flex">
                   <td class="col-9" style="padding-bottom: 6px; padding-top: 0;"> {{ lt.template_name }} </td>
                   <td class="col-1" style="padding-bottom: 6px; padding-top: 0;"><a href="{% url 'nominate_app:award_template' award.id lt.id %}" type="button" class="btn btn-success" value = "View">View</a></td>
                   <td class="col-1" style="padding-bottom: 6px; padding-top: 0;"><a href="{% url 'nominate_app:edit_award_template' award.id lt.id %}" type="button" class="btn btn-info" value = "View">Edit</a></td>
                   <td class="col-1" style="padding-bottom: 6px; padding-top: 0;">
-                  <form action="{% url 'nominate_app:award_template' award.id lt.id %}" method="post">
-                      {% csrf_token%}
+
+                    <form action="{% url 'nominate_app:award_template' award.id lt.id %}" method="POST">
+                        {% csrf_token %} 
                       <input type="hidden" name="_method" value="delete">
                       <input type="submit" class="btn btn-danger" value="Delete">
                   </form>
@@ -63,7 +64,6 @@
                 {% endfor %}
               </tbody>
             </table>
-          </form>
         </div>
       </div>
     </div>

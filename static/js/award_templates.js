@@ -22,9 +22,14 @@ $(".objective-type").on('change', function(event){
   if(this.selectedIndex != 0){
     
     $(this).parent().next().show()
+    id = $(this).attr('id').split('-')[1]
+    $('input[name="questions_set-'+ id +'-objectives"]').attr('required', true);
+
 
   }else{
-    $(this).parent().next().hide()
+    id = $(this).attr('id').split('-')[1]
+      $(this).parent().next().hide()
+      $('input[name="questions_set-'+ id +'-objectives"]').attr('required', false);
   }
 });
 
@@ -45,19 +50,7 @@ $(".objective-type").on('change', function(event){
     $(this).before(parentElement);
   });
 
-  $(".objective-type").on("change", function(event) {
-    if (this.selectedIndex == 1) {
-      $(this)
-        .parent()
-        .next()
-        .show();
-    } else {
-      $(this)
-        .parent()
-        .next()
-        .hide();
-    }
-  });
+  
 
   $(".objective-cancel").click(function() {
     if (
