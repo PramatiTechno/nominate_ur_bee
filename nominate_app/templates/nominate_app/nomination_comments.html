@@ -10,7 +10,7 @@
             <div class="date col-md-4">
                 <h6 class="text-muted">{{ comment.created_date }}</h6>
                 {% if user == comment.author %}
-                    <a class="btn btn-default comment-delete" value="{{ comment.id }}" href=""><span class="glyphicon glyphicon-remove"></span></a>
+                    <a class="btn btn-default comment-delete" value="{{ comment.id }}" href=""><span class="glyphicon glyphicon-remove"></span>Delete</a>
                 {% endif %}
             </div>
         </div>

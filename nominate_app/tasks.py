@@ -11,7 +11,7 @@ from IPython import embed
 logger = get_task_logger(__name__)
 
 #to start celery use 2 commands in two terminals one for worker other one for celery process
-#cery -A nominate_your_bee beat -l info
+#celery -A nominate_your_bee beat -l info
 #celery -A nominate_your_bee worker -l info
 
 def add_months(sourcedate, months):
@@ -43,7 +43,7 @@ def populate_monthly_frequency():
 				group_nominations = template.nomination_set.filter(group=period.group)
 				if  group_nominations.count() == 0:
 					print("Group count is zero");
-					if period.start_day.date() == (datetime.now() + timedelta(hours=24)).date():
+					if period.start_day == (datetime.now() + timedelta(hours=24)).date():
 						new_instance = Nomination.objects.get_or_create(award_template_id= template.id,start_day=period.start_day,end_day=period.end_day,group=period.group)
 				else:
 					for nom in group_nominations:
@@ -51,5 +51,5 @@ def populate_monthly_frequency():
 						last_nomination = template.nomination_set.last()
 						next_nomination_starts_at = add_months(last_nomination.start_day,frequencies[frequency]) 
 						next_nomination_ends_at = add_months(last_nomination.end_day,frequencies[frequency])
-						if next_nomination_starts_at.date() == (datetime.now() + timedelta(hours=24)).date():
+						if next_nomination_starts_at == (datetime.now() + timedelta(hours=24)).date():
 							new_instance = Nomination.objects.get_or_create(award_template_id=template.id,start_day=next_nomination_starts_at,end_day=next_nomination_ends_at,group=period.group)

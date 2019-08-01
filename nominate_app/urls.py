@@ -46,7 +46,10 @@ urlpatterns = [
   path('nomination_detail/<award_template_id>/nomination_instance/<int:nomination_instance_id>/comment/<int:comment_id>/delete', nomination_index.comment_remove, name='comment_remove'),
   path('nomination_detail/<award_template_id>/nomination_instance/<int:nomination_instance_id>/like/', nomination_index.nomination_like, name='nomination_like'),
 
-  path('nomination_instance/<int:instance_id>comment/<int:comment_id>/approve/', nomination_index.comment_approve, name='comment_approve'),
+  path('nomination_feed/nomination_instance/<int:nomination_instance_id>/comment/', nomination_index.CommentList.as_view(), name='add_comment'),
+  path('nomination_feed/nomination_instance/<int:nomination_instance_id>/comment/<int:comment_id>/delete', nomination_index.comment_remove, name='comment_remove'),
+  path('nomination_feed/nomination_instance/<int:nomination_instance_id>/like/', nomination_index.nomination_like, name='nomination_like'),
+
 ]
 
 if settings.DEBUG:
