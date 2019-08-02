@@ -18,13 +18,14 @@ def index(request):
   nominations = Nomination.objects.filter(group__in=list(map(lambda x: x['id'],current_user.groups.values()))) #,start_day__gt= datetime.today(),end_day__lt= datetime.today() )#list(map(lambda g: g.id,current_user.groups.all()))) 
   new_nominations,saved_nominations,submitted_nominations = [],[],[]
   for nomination in nominations:
-      if nomination.nominationinstance_set.count() == 0:
-        new_nominations.append(nomination)                                   
-      elif nomination.nominationinstance_set.get(user=request.user).status == 1:
-        nomination.nomination_instance_id = nomination.nominationinstance_set.get(user=request.user).id
+      nomination_instance = nomination.nominationinstance_set.filter(user=request.user)
+      if nomination_instance.count() == 0:
+        new_nominations.append(nomination)        
+      elif nomination_instance[0].status == 1:
+        nomination.nomination_instance_id = nomination_instance[0].id
         saved_nominations.append(nomination)
-      elif nomination.nominationinstance_set.get(user=request.user).status == 2:
-        nomination.nomination_instance_id = nomination.nominationinstance_set.get(user=request.user).id
+      elif nomination_instance[0].status == 2:
+        nomination.nomination_instance_id = nomination_instance[0].id
         submitted_nominations.append(nomination)    
   return render(request, 'nominate_app/nominations/index.html', {'new_nominations': new_nominations, 'submitted_nominations':submitted_nominations, 'saved_nominations': saved_nominations })
 
