@@ -15,13 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin  
 from django.urls import path  
-from nominate_app.views import awards,award_templates, award_template_views,nominate_process_view, nomination_status_view,nomination_index
+from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances, graphs
 from django.conf import settings 
 from django.conf.urls.static import static
 
 app_name = 'nominate_app'
 urlpatterns = [
-  path('', award_template_views.home, name='home'),
+  path("",awards.home, name='home'),
   path("awards/",awards.index,name="awards"),
   path("awards/new/",awards.new,name="new_award"),
   path("awards/<award_id>/edit/",awards.edit,name="edit_award"),
@@ -31,19 +31,23 @@ urlpatterns = [
   path("awards/<award_id>/award_templates/new/",award_templates.new,name="new_template"),
   path("awards/<award_id>/award_templates/<award_template_id>/edit/",award_templates.edit,name="edit_award_template"),
   path('awards/<award_id>/award_templates/<award_template_id>/', award_templates.award_template,name="award_template"),
-  path('question/delete/<ques_id>/', award_template_views.delete_award_template),
+  path("nominations/",nominations.index,name="nominations"),
+  path("nominations/<nomination_id>/nomination_instances/new/",nomination_instances.new,name="new_nomination_instance"),
+  path("nominations/<nomination_id>/nomination_instances/",nomination_instances.index,name="create_nomination_instance"),
+  path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/edit/",nomination_instances.edit,name="edit_nomination_instance"),
+  path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/",nomination_instances.nomination_instance,name="nomination_instance"),
+  path("graphs/",graphs.index,name="graphs"),    
+  path("graphs/<award_id>",graphs.load_graph,name="load_graph"),    
+
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
   path('nomination_status_load/<id>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
-  path('manager_nominate_index/', nominate_process_view.manager_nominate_index, name='manager_nominate_index'),
-  path('create_nomination/<chain_id>/', nominate_process_view.create_nomination, name='create_nomination'),
-  path('view_nomination/<chain_id>/', nominate_process_view.view_nomination, name='view_nomination'),
-  path('store_nomination/<nomination_instance_id>/', nominate_process_view.store_nomination, name='store_nomination'),
   path('nomination_feed/', nomination_index.NominationIndexView.as_view(), name='nomination_feed'),
-  path('nomination_detail/<award_template_id>/', nomination_index.NominationDetailView.as_view(), name='nomination_detail'),
-  path('nomination_detail/<award_template_id>/nomination_instance/<int:nomination_instance_id>/add_comment/', nomination_index.CommentList.as_view(), name='add_comment'),
+  
+  path('nomination_feed/<int:nomination_instance_id>/', nomination_index.nomination_instance_post, name='nomination_instance_post'),
+  path('nomination_feed/<int:nomination_instance_id>/comment/', nomination_index.CommentList.as_view(), name='add_comment'),
+  path('nomination_feed/<int:nomination_instance_id>/comment/<int:comment_id>/delete', nomination_index.comment_remove, name='comment_remove'),
+  path('nomination_feed/<int:nomination_instance_id>/like/', nomination_index.nomination_like, name='nomination_like'),
 
-  path('nomination_instance/<int:instance_id>comment/<int:comment_id>/approve/', nomination_index.comment_approve, name='comment_approve'),
-  path('nomination_instance/<int:instance_id>comment/<int:comment_id>/remove/', nomination_index.comment_remove, name='comment_remove'),
 ]
 
 if settings.DEBUG:

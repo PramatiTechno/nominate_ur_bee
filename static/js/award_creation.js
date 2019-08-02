@@ -1,4 +1,18 @@
 $(document).ready(function(){
+  // $("#needs-validation").submit(function(e){
+  //   count = $('.datepicker').length / 2
+  //   for(var i=0; i< count; i++){
+  //     start_day = $("input[name=nominationperiod_set-"+ i +"-start_day]").datepicker('getDate')
+  //     end_day = $("input[name=nominationperiod_set-"+ i +"-end_day]").datepicker('getDate')
+  //     if(start_day > end_day){
+  //       e.stopPropagation()
+  //       $("input[name=nominationperiod_set-"+ i +"-start_day]").focus()
+  //       $("input[name=nominationperiod_set-"+ i +"-end_day]").focus()
+  //       e.preventDefault()
+  //       break;
+  //     }
+  //   }
+  // });
   if(($('.del_btn_formset').length) == 1){
     $('.del_btn_formset').hide()
   }
@@ -17,7 +31,12 @@ $(document).ready(function(){
 
 
   $('body').on('focus',".datepicker", function(){
-    $(this).datepicker();
+    $('.datepicker').attr('autocomplete',"off");
+    $(this).datepicker({
+      startDate: "today",
+      maxViewMode: 1,
+      orientation: "bottom",
+    });
   });
 
   $(document).on('change', '[type=checkbox]', function(event) {
@@ -58,7 +77,13 @@ $(document).ready(function(){
 
     total++;
     $('#id_' + type + '-TOTAL_FORMS').val(total);
-    newElement.find('input.datepicker').removeData('datepicker').unbind().datepicker();
+    newElement.find('input.datepicker').removeData('datepicker').unbind().datepicker(
+      {
+        startDate: "today",
+        maxViewMode: 1,
+        orientation: "bottom",
+    }
+    );
     $(selector).after(newElement);
   }
 
@@ -68,4 +93,6 @@ $(document).ready(function(){
     $('#id_nominationperiod_set-TOTAL_FORMS').val(total);
     $('#id_nominationperiod_set-TOTAL_FORMS').attr('value', total);
   }
+
+
 });

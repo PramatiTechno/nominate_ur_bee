@@ -1,6 +1,6 @@
 
 {% block content %}
-    
+	<span class = "instance_id_span" style="visibility: hidden">{{ instance.id }}</span>
     {% for comment in instance.comments.all %}
         <div class="comment row">
             <div class="col-md-8">
@@ -9,9 +9,8 @@
             </div>
             <div class="date col-md-4">
                 <h6 class="text-muted">{{ comment.created_date }}</h6>
-                {% if not comment.approved_comment %}
-                    <a class="btn btn-default" href="{% url 'nominate_app:comment_remove' instance_id=instance.id comment_id=comment.id %}"><span class="glyphicon glyphicon-remove"></span></a>
-                    <a class="btn btn-default" href="{% url 'nominate_app:comment_approve' instance_id=instance.id comment_id=comment.id %}"><span class="glyphicon glyphicon-ok"></span></a>
+                {% if user == comment.author %}
+                    <a class="btn btn-default comment-delete" value="{{ comment.id }}" href=""><span class="glyphicon glyphicon-remove"></span>Delete</a>
                 {% endif %}
             </div>
         </div>
@@ -19,3 +18,26 @@
         <p>No comments here yet :(</p>
     {% endfor %}
 {% endblock %}
+
+<script>
+
+$('.comment-delete').on('click', function() {
+	var comment_section =$(this).parents('div.comment-section')
+	var instance_id = comment_section.find('span.instance_id_span').html()
+	var comment_id = $(this).attr('value')
+	$.ajax({
+	    type: "GET",
+	    url: instance_id + "/comment/"+ comment_id+ "/delete", 
+	    success : function(data) {
+	        console.log("success");
+	        comment_section.html(data)
+	    },
+	    error: function(response) {
+	        console.log("error",response)
+	    }
+	});
+	return false;
+});
+
+</script>
+                    

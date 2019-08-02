@@ -5,18 +5,7 @@
 <script src="{% static 'js/award_creation.js' %}"></script>
 <div class = "container">
    <div class="form-group">
-      {% if award_form.errors or formset.errors %}
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-         <ul>
-            {{ award_form.errors }}
-            {{ formset.errors }}
-         </ul>
-         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-         <span aria-hidden="true">&times;</span>
-         </button>
-      </div>
-      {% endif %}
-      <form method = "post" action="/awards/" id="needs-validation" novalidate>
+      <form method = "post" action="/awards/" id="needs-validation">
         {% csrf_token %}
           <div class = "row award_top_margin">
             <div class="col-sm-10">
@@ -66,12 +55,12 @@
         <div class = "row award_top_margin add_nomination_period">
             <div class="col-sm-2">
                <div class="form-row">
-                  <label class="col-form-label" for="name">Level</label>
+                  <label class="col-form-label" for="name">Group</label>
                </div>
             </div>
             <div class="col-sm-2">
                <div class="form-group">
-                  {{ form.level|attr:"class:form-control" }}
+                  {{ form.group|attr:"class:form-control" }}
                </div>
             </div>
             <div class="col-sm-4">
@@ -107,9 +96,11 @@
               </div>
             </div>
         </div>
-        <div class = "row award_top_margin justify-content-md-center">
+
+         {% endfor %} 	
+         <div class = "row award_top_margin justify-content-md-center">
             <div class="col-sm-2">
-               <button type="button" class="btn btn-primary add_more">Add More</button>
+              <button type="button" class="btn btn-primary add_more">Add More</button>
             </div>
         </div>
         <br>
@@ -120,8 +111,7 @@
           <div class="col-sm-6"> 
             <textarea class="form-control" rows="5" id="comment" name="description"></textarea>	
           </div>
-         </div>
-         {% endfor %} 	
+        </div>          
          <div class ="row award_top_margin justify-content-md-center">
             <div class="col-sm-4">
                <button type="button" class="btn btn-danger">Cancel</button>

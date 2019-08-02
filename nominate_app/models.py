@@ -6,11 +6,17 @@ from dateutil.relativedelta import *
 from datetime import datetime
 from IPython import embed
 from django.contrib.postgres.fields import ArrayField
+from safedelete.models import SafeDeleteModel
+from safedelete.models import SOFT_DELETE
+import safedelete.managers as managers
+import safedelete
 # from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
 Group.add_to_class('group', models.CharField(max_length=30, default='level0'))    
+class SafeDeleteQuestionsManager(managers.SafeDeleteManager):
+  _safedelete_visibility = safedelete.managers.DELETED_INVISIBLE
 
 class UserProfile(models.Model):
   email = models.EmailField(max_length=70, unique=True)
@@ -64,18 +70,17 @@ class Awards(models.Model):
     return self.name
 
   def save_nomination_period(self):
-    frequencies = NominationPeriod.objects.filter(award= self)
-    for frequency in frequencies:
-      new_nomination_period = NominationPeriod.objects.get_or_create(start_day= frequency.start_day, end_day= frequency.end_day, level_id= frequency.level_id, award_id= frequency.award_id)[0]
+    periods = NominationPeriod.objects.filter(award=self)
+    for period in periods:
+      new_nomination_period = NominationPeriod.objects.get_or_create(start_day= period.start_day, end_day= period.end_day, group_id= period.group_id, award_id= period.award_id)[0]
       new_nomination_period.save()
 
 class NominationPeriod(models.Model):
   CHOICES = [(str(i),str(i)) for i in range(1,32)]
-  level = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
-  is_template = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
@@ -94,55 +99,75 @@ class AwardTemplate(models.Model):
   def __str__(self):
     return self.template_name
 
-class Questions(models.Model):
+class Questions(SafeDeleteModel):
+  _safedelete_policy = SOFT_DELETE
   query_choice = (
       ('SUBJECTIVE', 'subjective'),
-      ('OBJECTIVE', 'objective')
+      ('OBJECTIVE', 'objective'),
+      ('MULTIPLE-CHOICE', 'multiple-choice')
   )
+  objects = SafeDeleteQuestionsManager()
   class Meta:
     db_table='award_questions'
     
   qname = models.CharField(max_length=100, null=False, blank=False)
   qtype = models.CharField(max_length=100, choices=query_choice, null=False, blank=False, default='subjective')
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-  role = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
   attachment_need = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  options = ArrayField(models.CharField(max_length=100, blank=True), size=20,blank=True,null=True)
+  options = ArrayField(models.CharField(max_length=90, blank=True), size=20,blank=True,null=True)
+  deleted = models.DateTimeField(editable=False,null=True)
+
   def __str__(self):
     return self.qname
+  # def __eq__(self, other):
+  #   if self.qname == other.qname and self.qtype == other.qtype and self.options == other.options \
+  #     and self.award_template_id == other.award_template_id and self.role_id == other.role_id:
+  #     return True
+  #   else:
+  #     return False
+    
+
+class Nomination(models.Model):
+  award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE)
+  start_day = models.DateField(max_length=20, null=False, blank=False)
+  end_day = models.DateField(max_length=20, null=False, blank=False)
+  created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+  updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+
+  class Meta:
+    db_table='nominations'  
 
 class NominationInstance(models.Model):
-  award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-  status = models.CharField(max_length=50, null=False, blank=False, default='new')
+  statuses =( 
+    ("New",0),
+    ("Saved", 1),
+    ("Submitted", 2),
+    ("Reviewed",3),
+    ("Approved",4),
+    ("Dismissed",5),
+    ("On hold",6)
+  )
+  nomination = models.ForeignKey(Nomination, on_delete=models.CASCADE)
+  status = models.IntegerField(null=False, blank=False,choices=statuses,default=0)
   result = models.CharField(max_length=50, null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
+  submitted_at = models.DateTimeField(auto_now_add=True, null=False, blank=False) 
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-
   class Meta:
     db_table='nomination_instances'
-
-class NominationSubmitter(models.Model):
-  submit_choice =( 
-    ("SAVE", 1),
-    ("SUBMIT", 0)
-  )
-  nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
-  reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
-  reviewed_at = models.DateField(max_length=20, null=True, blank=True)
-  submit_later =  models.IntegerField(choices=submit_choice, default=0)
-  created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-
-  class Meta:
-    db_table='nomination_submitters'
+  def get_status(self, status_code):
+    for status in self.statuses:
+      if status[1] == status_code:
+        return status[0]
 
 class NominationAnswers(models.Model):
   UPLOAD_TO = 'answers/images'
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
-  nomination_chain = models.ForeignKey(NominationSubmitter, on_delete=models.CASCADE)
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
   question = models.ForeignKey(Questions, on_delete=models.CASCADE)
   submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -154,21 +179,8 @@ class NominationAnswers(models.Model):
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
-
   class Meta:
     db_table='nomination_answers'
-
-class NominationTimeSlot(models.Model):
-  level = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
-  award = models.ForeignKey(Awards, on_delete=models.CASCADE)
-  start_day = models.DateField(max_length=20, null=False, blank=False)
-  end_day = models.DateField(max_length=20, null=False, blank=False)
-  nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
-  created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  
-  class Meta:
-    db_table='nomination_time_slots'
 
 class Comment(models.Model):
     nomination = models.ForeignKey('NominationInstance', on_delete=models.CASCADE, related_name='comments')
@@ -185,5 +197,14 @@ class Comment(models.Model):
         self.save()
 
     def __str__(self):
-        return self.text       
+        return self.text 
+
+class Like(models.Model):
+  nomination = models.ForeignKey('NominationInstance', on_delete=models.CASCADE, related_name='likes')
+  voter = models.ForeignKey(User, on_delete=models.CASCADE)
+  created_date = models.DateTimeField(default=timezone.now)
+
+  class Meta:
+    db_table='nomination_likes'
+
 

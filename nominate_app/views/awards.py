@@ -8,7 +8,16 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from nominate_app.utils import group_required
+from datetime import datetime
 from IPython import embed
+
+def home(request):
+  if request.user.groups.filter(name="Admin").exists():
+    return redirect('nominate_app:awards')
+  else:
+    return redirect('nominate_app:nominations')
+
+
  
 @group_required('Admin', raise_exception=True)
 def index(request):
@@ -16,13 +25,20 @@ def index(request):
     forms = Awards.objects.all()
     return render(request, 'nominate_app/awards/index.html',{'forms':forms})
   elif request.method == 'POST':
-    award = Awards()
+    award = Awards(name=request.POST['name'])
     NominationFormset = inlineformset_factory(Awards, NominationPeriod, form=NominationPeriodForm, extra=1)
     award_form = AwardsForm(request.POST)
     formset = NominationFormset(request.POST)
+    for form_id in range(int(request.POST['nominationperiod_set-TOTAL_FORMS'])):
+      start_day = datetime.strptime(request.POST['nominationperiod_set-{0}-start_day'.format(form_id)], '%m/%d/%Y')
+      end_day = datetime.strptime(request.POST['nominationperiod_set-{0}-end_day'.format(form_id)], '%m/%d/%Y')
+      if start_day > end_day:
+        messages.error(request, "End date must be greater than start date.")
+        return render(request, 'nominate_app/awards/new.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items()})
     if award_form.is_valid():
         created_award = award_form.save(commit=False)
         formset = NominationFormset(request.POST, instance=created_award)
+
     if formset.is_valid():  
         created_award.save()
         formset.save()
@@ -75,6 +91,14 @@ def award(request,award_id):
             x=1        
         NominationFormset = inlineformset_factory(Awards, NominationPeriod, form=NominationPeriodForm, extra=x)
         formset = NominationFormset(request.POST)
+        for form_id in range(int(request.POST['nominationperiod_set-TOTAL_FORMS'])):
+          start_day = datetime.strptime(request.POST['nominationperiod_set-{0}-start_day'.format(form_id)], '%m/%d/%Y')
+          end_day = datetime.strptime(request.POST['nominationperiod_set-{0}-end_day'.format(form_id)], '%m/%d/%Y')
+          if start_day > end_day:
+            messages.error(request, "End date must be greater than start date.")
+            award = Awards.objects.get(id=award_id)
+            return render(request, 'nominate_app/awards/edit.html', {'formset':formset, "award": award, 'award_form':award_form, 'frequencies': Awards.frequencies.items()})
+        
         if award_form.is_valid():
           created_award = award_form.save(commit=False)
           formset = NominationFormset(request.POST, instance=created_award)

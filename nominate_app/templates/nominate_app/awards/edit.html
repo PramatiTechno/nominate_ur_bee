@@ -9,7 +9,7 @@
       <form action="/awards/{{award.id}}/" method="post">
          <br />
          <input type="hidden" name="_method" value="put">
-         {% if award_form.errors or formset.errors %}
+         <!-- {% if award_form.errors or formset.errors %}
          <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <ul>
                {{ award_form.errors }}
@@ -19,7 +19,7 @@
             <span aria-hidden="true">&times;</span>
             </button>
          </div>
-         {% endif %}
+         {% endif %} -->
          {% csrf_token %}
          <div class = "row award_top_margin">
             <div class="col-sm-10">
@@ -70,12 +70,12 @@
             {{ form.id }}
             <div class="col-sm-2">
               <div class="form-row">
-                <label class="col-form-label" for="name">Level</label>
+                <label class="col-form-label" for="name">Group</label>
               </div>
             </div>
             <div class="col-sm-2">
               <div class="form-group">
-                {{ form.level|attr:"class:form-control" }}
+                {{ form.group|attr:"class:form-control" }}
               </div>
             </div>
             <div class="col-sm-4">

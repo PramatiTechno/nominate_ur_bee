@@ -9,6 +9,8 @@
 <div class = "container">
   <div class="form-group">
     <form method = "post" action="/awards/{{award.id}}/award_templates/{{award_template.id}}/">
+      <input type="hidden" name="_method" value="put">
+
       {% if template_form.errors or formset.errors %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
           <ul>
@@ -65,28 +67,69 @@
               <div class="form-group">
                   {{ form.qtype|attr:"class:form-control objective-type" }}
               </div>
-              <div class="objective-type-container" id="id_questions_set-0-objective-container">
-                  <div class="form-group">
-                      <div class='input-group row'>
-                        <div class='col-sm-10'>
-                            <input type="text" class='form-control' id='id_questions_set-0-objectives' name='questions_set-0-objectives'/>
-                        </div>
-                        <div class='col-sm-2'>
-                            <input type="button"  value='Remove' class='objective-cancel'  name='objective-cancel'/>
-                        </div>
-                      </div>
+              {% if questions %}
+                <div class="objective-type-container" id="id_questions_set-{{ forloop.counter0 }}-objective-container">
+                    <div class="form-group">
                       
-                      <input type="button" class='objective-add-button' name='objective-button'  value='Add Choice' />
-                  </div>
-              </div>                  
+                      {% for question in questions %}
+                        {% if question.qname == form.qname.value %}
+                          {% if question.qtype == "SUBJECTIVE" %}
+                            <div class='input-group row'>
+                                <div class='col-sm-10'>
+                                    <input type="text" class='form-control' id='id_questions_set-{{ forloop.counter0 }}-objectives' value="{{ option }}" name='questions_set-{{ forloop.counter0 }}-objectives'/>
+                                </div>
+                                <div class='col-sm-2'>
+                                    <input type="button"  value='Remove' class='objective-cancel'  name='objective-cancel'/>
+                                </div>
+                            </div>
+                          
+                          {% else %}
+                            {% for option in question.options %}
+                              <div class='input-group row'>
+                                  <div class='col-sm-10'>
+                                      <input type="text" class='form-control' id='id_questions_set-{{ forloop.counter }}-objectives' value="{{ option }}" name='questions_set-{{ question.id }}-objectives' required/>
+                                  </div>
+                                  <div class='col-sm-2'>
+                                      <input type="button"  value='Remove' class='objective-cancel'  name='objective-cancel'/>
+                                  </div>
+                              </div>
+                            {% endfor %}  
+                          {% endif %}
+                        {% endif %}
+                        
+                      
+                      {% endfor %}        
+                        <input type="button" class='objective-add-button' name='objective-button'  value='Add Choice' />
+                    </div>
+                </div>
+                
+
+                
+              {% else %}
+                <div class="objective-type-container" id="id_questions_set-0-objective-container">
+                    <div class="form-group">
+                        <div class='input-group row'>
+                          <div class='col-sm-10'>
+                              <input type="text" class='form-control' id='id_questions_set-0-objectives' name='questions_set-0-objectives' />
+                          </div>
+                          <div class='col-sm-2'>
+                              <input type="button"  value='Remove' class='objective-cancel'  name='objective-cancel'/>
+                          </div>
+                        </div>
+                        
+                        <input type="button" class='objective-add-button' name='objective-button'  value='Add Choice' />
+                    </div>
+                </div>
+              {% endif %}
+                                
             </div>
   
             </div>
             <div class="col-sm-2"> 
               <div class="form-row">
-                <label class="col-form-label" for='{{form.role}' >Level</label> 
+                <label class="col-form-label" for='{{form.group}' >Group</label> 
                 <div class="form-group">
-                  {{ form.role|attr:"class:form-control" }}
+                  {{ form.group|attr:"class:form-control" }}
                 </div>
               </div>
             </div>
@@ -105,8 +148,8 @@
               </div>
             </div>
           </div>
+          {% endfor %}  
         </div>
-      {% endfor %}  
       <div class = "row award_top_margin justify-content-md-center">
         <div class="col-sm-2">
           <button name="add_more" id="add_more" type="button" class="btn btn-primary add_more">Add More</button>
@@ -115,7 +158,7 @@
       <div class ="row award_top_margin justify-content-md-center">
         <div class="col-sm-4">
           <button type="button" class="btn btn-danger">Cancel</button>
-          <button type="submit" class="btn btn-success">Update</button>
+          <input type="submit" class="btn btn-success" value="Update">
         </div>  
       </div>    
     </form> 

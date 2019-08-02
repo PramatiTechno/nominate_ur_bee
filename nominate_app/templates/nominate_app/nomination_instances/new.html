@@ -8,7 +8,7 @@
 <script src="{% static 'js/award_templates.js' %}"></script>
 <div class = "container">
   <div class="form-group">
-    <form method="post"  enctype="multipart/form-data">
+    <form method="post"  enctype="multipart/form-data" action="/nominations/{{nomination.id}}/nomination_instances/">
       {% csrf_token %}
       <input type="hidden" name="nomination_instance" class="form-control" placeholder="" value="{{ nomination_instance.id}}" required />
       <div class = "row award_top_margin">
@@ -26,18 +26,13 @@
           <div class="col-sm-4">
             {% if question.qtype == 'SUBJECTIVE'%}   
               {% if question.nominationanswers_set.count > 0 %}
-              <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="{{ question.nominationanswers_set.first.answer_text }}" required />
+              <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="" required />
               {% else %}
               <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="" required />
               {% endif %}
             {% else %}
-                {% if question.nominationanswers_set.first.answer_text == 'yes' %}
-                  <input type="radio" value="yes" name="{{question.id}}_answer_option" checked> Yes   
-                  <input type="radio" value="no" name="{{question.id}}_answer_option"> No
-                {% else %}
-                  <input type="radio" value="yes" name="{{question.id}}_answer_option"> Yes
-                  <input type="radio" value="no" name="{{question.id}}_answer_option" checked> No
-                {% endif %}
+              <input type="radio" value="yes" name="{{question.id}}_answer_option" checked> Yes   
+              <input type="radio" value="no" name="{{question.id}}_answer_option"> No
             {% endif %}
           </div>
           {% if question.attachment_need %}
@@ -59,8 +54,6 @@
           <button type="button" class="btn btn-danger">Cancel</button>
           <button type="submit" class="btn btn-success" name="action" value="submit">Submit</button>
           <button type="submit" class="btn btn-primary" name="action" value="save">Save</button>
-          <!-- <button type="button" class="btn btn-primary"     onclick="location.href='{% url 'nominate_app:store_nomination' nomination_instance.id %}'"
-          id="save_form">Save</button> -->
         </div>  
       </div>    
     </form> 
