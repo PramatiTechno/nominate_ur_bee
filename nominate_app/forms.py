@@ -1,6 +1,7 @@
 from django import forms  
 from nominate_app.models import *
 from django.forms import inlineformset_factory
+from IPython import embed
 
 class AwardsForm(forms.ModelForm):
 
@@ -23,6 +24,16 @@ class AwardsActiveForm(forms.ModelForm):
     model = Awards
     fields = '__all__'
 
+
+class NominationFilterForm(forms.Form):
+    AWARD_CHOICES = [('ALL', 'ALL'), ] + [(award.id, award.name) for award in Awards.objects.all()]
+    AWARD_TEMPLATE_CHOICES = [(template.id, template.template_name) for template in AwardTemplate.objects.all()]
+    AWARD_TEMPLATE_CHOICES.insert(0, ('ALL', 'ALL'))
+    SORT_CHOICES = [('latest', 'Latest'), ('oldest', 'Oldest')]
+
+    Awards = forms.ChoiceField(choices=AWARD_CHOICES, widget=forms.Select(attrs={'onchange':'get_templates();'}))
+    Templates = forms.ChoiceField(choices=AWARD_TEMPLATE_CHOICES)
+    Sort = forms.ChoiceField(choices=SORT_CHOICES)
 
 class CommentForm(forms.ModelForm):
 
