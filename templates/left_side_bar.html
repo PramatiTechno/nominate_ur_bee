@@ -16,7 +16,7 @@
         <a href="#nominee" class="nav-link">Reviews</a>
       {% endif %} 
       <a href="#result" class="nav-link" data-toggle="tab">Results</a>
-      <a href="" class="nav-link" data-toggle="tab">Graph</a>
+      <a href="{% url 'nominate_app:graphs' %}" class="nav-link {% if request.path == "/graphs/" %}active{% endif %}" >Graph</a>
     </div>
   </nav>
 </div>

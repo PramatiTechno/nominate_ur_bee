@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin  
 from django.urls import path  
-from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances
+from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances, graphs
 from django.conf import settings 
 from django.conf.urls.static import static
 
@@ -36,13 +36,14 @@ urlpatterns = [
   path("nominations/<nomination_id>/nomination_instances/",nomination_instances.index,name="create_nomination_instance"),
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/edit/",nomination_instances.edit,name="edit_nomination_instance"),
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/",nomination_instances.nomination_instance,name="nomination_instance"),
-
+  path("graphs/",graphs.index,name="graphs"),    
+  path("graphs/<award_id>",graphs.load_graph,name="load_graph"),    
 
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
   path('nomination_status_load/<id>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
   path('nomination_feed/', nomination_index.NominationIndexView.as_view(), name='nomination_feed'),
   
-  path('nomination_feed/<int:nomination_instance_id>', nomination_index.nomination_instance_post, name='nomination_instance_post'),
+  path('nomination_feed/<int:nomination_instance_id>/', nomination_index.nomination_instance_post, name='nomination_instance_post'),
   path('nomination_feed/nomination_instance/<int:nomination_instance_id>/comment/', nomination_index.CommentList.as_view(), name='add_comment'),
   path('nomination_feed/nomination_instance/<int:nomination_instance_id>/comment/<int:comment_id>/delete', nomination_index.comment_remove, name='comment_remove'),
   path('nomination_feed/nomination_instance/<int:nomination_instance_id>/like/', nomination_index.nomination_like, name='nomination_like'),

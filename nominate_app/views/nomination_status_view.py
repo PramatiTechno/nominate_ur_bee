@@ -34,6 +34,7 @@ def get_nomination_data(award):
       nd['instances'].append({
         'username': nomination_instance.user.username,
         'status': st,
+        'id': nomination_instance.id,
       })
     
     nomination_data.append(nd)

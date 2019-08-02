@@ -160,6 +160,10 @@ class NominationInstance(models.Model):
   updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   class Meta:
     db_table='nomination_instances'
+  def get_status(self, status_code):
+    for status in self.statuses:
+      if status[1] == status_code:
+        return status[0]
 
 class NominationAnswers(models.Model):
   UPLOAD_TO = 'answers/images'
