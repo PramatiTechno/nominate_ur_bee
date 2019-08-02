@@ -27,7 +27,7 @@ $('.comment-delete').on('click', function() {
 	var comment_id = $(this).attr('value')
 	$.ajax({
 	    type: "GET",
-	    url: "nomination_instance/" + instance_id + "/comment/"+ comment_id+ "/delete", 
+	    url: instance_id + "/comment/"+ comment_id+ "/delete", 
 	    success : function(data) {
 	        console.log("success");
 	        comment_section.html(data)
