@@ -41,11 +41,8 @@ urlpatterns = [
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
   path('nomination_status_load/<id>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
   path('nomination_feed/', nomination_index.NominationIndexView.as_view(), name='nomination_feed'),
-  path('nomination_detail/<award_template_id>/', nomination_index.NominationDetailView.as_view(), name='nomination_detail'),
-  path('nomination_detail/<award_template_id>/nomination_instance/<int:nomination_instance_id>/comment/', nomination_index.CommentList.as_view(), name='add_comment'),
-  path('nomination_detail/<award_template_id>/nomination_instance/<int:nomination_instance_id>/comment/<int:comment_id>/delete', nomination_index.comment_remove, name='comment_remove'),
-  path('nomination_detail/<award_template_id>/nomination_instance/<int:nomination_instance_id>/like/', nomination_index.nomination_like, name='nomination_like'),
-
+  
+  path('nomination_feed/<int:nomination_instance_id>', nomination_index.nomination_instance_post, name='nomination_instance_post'),
   path('nomination_feed/nomination_instance/<int:nomination_instance_id>/comment/', nomination_index.CommentList.as_view(), name='add_comment'),
   path('nomination_feed/nomination_instance/<int:nomination_instance_id>/comment/<int:comment_id>/delete', nomination_index.comment_remove, name='comment_remove'),
   path('nomination_feed/nomination_instance/<int:nomination_instance_id>/like/', nomination_index.nomination_like, name='nomination_like'),

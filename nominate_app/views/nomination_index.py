@@ -18,56 +18,64 @@ class NominationIndexView(View):
 			award_id = request.GET['Awards']
 			template_id = request.GET['Templates']
 			sort = request.GET['Sort']
-			nominations = nomination_filter(request)
+			nominations = nomination_filter(award_id, template_id)
 			nominate_form = NominationFilterForm(initial={'Awards': award_id, 'Templates': template_id, 'Sort': sort})
 
 		else:
 			nominate_form = NominationFilterForm()
 			nominations = Nomination.objects.all()
 
-		
-		instance_details = get_nomination_instances(nominations, sort)
+		instance_details = {}
+		instances = nomination_sort(nominations, sort)
+		for instance in instances:
+			instance_details[instance] = nomination_instance_detail(instance, request.user)
 
 		return render(request, self.template_name, {'instances': instance_details, 'comment_form': comment_form, 'filter_form': nominate_form})
 
-		
-		# return render(request, self.template_name, {self.context_object_name: submitted_nominations, 'filter_form': NominationFilterForm})
 
 
-
-def nomination_filter(request):
-	award_templates = AwardTemplate.objects.all()
-	if request.GET['Templates'] != 'ALL':
-		award_templates = AwardTemplate.objects.filter(id=int(request.GET['Templates']))
-	
+def nomination_filter(award_id, template_id):
+	awards = Awards.objects.all() if award_id == 'ALL' else Awards.objects.filter(id=int(award_id))
+	award_templates = AwardTemplate.objects.filter(award__in=awards) if template_id =='ALL' else AwardTemplate.objects.filter(award__in=awards, id=int(template_id))
 	nominations = Nomination.objects.filter(award_template__in=award_templates)
 
 	return nominations
 
 
-def get_nomination_instances(nominations, sort):
+def nomination_sort(nominations, sort):
 	if sort == 'latest':
-		submitted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2).order_by('-submitted_at')
+		sorted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2).order_by('-submitted_at')
 	elif sort == 'oldest':
-		submitted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2).order_by('submitted_at')
+		sorted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2).order_by('submitted_at')
+
+	return sorted_instances
+	
+
+def nomination_instance_detail(instance, requested_user):
+	instance_detail = {
+		'answers': NominationAnswers.objects.filter(nomination_instance_id=instance, submitted_by_id=instance.user),
+		'submitted_at': str(instance.submitted_at),
+		'liked': False
+	}
+	for like in instance.likes.all():
+		if like.voter == requested_user:
+			instance_detail['liked'] = True
+
+	return instance_detail
 
 
-	instance_details = {}
-	for instance in submitted_instances:
-		instance_details[instance] = {
-			'answers': NominationAnswers.objects.filter(nomination_instance_id=instance, submitted_by_id=instance.user),
-			'submitted_at': str(instance.submitted_at),
-			'liked': False
-		}
-		for like in instance.likes.all():
-			if like.voter == request.user:
-				instance_answers[instance]['liked'] = True
 
-	return instance_details
+# view for single nomination instance
+def nomination_instance_post(request, nomination_instance_id):
+	instance = NominationInstance.objects.get(id=nomination_instance_id)
+	instance_detail = nomination_instance_detail(instance, request.user)
+	comment_form = CommentForm()
+	embed()
+	return render(request, 'nominate_app/nomination_instance.html', {'instance': instance, 'detail': instance_detail, 'comment_form':comment_form})
 
 
 
-
+# For Like and unlike in nomination instances
 def nomination_like(request, nomination_instance_id):
 	nomination_instance = get_object_or_404(NominationInstance, id=nomination_instance_id)
 	like, created = Like.objects.get_or_create(voter=request.user, nomination=nomination_instance)
@@ -79,7 +87,7 @@ def nomination_like(request, nomination_instance_id):
 		return JsonResponse({'value':'unlike'})
 
 
-
+# For comment resource of nomination instance
 class CommentList(View):
 	def get(self, request, nomination_instance_id):
 		form = CommentForm()
@@ -117,23 +125,3 @@ def comment_remove(request, nomination_instance_id, comment_id):
 	return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'user': request.user, 'form': form, 'instance': nomination_instance}))
 
 
-#Detail view (view post detail)
-class NominationDetailView(View):
-	template_name = 'nominate_app/nomination_detail.html'
-	def get(self, request, award_template_id):
-		award_template = AwardTemplate.objects.get(id=award_template_id)
-		award = award_template.award
-		nominations = Nomination.objects.filter(award_template_id=award_template)
-		submitted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2)
-		form = CommentForm()
-		instance_answers = {}
-		for instance in submitted_instances:
-			instance_answers[instance] = {
-				'answers': NominationAnswers.objects.filter(nomination_instance_id=instance, submitted_by_id=instance.user),
-				'submitted_at': str(instance.submitted_at),
-				'liked': False
-			}
-			for like in instance.likes.all():
-				if like.voter == request.user:
-					instance_answers[instance]['liked'] = True
-		return render(request, self.template_name, {'award': award, 'nomination': award_template, 'instances': instance_answers, 'comment_form': form})

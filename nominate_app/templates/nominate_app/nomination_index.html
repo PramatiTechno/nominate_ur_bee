@@ -15,7 +15,9 @@
 
 
 	<div class="row nomination-feed">
-		{% include 'nominate_app/nomination_detail.html' with comment_form=comment_form instances=instances%}
+		{% for instance, detail in instances.items %}
+			{% include 'nominate_app/nomination_detail.html' with instance=instance detail=detail comment_form=comment_form  %}
+		{% endfor %}
 	</div>
 </div>
 
