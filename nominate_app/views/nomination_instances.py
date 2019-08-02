@@ -88,6 +88,7 @@ def new(request,nomination_id):
   answers_form = NominationAnswersForm(instance=NominationAnswers())
   nomination = Nomination.objects.get(id=nomination_id)
   nomination_instance = NominationInstance(nomination=nomination)
+  
   nomination_template = nomination.award_template
   questions = Questions.objects.filter(award_template = nomination_template,group=nomination.group).order_by('id')
   new_form = request.POST.copy()
