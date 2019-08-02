@@ -83,7 +83,7 @@
             <div class="panel-body">
               {% for nomination_instance in nomination.instances %}
                   <div class="user">
-                    <a onclick="location.href='{% url 'nominate_app:nomination_feed' %}'" style="cursor: pointer; text-decoration: none">
+                    <a onclick="location.href='{% url 'nominate_app:nomination_feed' nomination_instance.id %}'" style="cursor: pointer; text-decoration: none">
                       <div class="row">
                           <div class="col-sm-6">
                               Username: {{ nomination_instance.username }}
