@@ -70,10 +70,7 @@ def nomination_instance_post(request, nomination_instance_id):
 	instance = NominationInstance.objects.get(id=nomination_instance_id)
 	instance_detail = nomination_instance_detail(instance, request.user)
 	comment_form = CommentForm()
-	embed()
 	return render(request, 'nominate_app/nomination_instance.html', {'instance': instance, 'detail': instance_detail, 'comment_form':comment_form})
-
-
 
 # For Like and unlike in nomination instances
 def nomination_like(request, nomination_instance_id):
