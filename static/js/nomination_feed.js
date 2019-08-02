@@ -13,7 +13,7 @@ $(function() { // shortcut for onDocumentReady
             }
             $.ajax({
                 type: "GET",
-                url: "nomination_instance/" + instance_id + "/comment/", 
+                url: "/nomination_feed/" + instance_id + "/comment/", 
                 success : function(data) {
                     console.log("our data",data);
                     comment_section.html(data)
@@ -32,7 +32,7 @@ $(function() { // shortcut for onDocumentReady
             var like_count_val = like_count.html()
             $.ajax({
                 type: "GET",
-                url: "nomination_instance/" + instance_id + "/like/", 
+                url: "/nomination_feed/" + instance_id + "/like/", 
                 success : function(data) {
                     if (data.value === "like"){
                         like_btn.html("Liked")
@@ -58,7 +58,7 @@ $(function() { // shortcut for onDocumentReady
             var csrf = $(this).find('input').val()
             $.ajax({
                 type: "POST",
-                url: "nomination_instance/" + instance_id + "/comment/", 
+                url: "/nomination_feed/" + instance_id + "/comment/", 
                 data: {
                     comment: comment_text_field.val(),
                     'csrfmiddlewaretoken' : csrf
