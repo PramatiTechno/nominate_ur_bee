@@ -2,7 +2,7 @@ $(function() { // shortcut for onDocumentReady
         $('.comment-section').hide()
 
         // When you click an "a" tag who is child of an item with class "subcategory_list"…
-        $('.comment-link').on('click', function() {
+        $(document).on('click', '.comment-link', function() {
             var instance_id = $(this).attr('value')
             var comment_section = $(this).parent('div').find('.comment-section')
             if (comment_section.is(':visible')) {
@@ -25,7 +25,7 @@ $(function() { // shortcut for onDocumentReady
             return false;
         });
 
-        $('.like-link').on('click', function(){
+        $(document).on('click', '.like-link', function(){
             var instance_id = $(this).attr('value')
             var like_btn = $(this)
             var like_count = like_btn.parent().find('.like-count')
@@ -51,7 +51,7 @@ $(function() { // shortcut for onDocumentReady
 
         })
 
-        $('.post-form').on('submit', function() {
+        $(document).on('submit', '.post-form', function() {
             var instance_id = $(this).find('.send').attr('value')
             var comment_text_field = $(this).find('.comment-text')
             var comment_section = $(this).parent('div').find('.comment-section')
