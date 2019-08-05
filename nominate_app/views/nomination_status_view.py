@@ -21,8 +21,10 @@ def get_nomination_data(award):
     nd = {
       'start_day': nomination.start_day.strftime('%d %B'),
       'end_day': nomination.end_day.strftime('%d %B'),
+      'end_day_data': nomination.end_day,
       'group_name': nomination.group.name,
       'template_name':  nomination.award_template.template_name.capitalize(),
+      'nomination_id': nomination.id,
       'instances': []
     }
     for nomination_instance in nomination.nominationinstance_set.all():
