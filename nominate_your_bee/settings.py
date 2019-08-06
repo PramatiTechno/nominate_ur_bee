@@ -13,7 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import dotenv
 # from django.contrib.messages import constants as message_constants
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 dotenv.read_dotenv(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env")))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -160,6 +161,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT=os.path.join(BASE_DIR, 'static/compiled/')
+
+urlpatterns = [
+    # ... the rest of your URLconf goes here ...
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 STATICFILES_DIRS = (
   os.path.join(BASE_DIR, "static"),
