@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from nominate_app.models import *
 from nominate_app.forms import CommentForm, NominationFilterForm
 from django.views.generic.base import View
 from IPython import embed
+import time
 from django.template.loader import render_to_string
 
 
@@ -14,7 +16,8 @@ class NominationIndexView(View):
 	def get(self, request):
 		comment_form = CommentForm()
 		sort = 'latest'
-		if request.GET:
+		page = request.GET.get('page', 1)
+		if 'Awards' in request.GET:
 			award_id = request.GET['Awards']
 			template_id = request.GET['Templates']
 			sort = request.GET['Sort']
@@ -25,10 +28,18 @@ class NominationIndexView(View):
 			nominate_form = NominationFilterForm()
 			nominations = Nomination.objects.all()
 
-		instance_details = {}
+
+		instance_details = []
 		instances = nomination_sort(nominations, sort)
+
 		for instance in instances:
-			instance_details[instance] = nomination_instance_detail(instance, request.user)
+			instance_details.append({
+				'instance': instance,
+				'detail': nomination_instance_detail(instance, request.user)
+				})
+
+		paginator = Paginator(instance_details, 3)
+		instance_details = paginator.page(page)
 
 		return render(request, self.template_name, {'instances': instance_details, 'comment_form': comment_form, 'filter_form': nominate_form})
 
@@ -52,14 +63,18 @@ def nomination_sort(nominations, sort):
 	
 
 def nomination_instance_detail(instance, requested_user):
+	likes_count = instance.likes.count()
+	comments_count = instance.comments.count()
 	instance_detail = {
 		'answers': NominationAnswers.objects.filter(nomination_instance_id=instance, submitted_by_id=instance.user),
 		'submitted_at': str(instance.submitted_at),
-		'liked': False
+		'is_liked': False,
+		'likes_count': likes_count - 1 if likes_count > 0 else 0,
+		'comments_count': comments_count
 	}
 	for like in instance.likes.all():
 		if like.voter == requested_user:
-			instance_detail['liked'] = True
+			instance_detail['is_liked'] = True
 
 	return instance_detail
 
@@ -75,7 +90,7 @@ def nomination_instance_post(request, nomination_instance_id):
 # For Like and unlike in nomination instances
 def nomination_like(request, nomination_instance_id):
 	nomination_instance = get_object_or_404(NominationInstance, id=nomination_instance_id)
-	like, created = Like.objects.get_or_create(voter=request.user, nomination=nomination_instance)
+	like, created = Like.objects.get_or_create(voter=request.user, nomination=nomination_instance) 
 	if created:
 		like.save()
 		return JsonResponse({'value':'like'})
