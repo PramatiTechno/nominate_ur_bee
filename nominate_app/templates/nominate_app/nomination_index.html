@@ -3,6 +3,8 @@
 {% block content %}
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="{% static 'js/nomination_feed.js' %}"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
 
 <br>
 <div class="container">
@@ -14,11 +16,38 @@
 	</div>
 
 
-	<div class="row nomination-feed">
-		{% for instance, detail in instances.items %}
-			{% include 'nominate_app/nomination_detail.html' with instance=instance detail=detail comment_form=comment_form  %}
+	<div class="row nomination-feed infinite-container">
+		{% for instance in instances %}
+		<div class="infinite-item">
+			{% include 'nominate_app/nomination_detail.html' with instance=instance.instance detail=instance.detail comment_form=comment_form  %}
+		</div>
 		{% endfor %}
 	</div>
+
+	{% if instances.has_next %}
+    	<a class="infinite-more-link" href="?page={{ instances.next_page_number }}">More</a>
+  	{% endif %}
+
+  	<div class="loading" style="display: none;">
+    	Loading...
+  	</div>
 </div>
+
+<script>
+
+    var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function () {
+        $('.loading').show();
+        query_strings = window.location.search
+        if (query_strings !== ""){
+        	$('.infinite-more-link').attr('href', $('.infinite-more-link').attr('href') + "&" + query_strings)
+    	}
+      },
+      onAfterPageLoad: function ($items) {
+        $('.loading').hide();
+      }
+    });
+  </script>
 
 {% endblock %}
