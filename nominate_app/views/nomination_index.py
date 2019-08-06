@@ -38,7 +38,7 @@ class NominationIndexView(View):
 				'detail': nomination_instance_detail(instance, request.user)
 				})
 
-		paginator = Paginator(instance_details, 3)
+		paginator = Paginator(instance_details, 10)
 		instance_details = paginator.page(page)
 
 		return render(request, self.template_name, {'instances': instance_details, 'comment_form': comment_form, 'filter_form': nominate_form})
