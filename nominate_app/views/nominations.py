@@ -12,6 +12,12 @@ from nominate_app.models import Nomination,NominationPeriod, AwardTemplate, Nomi
 from IPython import embed
 from datetime import datetime
 
+def change_date(request, nomination_id):
+  nomination = Nomination.objects.get(id=nomination_id)
+  date = request.POST['date']
+  nomination.end_day = datetime.strptime(date, '%m/%d/%Y').date()
+  nomination.save()
+  return redirect('nominate_app:nomination_status') 
 
 def index(request):
   current_user = User.objects.get(id=request.user.id)
