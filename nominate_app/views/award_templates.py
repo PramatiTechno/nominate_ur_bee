@@ -108,10 +108,9 @@ def award_template(request,award_id,award_template_id):
       messages.success(request, 'Award Template does not exist')
       return redirect('nominate_app:award_templates') 
     if request.method == 'GET':
-      return render(request, 'nominate_app/award_templates/show.html', {'award':award })
-    elif method == 'put': 
-      from IPython import embed
-      
+      questions = Questions.objects.filter(award_template_id=award_template.id)
+      return render(request, 'nominate_app/award_templates/show.html', {'award':award ,'template': award_template, 'questions': questions})
+    elif method == 'put':       
       award_template = AwardTemplate.objects.get(id = award_template_id)
       questions = Questions.objects.filter(award_template_id=award_template.id)
       if questions.exists():
