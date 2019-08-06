@@ -1,24 +1,57 @@
-
 #navbar_wex {
   min-height: calc(100vh - 50px); /* 54 pixel is the height of your .navbar */
 }
+
 #sidebar {
   min-height: 103px;
   background-color: #00b6d5;
 }
-.award_top_margin{
+
+.bg-left-sidebar {
+  background: #15222f;
+  padding: 0px;
+}
+
+.navbar.navbar-expand-sm.navbar-dark.leftsidebar {
+  padding: 0px;
+}
+
+.nav-link.leftsidebar {
+  width: 100% !important;
+  font-size: 16px;
+  padding: 18px !important;
+}
+
+.nav-link.leftsidebar:hover {
+  background: #22374c !important ;
+}
+.nav-link.leftsidebar.active {
+  border-right: 3px solid #00b6d5;
+}
+.nav.navbar-nav.navbar-collapse.collapse.flex-column {
+  text-align: left !important;
+}
+.award_top_margin {
   margin-top: 7px;
 }
-.remove_nomination{
+.remove_nomination {
   margin-left: 22px;
   margin-top: 9px;
 }
-.hide_checkbox{
+.hide_checkbox {
   display: none;
 }
-.award-checkbox{
+.award-checkbox {
   display: none;
 }
-.attachment_checkbox{
+.attachment_checkbox {
   margin-top: 11px;
+}
+
+.footer {
+  width: 100%;
+  background: #3b4854;
+  color: #788183;
+  text-align: right;
+  padding: 10px;
 }
