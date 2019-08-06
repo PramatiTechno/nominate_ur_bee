@@ -21,7 +21,7 @@
 
 <script>
 
-$('.comment-delete').on('click', function() {
+$(document).on('click', '.comment-delete', function() {
 	var comment_section =$(this).parents('div.comment-section')
 	var instance_id = comment_section.find('span.instance_id_span').html()
 	var comment_id = $(this).attr('value')
