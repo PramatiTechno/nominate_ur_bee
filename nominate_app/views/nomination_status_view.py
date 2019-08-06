@@ -76,7 +76,6 @@ def get_nomination_details(page, id=None, template_id=None):
     nomination_data = get_nomination_data(award_template, page)
   else:
     award_template = None
-  
   return {'award_categories':awards, 'nominations': nomination_data, 'award_selected': award, 'award_templates': award_templates, 'selected_template': award_template}
 
 def nomination_status_load_template(request, id, template_id):
