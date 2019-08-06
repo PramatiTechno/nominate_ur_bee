@@ -8,7 +8,16 @@
     border:none;
     color: white;
     block-size: none;
+<<<<<<< HEAD
     text-decoration: underline;
+=======
+    text-decoration: underline; 
+  }
+  .panel-container{
+    justify-content: center;
+    margin: 1em 1em;
+    font-size: 1.5em;
+>>>>>>> added categories panel
   }
   .panel-title{
     padding: 10px;
@@ -42,26 +51,30 @@
 <link href="{% static 'css/bootstrap-editable.css' %}" rel="stylesheet"/>
 <script src="{% static 'js/bootstrap-editable.js' %}"></script>
 <script src="{% static 'js/nomination_status.js' %}"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+
 <br>
 <div class="container">
   <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-  {% for award in award_categories %}
-      {% if award_selected.name == award.name %}
-        <a class="nav-item nav-link tab_forms active" id="nav-home-tab"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award.id %}'" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" value='{{ award.id }}'>{{ award.name|title }}</a>
-      {% else %}
-        <a class="nav-item nav-link tab_forms " id="nav-home-tab{{ forloop.counter }}"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award.id %}'" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" value='{{ award.id }}'>{{ award.name|title }}</a>
-      {% endif %}
-      {% empty %}
-        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">No Awards Found</a>
-      {% endfor %}
-    </div>
+      {% for award in award_categories %}
+          {% if award_selected.name == award.name %}
+            <a class="nav-item nav-link tab_forms active" id="nav-home-tab"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award.id %}'" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" value='{{ award.id }}'>{{ award.name|title }}</a>
+          {% else %}
+            <a class="nav-item nav-link tab_forms " id="nav-home-tab{{ forloop.counter }}"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award.id %}'" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true" value='{{ award.id }}'>{{ award.name|title }}</a>
+          {% endif %}
+          {% empty %}
+            <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">No Awards Found</a>
+          {% endfor %}
+        </div>
   </nav>
   
   <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
     </br>
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"></div>
+<<<<<<< HEAD
       
     {% for nomination in nominations %}  
         <div class="panel panel-default">
@@ -87,41 +100,105 @@
                        <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
                         End Date:<button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.end_day_data }}" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.end_day }}</button>
 
-                    </div>
-                </div>
+=======
+    <div class="row">
+      <div class="col-sm-3 sidenav" style="background-color:silver;" id="mySidenav">
+        {% for award_template in award_templates %}
+          <div class="row panel-container" >
+            {% if selected_template.id == award_template.id %}
+              <a href="{% url 'nominate_app:nomination_status_load_template' award_selected.id award_template.id %}" style="text-decoration: none; color: blue">{{ award_template.template_name }}</a>
+            {% else %}
+              <a href="{% url 'nominate_app:nomination_status_load_template' award_selected.id award_template.id %}" style="text-decoration: none; color: white">{{ award_template.template_name }}</a>
+            {% endif %}
+          </div>
+          
+        {% empty %}
+          No Award Templates Available.
+        {% endfor %}
+      </div>
+      <div class="col-sm-9 infinite-container">
+            {% for nomination in nominations %}  
+            <div class="panel panel-default infinite-item">
+              
+              <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
+              <a role="button" data-toggle="collapse" style="text-decoration: none" data-parent="#accordion" href="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
                 
-              </div>
-
-            </div>
-          </a>
-          </div>
-          <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{ forloop.counter }}">
-            <div class="panel-body">
-              {% for nomination_instance in nomination.instances %}
-                  <div class="user">
-                    <a href="/nomination_feed/{{nomination_instance.id}}" style="cursor: pointer; text-decoration: none">
-                      <div class="row">
-                          <div class="col-sm-6">
-                              Username: {{ nomination_instance.username }}
-                          </div>
-                          <div class="col-sm-6">
-                              Status: {{ nomination_instance.status }}
-                          </div>
-                      </div>
-                      
-                    </a>
+                <div class="panel-title row">
+                  <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            Start Date: {{ nomination.start_day }}
+                        </div>
+                        <div class="col-sm-6">
+                          <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
+                            End Date:<button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.end_day_data }}" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.end_day }}</button>
+    
+                        </div>
+>>>>>>> added categories panel
+                    </div>
+                    
                   </div>
-            
-              {% empty %}
-                No Nomination instances found.
-              {% endfor %}
+                  <div class="col-sm-4">
+                    {{ nomination.group_name }}
+                  </div>
+    
+                </div>
+              </a>
+              </div>
+              <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{ forloop.counter }}">
+                <div class="panel-body">
+                  {% for nomination_instance in nomination.instances %}
+                      <div class="user">
+                        <a href="/nomination_feed/{{nomination_instance.id}}" style="cursor: pointer; text-decoration: none">
+                          <div class="row">
+                              <div class="col-sm-6">
+                                  Username: {{ nomination_instance.username }}
+                              </div>
+                              <div class="col-sm-6">
+                                  Status: {{ nomination_instance.status }}
+                              </div>
+                          </div>
+                          
+                        </a>
+                      </div>
+                
+                  {% empty %}
+                    No Nomination instances found.
+                  {% endfor %}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-    {% empty %}
-      No Nominations found
-    {% endfor %}
+    
+        {% empty %}
+          No Nominations found
+        {% endfor %}
+  
+      </div>
+      
+    </div>
+    <div class="row" style="justify-content: center; font-size: 1.5em">
+        {% if nominations.has_other_pages %}
+        <ul class="pagination">
+          {% if nominations.has_previous %}
+            <li><a href="?page={{ nominations.previous_page_number }}">&laquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+          {% endif %}
+          {% for i in nominations.paginator.page_range %}
+            {% if nominations.number == i %}
+              <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if nominations.has_next %}
+            <li><a href="?page={{ nominations.next_page_number }}">&raquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+          {% endif %}
+        </ul>
+      {% endif %}
+    </div>
     </div>
     
     </div>
