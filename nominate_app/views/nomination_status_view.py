@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from nominate_app.models import Awards, AwardTemplate, NominationInstance, User, Nomination, Group
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.core import serializers 
 from django.http import JsonResponse
@@ -9,15 +10,18 @@ from IPython import embed
 def home(request):
     return render(request, 'base.html')
 
-def get_nomination_data(award):
+def get_nomination_data(award_template, page):
+  page = int(page)
   nomination_data = []
-  
-  award_templates = award.awardtemplate_set.all()
-  frequency = award.frequency
-  
-  award_template_ids = [ award_template.id for award_template in award_templates ]
-  nominations = Nomination.objects.filter(award_template_id__in=award_template_ids)
-  for nomination in nominations:
+  nominations = Nomination.objects.filter(award_template_id=award_template.id).order_by('id')
+  paginator = Paginator(nominations, 9)
+  try:
+    numbers = paginator.page(page)
+  except PageNotAnInteger:
+    numbers = paginator.page(1)
+  except EmptyPage:
+    numbers = paginator.page(paginator.num_pages)
+  for nomination in numbers:
     nd = {
       'start_day': nomination.start_day.strftime('%d %B'),
       'end_day': nomination.end_day.strftime('%d %B'),
@@ -40,22 +44,42 @@ def get_nomination_data(award):
       })
     
     nomination_data.append(nd)
-  return nomination_data
+  numbers.object_list = nomination_data
+  return numbers
 
 def nomination_status(request):
   if request.method == 'GET':
-    awards = Awards.objects.all()
-    award = awards[0]
-    nomination_data = get_nomination_data(award)
-  return render(request, 'nominate_app/nomination_status.html',{'award_categories':awards, 'nominations': nomination_data, 'award_selected': award})
-  #return render(request, 'nominate_app/nomination_status.html',{'nomination_status':nomination_status, 'award_categories':awards, 'nominations': nomination_data})
+    award = Awards.objects.first()
+    page = request.GET.get('page', 1)
+  return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=award.id))
+
 
 def nomination_status_load(request,id):
-  
   if request.method == 'GET':
-    awards = Awards.objects.all()
     award = Awards.objects.get(id=id)
-    nomination_data = get_nomination_data(award)
-    return render(request, 'nominate_app/nomination_status.html',{'award_categories':awards, 'nominations': nomination_data, 'award_selected': award})
+    page = request.GET.get('page', 1)
+    return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=award.id))
 
+def get_nomination_details(page, id=None, template_id=None):
+  awards = Awards.objects.all()
+  if id:
+    award = Awards.objects.get(id=id)
+  else:
+    award = awards[0]
+  award_templates =  AwardTemplate.objects.filter(award_id=award.id)
+  nomination_data = None
+  if award_templates:
+    if template_id:
+      award_template = AwardTemplate.objects.get(id=template_id)
+    else:
+      award_template = AwardTemplate.objects.first()
+    nomination_data = get_nomination_data(award_template, page)
+  else:
+    award_template = None
+  
+  return {'award_categories':awards, 'nominations': nomination_data, 'award_selected': award, 'award_templates': award_templates, 'selected_template': award_template}
 
+def nomination_status_load_template(request, id, template_id):
+  if request.method == 'GET':
+    page = request.GET.get('page', 1)
+    return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=id, template_id=template_id))
