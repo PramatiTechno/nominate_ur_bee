@@ -1,7 +1,5 @@
 $(document).ready(function(){
-  $(document).ajaxStop(function(){
-    window.location.reload();
-  });
+
   $.fn.editable.defaults.mode = 'inline';
   $('.fa-edit').on('click', function(event){
     event.stopPropagation()
@@ -28,7 +26,7 @@ $(document).ready(function(){
         },
         dataType: 'json',
         success: function (data) {
-          location.reload()
+          window.location.reload();
         }
       });
     })
@@ -44,30 +42,5 @@ $(document).ready(function(){
     $(this).editable('destroy');
   });
   $('#vacation').editable();
-  $(document).on('click', '.tab_forms', function(event) {
-    award_id=$(this).attr('value');
-    $.ajax({
-      url:'/nomination_status_load/' + award_id + '/',
-      type:'GET',
-      dataType: 'json',
-      data: { csrfmiddlewaretoken: '{{ csrf_token }}', id:  award_id},
-      success:function (json) {
-        var length = json.length
-        if (length == 0)
-          {
-            data='No Nomination Records Found For Selected Award'
-            $('#nomination_status_table').html(data);
-          }
-        else
-        {
-          $('#nomination_status_table').html('');
-          for (i = 0; i <= length-1 ; i++) 
-            {
-              data='<tr class="row"><td class="col-sm-8 user_name"> '+ json[i].nominator_name +' </td><td class="col-sm-4 status"> '+ json[i].nominator_status +' </td></tr>'
-              $('#nomination_status_table').append(data);
-            }
-        }  
-      }
-    });                                     
-  });
+
 });
