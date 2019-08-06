@@ -12,7 +12,10 @@ logger = get_task_logger(__name__)
 
 #to start celery use 2 commands in two terminals one for worker other one for celery process
 #celery -A nominate_your_bee beat -l info
-#celery -A nominate_your_bee worker -l info
+#celery -A nominate_your_bee beat --detach -l info -f beat.log
+
+#celery -A nominate_your_bee worker --detach -l info -f worker.log
+
 
 def add_months(sourcedate, months):
     month = sourcedate.month - 1 + months
