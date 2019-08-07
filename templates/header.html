@@ -1,10 +1,32 @@
+{% load staticfiles %}  
+
+<script src="{% static 'js/custom.js' %}"></script>
+
+
 <nav class="navbar navbar-expand-md navbar-dark sticky-top" id="sidebar">
-  <h3 class="navbar-brand">LOGO</h3> 
-  <h3 class="mx-auto navbar-brand">Nominate your bee</h3>
-    {% if user.is_authenticated %}
-    <p>{{ user.username }}</p>
-    <p><a href="/logout">Logout</a></p>
-    {% else %}
-    <p><a href="/login">Login</a></p>
-    {% endif %}
+<div style="width:100%;vertical-align:middle;">
+<div class="pull-left margin-top">
+  <i class="fa fa-bars bars"></i>
+  <img class="navbar-brand logo" src="../static/logo.png">
+</div>
+
+<div class="pull-right header-font">
+  <div class="pull-left" style="margin-right:40px;">
+    <div style="font-weight:bold;font-size:16px;">{{ user.userprofile.baselocation }}</div>
+    <div style="font-size:12px;">{{ user.userprofile.worklocation }}</div>
+  </div>
+  <div class="pull-left">
+    <div class="dropdown">
+        <div class="dropdown-toggle" style="font-weight:600;font-size:16px;cursor:pointer;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ user.first_name }}
+        </div>
+  <div class="dropdown-menu select-drop" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="/logout">Sign Out</a>
+  </div>
+</div>
+    <div style="font-size:12px;">{{ user.userprofile.jobtitle|truncatechars:12 }}</div>
+  </div>
+
+  </div>
+  </div>
 </nav>
