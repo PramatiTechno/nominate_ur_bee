@@ -1,7 +1,10 @@
 
 {% block content %}
-	<span class = "instance_id_span" style="visibility: hidden">{{ instance.id }}</span>
-    {% for comment in instance.comments.all %}
+	<span class = "instance_id_span" style="display:none">{{ instance.id }}</span>
+    {% if comments.has_next %}
+    	<a class="more-comments" href="" value="{{ comments.next_page_number }}">view more comments</a>
+    {% endif %}
+    {% for comment in comments %}
         <div class="comment row">
             <div class="col-md-8">
                 <strong>{{ comment.author }}</strong>
@@ -14,30 +17,12 @@
                 {% endif %}
             </div>
         </div>
-    {% empty %}
-        <p>No comments here yet :(</p>
     {% endfor %}
 {% endblock %}
 
 <script>
 
-$(document).on('click', '.comment-delete', function() {
-	var comment_section =$(this).parents('div.comment-section')
-	var instance_id = comment_section.find('span.instance_id_span').html()
-	var comment_id = $(this).attr('value')
-	$.ajax({
-	    type: "GET",
-	    url: instance_id + "/comment/"+ comment_id+ "/delete", 
-	    success : function(data) {
-	        console.log("success");
-	        comment_section.html(data)
-	    },
-	    error: function(response) {
-	        console.log("error",response)
-	    }
-	});
-	return false;
-});
+
 
 </script>
                     
