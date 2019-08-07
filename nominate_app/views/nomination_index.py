@@ -103,8 +103,22 @@ def nomination_like(request, nomination_instance_id):
 class CommentList(View):
 	def get(self, request, nomination_instance_id):
 		form = CommentForm()
+		page = request.GET.get('page', 1)
 		nomination_instance = get_object_or_404(NominationInstance, id=nomination_instance_id)
-		return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'user': request.user, 'form': form, 'instance': nomination_instance}))
+		comments = nomination_instance.comments.order_by('-created_date')
+
+		paginator = Paginator(comments, 3)
+
+		try:
+			comments = paginator.page(page)
+		except PageNotAnInteger:
+			comments = paginator.page(1)
+		except EmptyPage:
+			comments = []
+
+		comments.object_list = comments.object_list[::-1]
+
+		return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'user': request.user, 'form': form, 'instance': nomination_instance, 'comments': comments}))
 
 
 	def post(self, request, nomination_instance_id):
@@ -118,22 +132,20 @@ class CommentList(View):
 		comment.text = request.POST['comment']
 		comment.author = request.user
 		comment.save()
-		
-		return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'user': request.user, 'form': form, 'instance': nomination_instance}))
 
-	def delete(self, request, nomination_instance_id, comment_id):
-		nomination_instance = get_object_or_404(NominationInstance, id=nomintion_instance_id)
-		form = CommentForm()
-		comment = get_object_or_404(Comment, id=comment_id)
-		comment.delete()
-		return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'form': form, 'instance': nomination_instance}))
+		comments = []
+		comments.append(comment)
+
+		return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'user': request.user, 'form': form, 'instance': nomination_instance, 'comments': comments}))
 
 
 def comment_remove(request, nomination_instance_id, comment_id):
 	nomination_instance = get_object_or_404(NominationInstance, id=nomination_instance_id)
 	form = CommentForm()
 	comment = get_object_or_404(Comment, id=comment_id)
-	comment.delete()
-	return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'user': request.user, 'form': form, 'instance': nomination_instance}))
+	if comment:
+		comment.delete()
+		return JsonResponse({'status': "deleted"})
 
+	return JsonResponse({'status': "error"})
 

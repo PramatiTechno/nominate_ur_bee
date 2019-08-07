@@ -23,15 +23,17 @@
     		  <a href="" class="card-link like-link" value = "{{instance.id}}">{% if detail.is_liked %}Liked{% else %}Like{% endif %} </a>
               
     		<a href="" class="card-link comment-link" value = "{{instance.id}}">Comments({{ detail.comments_count }})</a>
-            <form method="POST" class="post-form">{% csrf_token %}
-                <div class="row">
-                    <div class="col-md-10">{{ comment_form.text }}</div>
-                    <span class="token">{% csrf_token %} </span>
-                    <div class="col-md-2"><button type="submit" class="send btn btn-default" value="{{instance.id}}">Send</button></div>
-                </div>
-            </form>
             <div class="comment-section">
-              <!-- from template comment -->
+                <form method="POST" class="post-form">{% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-10">{{ comment_form.text }}</div>
+                        <span class="token">{% csrf_token %} </span>
+                        <div class="col-md-2"><button type="submit" class="send btn btn-default" value="{{instance.id}}">Send</button></div>
+                    </div>
+                </form>
+                <div class="comment-rows">
+                    <!-- from template comment -->
+                </div>
             </div>
   		</div>
 	</div>
