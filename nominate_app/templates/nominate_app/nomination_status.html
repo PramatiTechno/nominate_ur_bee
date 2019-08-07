@@ -3,11 +3,18 @@
 {% load staticfiles %}
 
 <style>
+  .datetext{
+    width: 9em;
+  }
+  #date-filter{
+    background-color: transparent;
+    border:none;
+    
+  }
   .enddate{
     background-color: transparent;
     border:none;
     color: white;
-    block-size: none;
     text-decoration: underline; 
   }
   .panel-container{
@@ -24,12 +31,7 @@
     font-size: 20px;
     margin: 10px 0px 0px 0px;
   }
-  .fa-edit{
-    background-color: transparent;
-    block-size: 0;
-    border: none;
-    color: white;
-  }
+  
   .user:nth-child(2){
     background: bisque;
 
@@ -49,7 +51,10 @@
 <script src="{% static 'js/nomination_status.js' %}"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
-
+<script>
+  $(document).ready(function(){
+  })
+</script>
 <br>
 <div class="container">
   <nav>
@@ -86,19 +91,54 @@
         {% endfor %}
       </div>
       <div class="col-sm-9 infinite-container">
+            <div class="row">
+              <div class="col-sm-12">
+                
+                <form method = "GET" action="{% url 'nominate_app:nomination_filter' award_selected.id selected_template.id %}">
+                    <div class="row">
+                        <div class="col-sm-5">
+                          <div class="row">
+                            <div class="col-sm-4">
+                                Start Date:
+                            </div>
+                            <div class="col-sm-8">
+                                <input type="text" id="start_date" class="form-control datepicker" name="filter"/>
+                            </div>
+                          </div>
+                            
+                        </div>
+                        <div class="col-sm-5">
+                    
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    End Date:
+                                </div>
+                                <div class="col-sm-8">
+                                    <input type="text" id="end_date" class="form-control datepicker" name="filter"/>
+                                </div>
+                              </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit">Filter</button>
+                        </div>
+                      </div>
+                  
+                  
+                </form>
+              </div>
+            </div>
             {% for nomination in nominations %}  
             <div class="panel panel-default infinite-item">
-              
+    
               <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
-              <a role="button" data-toggle="collapse" style="text-decoration: none" data-parent="#accordion" href="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
-                
+              <a role="button" data-toggle="collapse" style="text-decoration: none" data-parent="#accordion" href="#collapse{{ forloop.counter }}" aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">            
                 <div class="panel-title row">
-                  <div class="col-sm-8">
+                  <div class="col-sm-8">  
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             Start Date: {{ nomination.start_day }}
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-7">
                           <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
                             End Date:<button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.end_day_data }}" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.end_day }}</button>
     
