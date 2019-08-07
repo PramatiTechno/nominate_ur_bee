@@ -43,6 +43,7 @@ urlpatterns = [
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
   path('nomination_status_load/<id>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
   path('nomination_status_load/awards/<id>/templates/<template_id>', nomination_status_view.nomination_status_load_template, name='nomination_status_load_template'),
+  path('nomination_status_load/awards/<id>/templates/<template_id>/filter', nomination_status_view.nomination_status_load_filter, name="nomination_filter"),
   path('nomination_feed/', nomination_index.NominationIndexView.as_view(), name='nomination_feed'),
   
   path('nomination_feed/<int:nomination_instance_id>/', nomination_index.nomination_instance_post, name='nomination_instance_post'),

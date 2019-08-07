@@ -5,15 +5,25 @@ from django.http import HttpResponse
 from django.core import serializers 
 from django.http import JsonResponse
 from IPython import embed
+from datetime import datetime
+from django.contrib import messages
+
 # Create your views here.
 
 def home(request):
     return render(request, 'base.html')
 
-def get_nomination_data(award_template, page):
+def get_nomination_data(award_template, page, start_day=None, end_day=None, request=None):
   page = int(page)
   nomination_data = []
-  nominations = Nomination.objects.filter(award_template_id=award_template.id).order_by('id')
+  nominations = None
+  if start_day and end_day and start_day < end_day:
+    nominations = Nomination.objects.filter(award_template_id=award_template.id, start_day__gte=start_day, end_day__lte=end_day)
+  else:
+    if start_day and end_day:
+      messages.error(request, "End date must be greater than start date.")
+
+    nominations = Nomination.objects.filter(award_template_id=award_template.id).order_by('id')
   paginator = Paginator(nominations, 9)
   try:
     numbers = paginator.page(page)
@@ -60,7 +70,15 @@ def nomination_status_load(request,id):
     page = request.GET.get('page', 1)
     return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=award.id))
 
-def get_nomination_details(page, id=None, template_id=None):
+def nomination_status_load_filter(request,id, template_id):
+  page = request.GET.get('page', 1)
+  days = request.GET.getlist('filter')
+  start_day = datetime.strptime(days[0], '%m/%d/%Y').date()
+  end_day = datetime.strptime(days[1], '%m/%d/%Y').date()
+  return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=id,template_id=template_id, start_day=start_day, end_day=end_day, request=request))
+
+
+def get_nomination_details(page, id=None, template_id=None, start_day=None, end_day=None, request=None):
   awards = Awards.objects.all()
   if id:
     award = Awards.objects.get(id=id)
@@ -73,7 +91,7 @@ def get_nomination_details(page, id=None, template_id=None):
       award_template = AwardTemplate.objects.get(id=template_id)
     else:
       award_template = AwardTemplate.objects.first()
-    nomination_data = get_nomination_data(award_template, page)
+    nomination_data = get_nomination_data(award_template, page, start_day=start_day, end_day=end_day, request=request)
   else:
     award_template = None
   return {'award_categories':awards, 'nominations': nomination_data, 'award_selected': award, 'award_templates': award_templates, 'selected_template': award_template}
