@@ -50,6 +50,7 @@ urlpatterns = [
   path('nomination_feed/<int:nomination_instance_id>/comment/', nomination_index.CommentList.as_view(), name='add_comment'),
   path('nomination_feed/<int:nomination_instance_id>/comment/<int:comment_id>/delete', nomination_index.comment_remove, name='comment_remove'),
   path('nomination_feed/<int:nomination_instance_id>/like/', nomination_index.nomination_like, name='nomination_like'),
+  path('nomination_feed/<int:nomination_instance_id>/liked_people/', nomination_index.nomination_liked_people, name='nomination_liked_people'),
 
 ]
 

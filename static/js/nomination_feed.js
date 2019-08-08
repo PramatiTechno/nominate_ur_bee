@@ -26,6 +26,29 @@ $(function() { // shortcut for onDocumentReady
             return false;
 
         })
+
+        $(document).on('click', '.like-count', function(){
+            var instance_id = $(this).attr('value')
+            var count_link = $(this)
+            $.ajax({
+                type: "GET",
+                url: "/nomination_feed/" + instance_id + "/liked_people/", 
+                success : function(data) {
+                    var modalDiv = $(".modal-body")
+                    var modal_content = ""
+                    data.liked_people.forEach(function(ppl, index){
+                        modal_content = modal_content + "<p>" + ppl + "</p>"
+                    })
+                    modalDiv.html(modal_content);
+                    $("#like_modal").modal("show");
+                },
+                error: function(response) {
+                    console.log("error",response)
+                }
+            });
+            return false;
+        })
+
         // When you click an "a" tag who is child of an item with class "subcategory_list"…
         $(document).on('click', '.comment-link', function() {
             var instance_id = $(this).attr('value')
