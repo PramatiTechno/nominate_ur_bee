@@ -17,8 +17,6 @@ def home(request):
   else:
     return redirect('nominate_app:nominations')
 
-
- 
 @group_required('Admin', raise_exception=True)
 def index(request):
   if request.method == 'GET':
