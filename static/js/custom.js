@@ -7,10 +7,8 @@ function autoHeight() {
   }
 }
 $(document).ready(function() {
-  alert(1134);
   autoHeight();
 });
 $(window).resize(function() {
-  alert(1134);
   autoHeight();
 });

@@ -34,6 +34,13 @@ class NominationFilterForm(forms.Form):
     Awards = forms.ChoiceField(choices=AWARD_CHOICES, widget=forms.Select(attrs={'onchange':'get_templates();'}))
     Templates = forms.ChoiceField(choices=AWARD_TEMPLATE_CHOICES)
     Sort = forms.ChoiceField(choices=SORT_CHOICES)
+    from_ = forms.CharField(label='From', widget=forms.TextInput(attrs={'class': "form-control datepicker", 'id': "start_date", 'name': "start_date"}))
+    to = forms.CharField(label='To', widget=forms.TextInput(attrs={'class': "form-control datepicker", 'id': "end_date", 'name': "end_date"}))
+
+    def __init__(self, *args, **kwargs):
+      super(NominationFilterForm, self).__init__(*args, **kwargs)
+      self.fields['from_'].required = False
+      self.fields['to'].required = False
 
 class CommentForm(forms.ModelForm):
 

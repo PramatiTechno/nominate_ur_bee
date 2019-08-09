@@ -16,13 +16,22 @@ class NominationIndexView(View):
 	def get(self, request):
 		comment_form = CommentForm()
 		sort = 'latest'
+		date_filter = None
 		page = request.GET.get('page', 1)
 		if 'Awards' in request.GET:
 			award_id = request.GET['Awards']
 			template_id = request.GET['Templates']
+			from_ = request.GET['from_']
+			to = request.GET['to']
 			sort = request.GET['Sort']
 			nominations = nomination_filter(award_id, template_id)
-			nominate_form = NominationFilterForm(initial={'Awards': award_id, 'Templates': template_id, 'Sort': sort})
+			nominate_form = NominationFilterForm(initial={'Awards': award_id, 'Templates': template_id, 'Sort': sort, 'from_': from_, 'to': to})
+
+			if from_ and to:
+				date_filter = {
+					'from': datetime.strptime(from_, '%m/%d/%Y').date(),
+					'to': datetime.strptime(to, '%m/%d/%Y').date(),
+				}
 
 		else:
 			nominate_form = NominationFilterForm()
@@ -30,7 +39,7 @@ class NominationIndexView(View):
 
 
 		instance_details = []
-		instances = nomination_sort(nominations, sort)
+		instances = instance_filter_sort(nominations, sort, date_filter)
 
 		for instance in instances:
 			instance_details.append({
@@ -53,11 +62,16 @@ def nomination_filter(award_id, template_id):
 	return nominations
 
 
-def nomination_sort(nominations, sort):
+def instance_filter_sort(nominations, sort, date_filter):
+	if date_filter:
+		instances = NominationInstance.objects.filter(nomination__in=nominations, status=2, submitted_at__gte=date_filter['from'], submitted_at__lte=date_filter['to'])
+	else:
+		instances = NominationInstance.objects.filter(nomination__in=nominations, status=2)
+
 	if sort == 'latest':
-		sorted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2).order_by('-submitted_at')
+		sorted_instances = instances.order_by('-submitted_at')
 	elif sort == 'oldest':
-		sorted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2).order_by('submitted_at')
+		sorted_instances = instances.order_by('submitted_at')
 
 	return sorted_instances
 	

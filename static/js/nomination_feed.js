@@ -1,5 +1,8 @@
 $(function() { // shortcut for onDocumentReady
         $('.comment-section').hide()
+        $("#start_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
+        $("#end_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
+        $('.datepicker').attr('autocomplete',"off");
 
         $(document).on('click', '.like-link', function(){
             var instance_id = $(this).attr('value')
