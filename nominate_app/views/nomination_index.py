@@ -21,14 +21,16 @@ class NominationIndexView(View):
 		if 'Awards' in request.GET:
 			award_id = request.GET['Awards']
 			template_id = request.GET['Templates']
+			from_ = request.GET['from_']
+			to = request.GET['to']
 			sort = request.GET['Sort']
 			nominations = nomination_filter(award_id, template_id)
-			nominate_form = NominationFilterForm(initial={'Awards': award_id, 'Templates': template_id, 'Sort': sort})
+			nominate_form = NominationFilterForm(initial={'Awards': award_id, 'Templates': template_id, 'Sort': sort, 'from_': from_, 'to': to})
 
-			if request.GET['start_date'] and request.GET['end_date']:
+			if from_ and to:
 				date_filter = {
-					'start_date': datetime.strptime(request.GET['start_date'], '%m/%d/%Y').date(),
-					'end_date': datetime.strptime(request.GET['end_date'], '%m/%d/%Y').date(),
+					'from': datetime.strptime(from_, '%m/%d/%Y').date(),
+					'to': datetime.strptime(to, '%m/%d/%Y').date(),
 				}
 
 		else:
@@ -62,7 +64,7 @@ def nomination_filter(award_id, template_id):
 
 def instance_filter_sort(nominations, sort, date_filter):
 	if date_filter:
-		instances = NominationInstance.objects.filter(nomination__in=nominations, status=2, submitted_at__gte=date_filter['start_date'], submitted_at__lte=date_filter['end_date'])
+		instances = NominationInstance.objects.filter(nomination__in=nominations, status=2, submitted_at__gte=date_filter['from'], submitted_at__lte=date_filter['to'])
 	else:
 		instances = NominationInstance.objects.filter(nomination__in=nominations, status=2)
 

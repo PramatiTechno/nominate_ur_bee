@@ -11,8 +11,37 @@
 <div class="container">
 	<div class="row">
 		<form action="/nomination_feed/" method="GET">{% csrf_token %}
-	        {{ filter_form}}
-          <div class="row">
+
+        <div class="row">
+          <div class="col-md-5">
+            <label>Awards</label>
+	           {{ filter_form.Awards}} 
+          </div>
+
+          <div class="col-md-7">
+            <label>Template</label>
+            {{filter_form.Templates}} 
+          </div>
+          
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <label> Sort </label>
+            {{ filter_form.Sort }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <label> From </label>
+            {{filter_form.from_}} 
+          </div>
+          <div class="col-sm-6">
+            <label> To </label>
+            {{filter_form.to}}
+          </div>
+        </div>
+          <!-- <div class="row">
             <div class="col-sm-6">
               <div class="row">
                 <div class="col-sm-4">
@@ -35,7 +64,7 @@
                   </div>
             </div>
 
-          </div>
+          </div> -->
 	        <input type="submit" id="submit" name="submit" value="Feed"/></li>
 	    </form>
 	</div>
