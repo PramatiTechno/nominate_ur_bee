@@ -1,14 +1,16 @@
 function autoHeight() {
-  var bodyHeight = $(window).height();
-  var vwptHeight = $(".col-sm-10.content").height() + 80;
+  var bodyHeight = $(document).height();
+  var vwptHeight = $(".col-lg-10.col-sm-10.content").height() + 80;
   var gap = bodyHeight - 120;
   if (vwptHeight < bodyHeight) {
-    $(".col-sm-10.content").css("min-height", gap);
+    $(".col-lg-10.col-sm-10.content").css("min-height", gap);
   }
 }
 $(document).ready(function() {
+  alert(1134);
   autoHeight();
 });
 $(window).resize(function() {
+  alert(1134);
   autoHeight();
 });
