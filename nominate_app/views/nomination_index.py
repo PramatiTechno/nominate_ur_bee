@@ -98,6 +98,15 @@ def nomination_like(request, nomination_instance_id):
 		like.delete()
 		return JsonResponse({'value':'unlike'})
 
+def nomination_liked_people(request, nomination_instance_id):
+	nomination_instance = get_object_or_404(NominationInstance, id=nomination_instance_id)
+	likes = nomination_instance.likes.all()
+	liked_people = []
+	for like in likes:
+		liked_people.append(like.voter.email)
+
+	return JsonResponse({'liked_people': liked_people})
+
 
 # For comment resource of nomination instance
 class CommentList(View):
