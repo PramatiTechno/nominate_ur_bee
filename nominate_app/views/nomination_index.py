@@ -16,6 +16,7 @@ class NominationIndexView(View):
 	def get(self, request):
 		comment_form = CommentForm()
 		sort = 'latest'
+		date_filter = None
 		page = request.GET.get('page', 1)
 		if 'Awards' in request.GET:
 			award_id = request.GET['Awards']
@@ -24,13 +25,19 @@ class NominationIndexView(View):
 			nominations = nomination_filter(award_id, template_id)
 			nominate_form = NominationFilterForm(initial={'Awards': award_id, 'Templates': template_id, 'Sort': sort})
 
+			if request.GET['start_date'] and request.GET['end_date']:
+				date_filter = {
+					'start_date': datetime.strptime(request.GET['start_date'], '%m/%d/%Y').date(),
+					'end_date': datetime.strptime(request.GET['end_date'], '%m/%d/%Y').date(),
+				}
+
 		else:
 			nominate_form = NominationFilterForm()
 			nominations = Nomination.objects.all()
 
 
 		instance_details = []
-		instances = nomination_sort(nominations, sort)
+		instances = instance_filter_sort(nominations, sort, date_filter)
 
 		for instance in instances:
 			instance_details.append({
@@ -53,11 +60,16 @@ def nomination_filter(award_id, template_id):
 	return nominations
 
 
-def nomination_sort(nominations, sort):
+def instance_filter_sort(nominations, sort, date_filter):
+	if date_filter:
+		instances = NominationInstance.objects.filter(nomination__in=nominations, status=2, submitted_at__gte=date_filter['start_date'], submitted_at__lte=date_filter['end_date'])
+	else:
+		instances = NominationInstance.objects.filter(nomination__in=nominations, status=2)
+
 	if sort == 'latest':
-		sorted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2).order_by('-submitted_at')
+		sorted_instances = instances.order_by('-submitted_at')
 	elif sort == 'oldest':
-		sorted_instances = NominationInstance.objects.filter(nomination__in=nominations, status=2).order_by('submitted_at')
+		sorted_instances = instances.order_by('submitted_at')
 
 	return sorted_instances
 	
