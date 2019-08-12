@@ -31,9 +31,9 @@ class NominationFilterForm(forms.Form):
     AWARD_TEMPLATE_CHOICES.insert(0, ('ALL', 'ALL'))
     SORT_CHOICES = [('latest', 'Latest'), ('oldest', 'Oldest')]
 
-    Awards = forms.ChoiceField(choices=AWARD_CHOICES, widget=forms.Select(attrs={'onchange':'get_templates();'}))
-    Templates = forms.ChoiceField(choices=AWARD_TEMPLATE_CHOICES)
-    Sort = forms.ChoiceField(choices=SORT_CHOICES)
+    Awards = forms.ChoiceField(choices=AWARD_CHOICES, widget=forms.Select(attrs={'onchange':'get_templates();','class': "mySelect btn btn-info"}))
+    Templates = forms.ChoiceField(choices=AWARD_TEMPLATE_CHOICES, widget=forms.Select(attrs={'class': "mySelect btn btn-info"}))
+    Sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select(attrs={'class': "mySelect btn btn-info"}))
     from_ = forms.CharField(label='From', widget=forms.TextInput(attrs={'class': "form-control datepicker", 'id': "start_date", 'name': "start_date"}))
     to = forms.CharField(label='To', widget=forms.TextInput(attrs={'class': "form-control datepicker", 'id': "end_date", 'name': "end_date"}))
 
