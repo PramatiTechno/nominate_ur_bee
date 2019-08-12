@@ -61,21 +61,21 @@ def nomination_status(request):
   if request.method == 'GET':
     award = Awards.objects.first()
     page = request.GET.get('page', 1)
-  return render(request, 'nominate_app/nomination_status_1.html', get_nomination_details(page, id=award.id))
+  return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=award.id))
 
 
 def nomination_status_load(request,id):
   if request.method == 'GET':
     award = Awards.objects.get(id=id)
     page = request.GET.get('page', 1)
-    return render(request, 'nominate_app/nomination_status_1.html', get_nomination_details(page, id=award.id))
+    return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=award.id))
 
 def nomination_status_load_filter(request,id, template_id):
   page = request.GET.get('page', 1)
   days = request.GET.getlist('filter')
   start_day = datetime.strptime(days[0], '%m/%d/%Y').date()
   end_day = datetime.strptime(days[1], '%m/%d/%Y').date()
-  return render(request, 'nominate_app/nomination_status_1.html', get_nomination_details(page, id=id,template_id=template_id, start_day=start_day, end_day=end_day, request=request))
+  return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=id,template_id=template_id, start_day=start_day, end_day=end_day, request=request))
 
 
 def get_nomination_details(page, id=None, template_id=None, start_day=None, end_day=None, request=None):
@@ -99,4 +99,4 @@ def get_nomination_details(page, id=None, template_id=None, start_day=None, end_
 def nomination_status_load_template(request, id, template_id):
   if request.method == 'GET':
     page = request.GET.get('page', 1)
-    return render(request, 'nominate_app/nomination_status_1.html', get_nomination_details(page, id=id, template_id=template_id))
+    return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=id, template_id=template_id))
