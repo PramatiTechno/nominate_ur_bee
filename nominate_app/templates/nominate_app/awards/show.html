@@ -4,20 +4,22 @@
 {% load staticfiles %}
 <script src="{% static 'js/edit_award.js' %}"></script>
 
+<!-- header -->
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+  <h5>
+    <a href="{% url 'nominate_app:awards' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    Award - {{ award.name }}
+    <div class="custom-control custom-switch pull-right">
+      {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
+      <label class="custom-control-label" for="customSwitch1" ></label>
+    </div>
+  </h5>
+</div>
+
 <div class = "container">
    <div class="form-group">
          </br>
-         <div class = "row award_top_margin">
-            <div class="col-sm-10">
-               <div class="form-row float-right">
-                  <label class="col-form-label" name='is_active'>Enable/Disable</label>
-                  <div class="custom-control custom-switch">
-                     {{ award_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
-                     <label class="custom-control-label" for="customSwitch1" ></label>
-                  </div>
-               </div>
-            </div>
-         </div>
+        
          <div class = "row award_top_margin">
             <div class="col-sm-2">
                <label class="col-form-label" for="name">Award Name</label>
@@ -43,11 +45,6 @@
             </div>
          </div>
 
-         <div class = "row award_top_margin justify-content-md-center">
-            <div class="col-sm-2">
-               <button type="button" onclick="location.href='{% url 'nominate_app:awards' %}'" class="btn btn-primary add_more">Back</button>
-            </div>
-         </div>
          <br>	
 
    </div>

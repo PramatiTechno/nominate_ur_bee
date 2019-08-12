@@ -3,6 +3,19 @@
 {% block content %}
 {% load staticfiles %}
 <script src="{% static 'js/edit_award.js' %}"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- header -->
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+  <h5>
+    <a href="{% url 'nominate_app:awards' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    Editing Award {{award.name}}
+    <div class="custom-control custom-switch pull-right">
+      {{ award_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
+      <label class="custom-control-label" for="customSwitch1" ></label>
+    </div>
+  </h5>
+</div>
 
 <div class = "container">
    <div class="form-group">
@@ -21,30 +34,21 @@
          </div>
          {% endif %} -->
          {% csrf_token %}
+         
          <div class = "row award_top_margin">
-            <div class="col-sm-10">
-               <div class="form-row float-right">
-                  <label class="col-form-label" name='is_active'>Enable/Disable</label>
-                  <div class="custom-control custom-switch">
-                     {{ award_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
-                     <label class="custom-control-label" for="customSwitch1" ></label>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class = "row award_top_margin">
-            <div class="col-sm-2">
+            <div class="col-md-2">
                <label class="col-form-label" for="name">Award Name</label>
             </div>
-            <div class="col-sm-8">  	
+            <div class="col-md-8">
                <input type="text" name="name" class="form-control" value="{{  award.name }}" />
             </div>
          </div>
+
          <div class = "row award_top_margin">
-            <div class="col-sm-2">
+            <div class="col-md-2">
                <label class="col-form-label" for="name">Frequency</label>
             </div>
-            <div class="col-sm-3">
+            <div class="col-md-8">
                <select class="form-control" id="exampleSelect1" name="frequency" required>
                   {% for k, v in frequencies %}
                   {% if k == award.frequency %}
@@ -56,72 +60,73 @@
                </select>
             </div>
          </div>
+
          <div class = "row award_top_margin">
-            <div class="col-sm-2">
+            <div class="col-md-2">
                <label class="col-form-label" for="name">Description</label>
             </div>
-            <div class="col-sm-6">
+            <div class="col-md-8">
                <textarea class="form-control descript" rows="5" name="description">{{ award.description }}</textarea>  	
             </div>
          </div>
+
          {{ formset.management_form }}
          {% for form in formset.forms %}
          <div class = "row award_top_margin add_nomination_period">
             {{ form.id }}
-            <div class="col-sm-2">
-              <div class="form-row">
-                <label class="col-form-label" for="name">Group</label>
-              </div>
+            <div class="col-md-2 mt-4">
+              <label class="col-form-label" for="name">Period</label>
             </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                {{ form.group|attr:"class:form-control" }}
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-row">
-                <label class="col-form-label" for="name">Start Date</label>
-                <div class="form-group">
-                  <div class='input-group date' id='datepicker-0-start_day'>
-                    {{ form.start_day|attr:"class:form-control datepicker" }}
-                    <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
+
+            <div class="col-md-8">
+              <div class ="row">
+
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="col-form-label">Group</label>
+                    {{ form.group|attr:"class:form-control" }}
                   </div>
                 </div>
-              </div>
-            </div>
-           
-            <div class="col-sm-4">
-              <div class="form-row">
-                <label class="col-form-label" for="name">End Date</label>	
-                  <div class="form-group">
-                    <div class='input-group date' id='datepicker-0-end_day'>
-                      {{ form.end_day|attr:"class:form-control datepicker" }}
-                      <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
-                      </span>
-                    </div>
-                  </div>  
-                  <span class="fa del_btn_formset remove_nomination">
-                    <label><span class="fa fa-minus">
-                     {{ form.DELETE | attr:"class:hide_checkbox"}}
-                    </span>
-                    </label>
-                  </span>  
+
+                <div class="col-md-4">
+                    <label class="col-form-label" for="name">Start Date</label>
+                        {{ form.start_day|attr:"class:form-control datepicker" }}
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
                 </div>
+               
+                <div class="col-md-4">
+                    <label class="col-form-label" for="name">End Date</label>	
+                          {{ form.end_day|attr:"class:form-control datepicker" }}
+                          <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                </div>
+
               </div>
             </div>
-          {% endfor %} 	
-         <div class = "row award_top_margin justify-content-md-center">
-            <div class="col-sm-2">
-               <button type="button" class="btn btn-primary add_more">Add More</button>
+            
+            <div class="mt-4">
+              <span class="fa del_btn_formset remove_nomination">
+                <label><span class="fa fa-trash-o fa-lg" style="color: #bf1a1a">
+                 {{ form.DELETE | attr:"class:hide_checkbox"}}
+                </span>
+                </label>
+              </span>
             </div>
+
+          </div>
+          {% endfor %} 	
+
+         <div class = "row award_top_margin">
+               <i class="fa fa-plus-circle fa-2x col-md-2 offset-2 add_more" aria-hidden="true"></i>
          </div>
+
          <br>	
          <div class ="row award_top_margin justify-content-md-center">
             <div class="col-sm-4">
-               <button type="button" class="btn btn-danger">Cancel</button>
+               <a type="button" class="btn btn-danger" href="{% url 'nominate_app:awards' %}">Cancel</a>
                <button type="submit" class="btn btn-success">Update</button>
             </div>
          </div>
