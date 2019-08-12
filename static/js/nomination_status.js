@@ -2,13 +2,15 @@ $(document).ready(function(){
   $("#start_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
   $("#end_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
   $('.datepicker').attr('autocomplete',"off");
+  $('.nomination-instances').hide()
   $(document).ajaxStop(function(){
     window.location.reload();
   });
-  $.fn.editable.defaults.mode = 'inline';
-  $('.fa-edit').on('click', function(event){
-    event.stopPropagation()
+  $(".show-nominations").on('click', function(){
+    $(this).parent().parent().next().toggle();
   });
+  $.fn.editable.defaults.mode = 'inline';
+
   $('.enddate').click(function(e) {
     e.stopPropagation();
     $(this).editable('show');

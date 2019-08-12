@@ -41,7 +41,7 @@ def get_nomination_data(award_template, page, start_day=None, end_day=None, requ
       'nomination_id': nomination.id,
       'instances': []
     }
-    for nomination_instance in nomination.nominationinstance_set.all():
+    for nomination_instance in nomination.nominationinstance_set.all().order_by('id'):
       st = None
       for status in nomination_instance.statuses:
         if nomination_instance.status == status[1]:
@@ -61,30 +61,30 @@ def nomination_status(request):
   if request.method == 'GET':
     award = Awards.objects.first()
     page = request.GET.get('page', 1)
-  return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=award.id))
+  return render(request, 'nominate_app/nomination_status_1.html', get_nomination_details(page, id=award.id))
 
 
 def nomination_status_load(request,id):
   if request.method == 'GET':
     award = Awards.objects.get(id=id)
     page = request.GET.get('page', 1)
-    return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=award.id))
+    return render(request, 'nominate_app/nomination_status_1.html', get_nomination_details(page, id=award.id))
 
 def nomination_status_load_filter(request,id, template_id):
   page = request.GET.get('page', 1)
   days = request.GET.getlist('filter')
   start_day = datetime.strptime(days[0], '%m/%d/%Y').date()
   end_day = datetime.strptime(days[1], '%m/%d/%Y').date()
-  return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=id,template_id=template_id, start_day=start_day, end_day=end_day, request=request))
+  return render(request, 'nominate_app/nomination_status_1.html', get_nomination_details(page, id=id,template_id=template_id, start_day=start_day, end_day=end_day, request=request))
 
 
 def get_nomination_details(page, id=None, template_id=None, start_day=None, end_day=None, request=None):
-  awards = Awards.objects.all()
+  awards = Awards.objects.all().order_by('id')
   if id:
     award = Awards.objects.get(id=id)
   else:
     award = awards[0]
-  award_templates =  AwardTemplate.objects.filter(award_id=award.id)
+  award_templates =  AwardTemplate.objects.filter(award_id=award.id).order_by('id')
   nomination_data = None
   if award_templates:
     if template_id:
@@ -99,4 +99,4 @@ def get_nomination_details(page, id=None, template_id=None, start_day=None, end_
 def nomination_status_load_template(request, id, template_id):
   if request.method == 'GET':
     page = request.GET.get('page', 1)
-    return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=id, template_id=template_id))
+    return render(request, 'nominate_app/nomination_status_1.html', get_nomination_details(page, id=id, template_id=template_id))

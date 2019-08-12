@@ -7,7 +7,7 @@
       {% if user.userprofile.get_group_name == "admin" %} 
         <a href="{% url 'nominate_app:awards' %}" class="nav-link leftsidebar {% if request.path == "/awards/" %}active{% endif %}">Awards</a>
         <a href="{% url 'nominate_app:award_templates_home' %}" class="nav-link leftsidebar {% if request.path == "/award_templates/" %}active{% endif %}">Award Templates</a>
-        <a href="{% url 'nominate_app:nomination_status' %}" class="nav-link leftsidebar {% if request.path == "/nomination_status/" %}active{% endif %}">Nomination Status</a>
+        <a href="{% url 'nominate_app:nomination_status' %}" class="nav-link leftsidebar {% if request.path == "/nomination_status/" or "/nomination_status_load/" in request.path %}active{% endif %}">Nomination Status</a>
       {% else%}
         <a href="{% url 'nominate_app:nominations' %}" class="nav-link leftsidebar {% if request.path == "/nominations/" %}active{% endif %}">Nominate</a>
       {% endif %}
