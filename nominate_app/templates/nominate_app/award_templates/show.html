@@ -6,49 +6,41 @@
 
 {% load staticfiles %}
 <script src="{% static 'js/edit_award_template.js' %}"></script>
-<div class = "container">
-  <div class="form-group">
-    <div class = "row award_top_margin">
-      <div class="col-sm-10">
-        <div class="form-row float-right">
-          <label class="col-form-label" name='is_active'>Enable/Disable</label>
-          <div class="custom-control custom-switch">
-            <label class="custom-control-label" for="customSwitch1" ></label>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class = "row ">
-      <div class="col-sm-2">
-        <label class="col-form-label" for=''><h5>Template Name</h5></label>
-      </div>
-      <div class="col-sm-8">    
-        {{ template.template_name }}
-      </div>
-    </div> 
-    <br>
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+  <h5>
+    <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    Award Template - {{ template.template_name }}
+    <div class="custom-control custom-switch pull-right">
+      <!-- switch -->
+      <label class="custom-control-label" for="customSwitch1" ></label>
+    </div>
+  </h5>
+</div>
       
       
+  <div class="container">
   {% for question in questions %}
     <div class="formset_table add_template_questions">
 
       <div class = "row award_top_margin ">
-        <div class="col-sm-2">
-          <label class="col-form-label" for='{{form.qname}}' >Question</label>
+        <div class="col-md-2">
+          <div class="form-row">
+            Question
+          </div>
         </div>
-        <div class="col-sm-8">    
+        <div class="col-md-8">    
           <p class="text-muted">{{ question.qname }}</p>
         </div>
       </div> 
 
       <div class = "row award_top_margin ">
-        <div class="col-sm-2"> 
+        <div class="col-md-2"> 
           <div class="form-row">
-            <label class="col-form-label" for='{{form.qtype}}' >Question Type</label> 
+            Question Type
           </div>
         </div>
-        <div class="col-sm-3"> 
+        <div class="col-md-3"> 
           <div class="form-group">
             <p class="text-muted">{{ question.qtype }}</p>
           </div>             
@@ -56,29 +48,27 @@
       </div>
       {% if question.qtype == "OBJECTIVE" %}
           <div class = "row award_top_margin ">
-            <div class="col-sm-2"> 
+            <div class="col-md-2"> 
               <div class="form-row">
-                <label class="col-form-label" for='{{form.group}' >Options:</label> 
+                Options
               </div>
             </div>
-          </div>
+          <div class="col-md-3"> 
         {% for option in question.options %}
-          <div class="row">
-            <div class="col-sm-3 offset-sm-2"> 
-              <div class="form-group">
-                <p class="text-muted">{{ option }}</p>
+              <div class="row">
+                  <p class="text-muted col">{{ option }}</p>
               </div>
+        {% endfor %}
             </div>
           </div>
-        {% endfor %}
       {% endif %}
       <div class = "row award_top_margin ">
-        <div class="col-sm-2"> 
+        <div class="col-md-2"> 
           <div class="form-row">
-            <label class="col-form-label" for='{{form.group}' >Group</label> 
+            Group
           </div>
         </div>
-        <div class="col-sm-3"> 
+        <div class="col-md-3"> 
           <div class="form-group">
             <p class="text-muted">{{ question.group }}</p>
           </div>
@@ -90,11 +80,10 @@
       {% endfor %}  
     
       <div class ="row award_top_margin justify-content-md-center">
-        <div class="col-sm-4">
-          <button type="button" class="btn btn-danger">Cancel</button>
+        <div class="col-md-4">
+          <a href="{% url 'nominate_app:award_templates_home' %}" class="btn btn-danger">Back</a>
         </div>  
       </div> 
 
   </div>
-</div>  
 {% endblock %}

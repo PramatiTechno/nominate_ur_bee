@@ -5,9 +5,26 @@
 {% block content %}
 
 {% load staticfiles %}
+
+
+
 <script src="{% static 'js/edit_award_template.js' %}"></script>
+
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+  <h5>
+    <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    Editing Award Template {{ template.template_name }}
+    <div class="custom-control custom-switch pull-right">
+      {{ template_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
+      <label class="custom-control-label" for="customSwitch1" ></label>
+    </div>
+  </h5>
+</div>
+
+
 <div class = "container">
   <div class="form-group">
+
     <form method = "post" action="/awards/{{award.id}}/award_templates/{{award_template.id}}/">
       <input type="hidden" name="_method" value="put">
 
@@ -23,47 +40,48 @@
         </div>  
       {% endif %}
       {% csrf_token %}
-      <div class = "row award_top_margin">
-          <div class="col-sm-10">
-            <div class="form-row float-right">
-              <label class="col-form-label" name='is_active'>Enable/Disable</label>
-              <div class="custom-control custom-switch">
-                {{ template_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
-                <label class="custom-control-label" for="customSwitch1" ></label>
-              </div>
-            </div>
-          </div>
-        </div>
+ 
        <div class = "row award_top_margin">
-        <div class="col-sm-2">
+        <div class="col-md-2">
           <label class="col-form-label" for='{{template_form.template_name}}'>Template Name</label>
         </div>
-        <div class="col-sm-8">    
+        <div class="col-md-8">    
           {{ template_form.template_name }}
         </div>
-      </div> 
+      </div>
+
       <br>
       {{ formset.management_form }}
       {% for form in formset.forms %}
-      
-      
         <div class="formset_table add_template_questions">
+          <hr>
           <div class = "row award_top_margin ">
             {{ form.id }}
-            <div class="col-sm-2">
+            <div class="col-md-2">
               <label class="col-form-label" for='{{form.qname}}' >Question</label>
             </div>
-            <div class="col-sm-8">    
+            <div class="col-md-8">  
               {{ form.qname|attr:"class:form-control" }}
             </div>
+
+            <div class="col-md-2">
+              <span class="fa del_btn_formset remove_nomination">
+                <label><span class="fa fa-trash-o fa-lg" style="color: #bf1a1a">
+                  {{ form.DELETE|attr:"class:award-checkbox" }}
+                </span>
+                </label>
+              </span>
+            </div>
           </div> 
+
           <div class = "row award_top_margin ">
-            <div class="col-sm-2"> 
+            <div class="col-md-2"> 
               <div class="form-row">
                 <label class="col-form-label" for='{{form.qtype}}' >Question Type</label> 
               </div>
             </div>
-            <div class="col-sm-3"> 
+
+            <div class="col-md-8"> 
               <div class="form-group">
                   {{ form.qtype|attr:"class:form-control objective-type" }}
               </div>
@@ -74,23 +92,23 @@
                       {% for question in questions %}
                         {% if question.qname == form.qname.value %}
                           {% if question.qtype == "SUBJECTIVE" %}
-                            <div class='input-group row'>
-                                <div class='col-sm-10'>
+                            <div class='input-group row p-1'>
+                                <div class='col-md-8'>
                                     <input type="text" class='form-control' id='id_questions_set-{{ forloop.counter0 }}-objectives' value="{{ option }}" name='questions_set-{{ forloop.counter0 }}-objectives'/>
                                 </div>
-                                <div class='col-sm-2'>
-                                    <input type="button"  value='Remove' class='objective-cancel'  name='objective-cancel'/>
+                                <div class='col-md-2'>
+                                  <i class="fa fa-minus objective-cancel" name='objective-cancel'aria-hidden="true"></i>
                                 </div>
                             </div>
                           
                           {% else %}
                             {% for option in question.options %}
-                              <div class='input-group row'>
-                                  <div class='col-sm-10'>
+                              <div class='input-group row p-1'>
+                                  <div class='col-md-8'>
                                       <input type="text" class='form-control' id='id_questions_set-{{ forloop.counter }}-objectives' value="{{ option }}" name='questions_set-{{ question.id }}-objectives' required/>
                                   </div>
-                                  <div class='col-sm-2'>
-                                      <input type="button"  value='Remove' class='objective-cancel'  name='objective-cancel'/>
+                                  <div class='col-md-2'>
+                                    <i class="fa fa-minus objective-cancel" name='objective-cancel'aria-hidden="true"></i>
                                   </div>
                               </div>
                             {% endfor %}  
@@ -98,14 +116,18 @@
                         {% endif %}
                         
                       
-                      {% endfor %}        
-                        <input type="button" class='objective-add-button' name='objective-button'  value='Add Choice' />
+                      {% endfor %}
+                        <a class="objective-add-button btn" name='objective-button'>
+                          <i class="fa fa-plus" aria-hidden="true"></i>
+                           Add Choice
+                        </a>
                     </div>
                 </div>
                 
 
                 
               {% else %}
+
                 <div class="objective-type-container" id="id_questions_set-0-objective-container">
                     <div class="form-group">
                         <div class='input-group row'>
@@ -122,45 +144,46 @@
                 </div>
               {% endif %}
                                 
-            </div>
-  
-            </div>
-            <div class="col-sm-2"> 
-              <div class="form-row">
-                <label class="col-form-label" for='{{form.group}' >Group</label> 
-                <div class="form-group">
-                  {{ form.group|attr:"class:form-control" }}
-                </div>
               </div>
             </div>
-            <div class="col-sm-3"> 
-              <div class="form-row">
+
+            <div class="row">
+              <div class="col-md-2"> 
+                  <label class="col-form-label" for='{{form.group}' >Group</label> 
+              </div>
+
+              <div class="col-md-8 form-group">
+                {{ form.group|attr:"class:form-control" }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-2"> 
                 <label class="col-form-label" for='{{form.attachment_need}}'>Need Attachment</label> 
-                <div class="form-group">
-                  {{ form.attachment_need|attr:"class:attachment_checkbox" }}
-                </div>
-                <span class="fa del_btn_formset remove_nomination">
-                  <label><span class="fa fa-minus">
-                    {{ form.DELETE|attr:"class:award-checkbox" }}
-                  </span>
-                  </label>
-                </span>  
               </div>
+
+              <div class="col-md-1">
+                {{ form.attachment_need|attr:"class:attachment_checkbox" }}
+              </div>  
             </div>
+
           </div>
           {% endfor %}  
-        </div>
-      <div class = "row award_top_margin justify-content-md-center">
-        <div class="col-sm-2">
-          <button name="add_more" id="add_more" type="button" class="btn btn-primary add_more">Add More</button>
+
+
+      <!-- action buttons -->
+      <div class = "row award_top_margin">
+        <div class="col-md-3">
+          <button name="add_more" id="add_more" type="button" class="btn btn-outline-primary ml-2 add_more"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add Question</button>
         </div>
       </div>   
       <div class ="row award_top_margin justify-content-md-center">
-        <div class="col-sm-4">
-          <button type="button" class="btn btn-danger">Cancel</button>
+        <div class="col-md-4">
+          <a href="{% url 'nominate_app:award_templates_home' %}" class="btn btn-danger">Cancel</a>
           <input type="submit" class="btn btn-success" value="Update">
         </div>  
-      </div>    
+      </div>
+
     </form> 
   </div>
 </div>  
