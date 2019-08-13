@@ -12,13 +12,16 @@
 .btn-outline-secondary{
     text-align: left;
     border-radius: 0px;
+    box-shadow: 0px 5px 10px #00000036;
+    border: 0px;
 }
-.btn-outline-secondary:focus{
-    box-shadow: none;
+.btn-outline-secondary:focus,.btn-outline-secondary:hover{
+  background: #afbcc7 !important;
 }
+
 #caret_icon_container{
     text-align: right;
-    font-size: 1.5em;
+    font-size: 20px;
 }
 
 
@@ -36,7 +39,7 @@
     {% for form in forms %}
     {% if forloop.counter == 1 %}
       <button class="btn-outline-secondary form-control" type="button" data-toggle="dropdown">
-        <div class="row">
+        <div class="row" style="margin:0px;">
             <div class="col-sm-11" id="award_name_container">
                 {{ award.name.capitalize }}
             </div>
