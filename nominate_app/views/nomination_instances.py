@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect 
 from django.forms import modelformset_factory, inlineformset_factory
 from nominate_app.forms import NominationAnswersForm
-from nominate_app.models import Nomination,NominationPeriod, AwardTemplate, NominationInstance, User, Questions, NominationAnswers
+from nominate_app.models import Nomination,NominationPeriod, AwardTemplate, NominationInstance, User, Questions, NominationAnswers, NominationSubmitted, QuestionAnswers, UserProfile
 from django.http import HttpResponse
 from django.contrib import messages
 from django.db.models import Q
@@ -78,8 +78,21 @@ def index(request,nomination_id):
         nomination_instance.save()
         messages.success(request, 'Nomination saved successfully.')
       elif request.POST['action'] == 'submit':
+        user_details = UserProfile.objects.get(user_id=request.user.id)
+        nomination_submitted = NominationSubmitted(status=0, email=request.user.username, firstname=request.user.first_name, \
+          lastname=request.user.last_name, award_name=nomination_template.award.name, \
+          group_id=request.user.groups.all()[0].id, designation=user_details.designation, \
+          worklocation=user_details.worklocation, baselocation=user_details.baselocation, \
+          template_name=nomination_template.template_name, submitted_at=timezone.now())
+        nomination_submitted.save()
+        for ans_obj in ans_obj_List:
+          if ans_obj['action'] == 'submit':
+            
+            qa = QuestionAnswers(nomination_submitted_id=nomination_submitted.id, \
+              question=Questions.objects.get(id=ans_obj['question']).qname, answer=ans_obj['answer_text'][0])
+            qa.save()
         nomination_instance.status = 2
-        nomination_instance.submitted_at = datetime.now()
+        nomination_instance.submitted_at = timezone.now()
         nomination_instance.save()
         messages.success(request, 'Nomination submitted successfully.')
       return redirect('nominate_app:nominations')

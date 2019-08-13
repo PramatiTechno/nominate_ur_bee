@@ -141,6 +141,41 @@ class Nomination(models.Model):
   class Meta:
     db_table='nominations'  
 
+class NominationSubmitted(models.Model):
+  class Meta:
+    db_table='nomination_submitted'
+  statuses = (
+    ("Submitted", 0),
+    ("Reviewed", 1),
+    ("Approved", 2),
+    ("Dismissed", 3),
+    ("On hold", 4),
+    )
+  status = models.IntegerField(null=False, blank=False,choices=statuses,default=0)
+  submitted_at = models.DateTimeField(auto_now_add=True, null=False, blank=False) 
+  email = models.CharField(max_length=50, null=False, blank=False)
+  firstname = models.CharField(max_length=30, null=False, blank=False)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False, default=Group.objects.get(name="Manager").id)
+  designation = models.CharField(max_length=30, null=False, default="")
+  lastname = models.CharField(max_length=30, null=False, blank=False)
+  award_name = models.CharField(max_length=30, null=False, blank=False)
+  worklocation = models.CharField(max_length=30, null=False, blank=False, default="")
+  baselocation = models.CharField(max_length=30, null=False, blank=False, default="")
+  template_name = models.CharField(max_length=150, null=False, blank=False)
+
+class QuestionAnswers(models.Model):
+  class Meta:
+    db_table='question_answers'
+  nomination_submitted = models.ForeignKey(NominationSubmitted, on_delete=models.CASCADE)
+  question = models.CharField(max_length=100, null=False, blank=False)
+  answer = models.CharField(max_length=500, null=True, blank=True)
+  def get_status(self, status_code):
+    for status in self.statuses:
+      if status[1] == status_code:
+        return status[0]
+
+
+
 class NominationInstance(models.Model):
   statuses =( 
     ("New",0),
