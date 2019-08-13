@@ -128,9 +128,9 @@ table td .edit {
 
 .edit_fa{
     font-size: 24px !important;
-    display: inline;
     color: #2c54c5;
-    margin:0px 10px
+    margin:0px 10px;
+    text-decoration: inline;
 }
 
 .add-icon{

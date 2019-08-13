@@ -50,11 +50,9 @@
         </div>
       </div>
 
-      <br>
       {{ formset.management_form }}
       {% for form in formset.forms %}
         <div class="formset_table add_template_questions">
-          <hr>
           <div class = "row award_top_margin ">
             {{ form.id }}
             <div class="col-md-2">
@@ -76,9 +74,7 @@
 
           <div class = "row award_top_margin ">
             <div class="col-md-2"> 
-              <div class="form-row">
                 <label class="col-form-label" for='{{form.qtype}}' >Question Type</label> 
-              </div>
             </div>
 
             <div class="col-md-8"> 
@@ -87,7 +83,6 @@
               </div>
               {% if questions %}
                 <div class="objective-type-container" id="id_questions_set-{{ forloop.counter0 }}-objective-container">
-                    <div class="form-group">
                       
                       {% for question in questions %}
                         {% if question.qname == form.qname.value %}
@@ -97,7 +92,7 @@
                                     <input type="text" class='form-control' id='id_questions_set-{{ forloop.counter0 }}-objectives' value="{{ option }}" name='questions_set-{{ forloop.counter0 }}-objectives'/>
                                 </div>
                                 <div class='col-md-2'>
-                                  <i class="fa fa-minus objective-cancel" name='objective-cancel'aria-hidden="true"></i>
+                                  <i class="fa fa-trash-o objective-cancel" style="color: #bf1a1a" name='objective-cancel'aria-hidden="true"></i>
                                 </div>
                             </div>
                           
@@ -108,20 +103,16 @@
                                       <input type="text" class='form-control' id='id_questions_set-{{ forloop.counter }}-objectives' value="{{ option }}" name='questions_set-{{ question.id }}-objectives' required/>
                                   </div>
                                   <div class='col-md-2'>
-                                    <i class="fa fa-minus objective-cancel" name='objective-cancel'aria-hidden="true"></i>
+                                    <i class="fa fa-trash-o objective-cancel" style="color: #bf1a1a" name='objective-cancel'aria-hidden="true"></i>
                                   </div>
                               </div>
                             {% endfor %}  
                           {% endif %}
                         {% endif %}
                         
-                      
                       {% endfor %}
-                        <a class="objective-add-button btn" name='objective-button'>
-                          <i class="fa fa-plus" aria-hidden="true"></i>
-                           Add Choice
-                        </a>
-                    </div>
+                      <button type="button" class="btn btn-outline-primary mt-1 objective-add-button" name='objective-button'><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add Choice</button>
+                   
                 </div>
                 
 
@@ -129,7 +120,6 @@
               {% else %}
 
                 <div class="objective-type-container" id="id_questions_set-0-objective-container">
-                    <div class="form-group">
                         <div class='input-group row'>
                           <div class='col-sm-10'>
                               <input type="text" class='form-control' id='id_questions_set-0-objectives' name='questions_set-0-objectives' />
@@ -140,24 +130,23 @@
                         </div>
                         
                         <input type="button" class='objective-add-button' name='objective-button'  value='Add Choice' />
-                    </div>
                 </div>
               {% endif %}
                                 
               </div>
             </div>
 
-            <div class="row">
+            <div class="row award_top_margin ">
               <div class="col-md-2"> 
                   <label class="col-form-label" for='{{form.group}' >Group</label> 
               </div>
 
-              <div class="col-md-8 form-group">
+              <div class="col-md-8">
                 {{ form.group|attr:"class:form-control" }}
               </div>
             </div>
 
-            <div class="row">
+            <div class="row award_top_margin ">
               <div class="col-md-2"> 
                 <label class="col-form-label" for='{{form.attachment_need}}'>Need Attachment</label> 
               </div>
@@ -167,6 +156,7 @@
               </div>  
             </div>
 
+          <hr>
           </div>
           {% endfor %}  
 
