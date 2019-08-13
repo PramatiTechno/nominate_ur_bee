@@ -2,10 +2,9 @@
 {% block content %}
 {% load staticfiles %}
 
-
 <style>
 .page-content {
-  margin: 8px;
+  margin: 0px;
 }
 
 .header {
@@ -192,6 +191,31 @@ table td {
 .date-filter-tag{
     padding-top: 0.5em;
 }
+
+.template_ul li{
+  list-style-type: none;
+  padding: 20px 10px;
+  border-bottom:1px solid #c2c2c2;
+}
+
+.sidenav{
+  border-right: 1px solid #c2c2c2;
+  box-shadow: 5px 1px 5px rgba(110,110,110,0.3);
+}
+
+.template_ul li a{
+  padding: 40px 0px;
+  color: #68686d;
+}
+
+
+.template_ul{
+  padding:20px 0px;
+}
+
+.nom_content{
+  padding: 0px 50px;
+}
 </style>
 
 
@@ -202,8 +226,7 @@ table td {
 <script src="{% static 'js/infinite.min.js' %}"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<div class="container-fluid" style="padding-left:0px !important;">
-
+<div class="container-fluid" style="padding-left:0px !important;height:100%;">
 
 <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
   <h5>Nomination Status</h5>
@@ -238,17 +261,19 @@ table td {
             
         </div>
     </div>
-    <div class="page-content">
-        <div class="row">
-            <div class="col-md-2">
-                        Award Templates<br>
+    <div class="page-content" style="height:80vh;">
+        <div class="row" style="height:100%;">
+            <div class="col-md-2 sidenav">
+
+                        <div style="font-weight: bold;text-align: center;padding-top:20px;">Award Templates</div>
+                        <ul class="template_ul">
                         {% for award_template in award_templates %}
                             {% if selected_template.id == award_template.id %}
-                <a href="{% url 'nominate_app:nomination_status_load_template' award_selected.id award_template.id %}" style="text-decoration: none; color: blue">{{ award_template.template_name.capitalize }}</a>
+                <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected.id award_template.id %}" style="text-decoration: none; color: #3b3b3e;">{{ award_template.template_name.capitalize }}</a></li>
                             {% else %}
-                <a href="{% url 'nominate_app:nomination_status_load_template' award_selected.id award_template.id %}" style="text-decoration: none;">{{ award_template.template_name.capitalize }}</a>
+                <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected.id award_template.id %}" style="text-decoration: none;color: #68686d;">{{ award_template.template_name.capitalize }}</a></li>
                             {% endif %}
-                    
+                        </ul>
                         <br>        
                         {% empty %}
                         No Award Templates Available.
@@ -256,7 +281,7 @@ table td {
                 
                         
             </div>
-            <div class="col-md-10">
+            <div class="col-md-10 nom_content">
                     <div class="row filter-container">
                             <div class="col-sm-12">
                                 
@@ -264,10 +289,10 @@ table td {
                                     <div class="row">
                                         <div class="col-sm-5">
                                         <div class="row">
-                                            <div class="col-md-3 date-filter-tag">
-                                                Start Date:
+                                            <div class="col-md-4 date-filter-tag" style="padding-right:0px;">
+                                                Start Date
                                             </div>
-                                            <div class="col-md-9">
+                                            <div class="col-md-8" style="padding-left:0px;">
                                                 <input type="text" id="start_date" class="form-control datepicker" name="filter"/>
                                             </div>
                                         </div>
@@ -276,10 +301,10 @@ table td {
                                         <div class="col-sm-5">
                                     
                                             <div class="row">
-                                                <div class="col-md-3 date-filter-tag">
-                                                    End Date:
+                                                <div class="col-md-4 date-filter-tag" style="padding-right:0px;">
+                                                    End Date
                                                 </div>
-                                                <div class="col-md-9">
+                                                <div class="col-md-8" style="padding-left:0px;">
                                                     <input type="text" id="end_date" class="form-control datepicker" name="filter"/>
                                                 </div>
                                             </div>
