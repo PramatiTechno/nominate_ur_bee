@@ -44,7 +44,6 @@
         </div>
       </div> 
 
-      <br>
       {{ formset.management_form }}
       {% for form in formset.forms %}
       <div class="formset_table add_template_questions">
@@ -87,7 +86,7 @@
                       </div>
 
                       <div class='col-md-2'>
-                        <i class="fa fa-minus objective-cancel" name='objective-cancel'aria-hidden="true"></i>
+                        <i class="fa fa-trash-o objective-cancel" style="color: #bf1a1a" name='objective-cancel'aria-hidden="true"></i>
                       </div>
                     </div>
                     
@@ -103,9 +102,7 @@
 
         <div class="row">
           <div class="col-md-2"> 
-            <div class="form-row">
               <label class="col-form-label" for='{{form.group}' >Group</label> 
-            </div>
           </div>
 
           <div class="col-md-8">
@@ -129,8 +126,8 @@
           </div>
         </div>
 
+      <hr>
       </div>
- 
 
       <div class = "row award_top_margin">
         <div class="col-md-3">
