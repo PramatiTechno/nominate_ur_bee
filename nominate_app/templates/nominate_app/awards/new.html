@@ -57,18 +57,14 @@
          {% for form in formset.forms %}
         <div class = "row award_top_margin add_nomination_period">
             <div class="col-md-2">
-               <div class="form-row">
                   <label class="col-form-label mt-4" for="name">Period</label>
-               </div>
             </div>
 
             <div class="col-md-8">
               <div class="row">
                 <div class="col-md-4">
-                   <div class="form-group">
                       <label class="col-form-label" for="">Group</label>
                       {{ form.group|attr:"class:form-control" }}
-                   </div>
                 </div>
             
                 <div class="col-md-4">
@@ -89,17 +85,18 @@
                         <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                 </div>
-            </div>
-        </div>
+                
+              </div>
+          </div>
         
-        <div class="mt-4">
-          <span class="fa del_btn_formset">
-            <label><span class="fa fa-trash-o fa-lg" style="color: #bf1a1a">
-             {{ form.DELETE | attr:"class:hide_checkbox"}}
+          <div class="mt-4">
+            <span class="fa del_btn_formset">
+              <label><span class="fa fa-trash-o fa-lg" style="color: #bf1a1a">
+               {{ form.DELETE | attr:"class:hide_checkbox"}}
+              </span>
+              </label>
             </span>
-            </label>
-          </span>
-        </div>
+          </div>
 
       </div>
 
@@ -107,7 +104,7 @@
          <div class = "row award_top_margin">
                <i class="fa fa-plus-circle fa-2x add_more col-md-2 offset-2" aria-hidden="true"></i>
          </div>
-        <br>
+
         <div class ="row award_top_margin">
           <div class="col-md-2"> 
             <label class="col-form-label" for="name">Description</label>	

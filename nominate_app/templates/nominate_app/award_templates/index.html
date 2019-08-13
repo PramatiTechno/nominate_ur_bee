@@ -1,21 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load staticfiles %}
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="{% static 'js/award_index.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 
 <!-- header -->
 <div class="container" style="padding-left:0px !important;padding-right:0px !important;">
   <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
-        <h5>Award Templates <a href="{% url 'nominate_app:new_template' award.id %}" class="pull-right"><i class="fa fa-plus add-icon"></i></a>
-      </h5>
+        <h5>Award Templates <a href="{% url 'nominate_app:new_template' award.id %}" class="pull-right"><i class="fa fa-plus add-icon"></i></a></h5>
   </div>
 </div>
 
 
-  <form method = "POST">
+<div class="dropdown">
+    {% for form in forms %}
+    {% if forloop.counter == 1 %}
+      <button class="btn-outline-secondary form-control" type="button" data-toggle="dropdown">
+        <div class="row">
+            <div class="col-sm-11" id="award_name_container">
+                {{ award.name.capitalize }}
+            </div>
+            <div class="col-sm-1" id="caret_icon_container">
+                <i class="fa fa-one-half fa-chevron-down" style="vertical-align: top" ></i>
+            </div>
+        </div>
+      </button>
+      
+       <div class="dropdown-menu dropdown-menu-awards">
+
+    {% endif %}
+
+    {% if form.name == award.name %}
+        <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:award_templates_index' award_id=form.id %}" value='{{ form.id }}'>{{ form.name|title }}</a>
+    {% else %}
+        <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}" href="{% url 'nominate_app:award_templates_index' award_id=form.id %}" value='{{ form.id }}'>{{ form.name|title }}</a>
+    {% endif %}
+    {% empty %}
+        <a class="dropdown-item">No Awards Found</a>
+  {% endfor %}
+        
+    </div>
+</div>
+
+  <!-- <form method = "POST">
     {% csrf_token %}
     <select type="selection" class="mySelect form-control" id = "award" onchange="location = this.value;" style="">
       {% for form in forms %}
@@ -26,7 +55,7 @@
       <option> No Awards Found </option>
       {% endfor %}
     </select>
-  </form>
+  </form> -->
 
 
 
@@ -51,6 +80,7 @@
 
       <td scope="row" data-label="Actions">
         <a href="{% url 'nominate_app:edit_award_template' award.id template.id %}"><i class="fa fa-edit edit_fa"></i></a>
+
         <form action="{% url 'nominate_app:award_template' award.id template.id %}" method="post" id="form_{{form.id}}" class="form_det">
           {% csrf_token%}
           <input type="hidden" name="_method" value="delete">
