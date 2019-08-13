@@ -5,17 +5,7 @@ $(document).ready(function(){
       $(this).parent().next().hide()
   })
 
-$('.objective-add-button').click(function(){
-  parentElement = $(this).prev().clone(true)
-  newElement = $(parentElement).children().first().children()
-  oldId = $(newElement).attr('id')
-  dconstructedId = oldId.split('-') 
-  dconstructedId[1] = "" + (parseInt(dconstructedId[1]) + 1)
-  newId = dconstructedId.join("-")
-  $(newElement).val('');
-  $(newElement).attr('id',newId)
-  $(this).before(parentElement)
-});
+
 
 
 $(".objective-type").on('change', function(event){

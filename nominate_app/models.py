@@ -165,6 +165,9 @@ class NominationInstance(models.Model):
       if status[1] == status_code:
         return status[0]
 
+  def get_submitted_at_date(self):
+        return self.submitted_at.strftime('%b %d, %Y')
+
 class NominationAnswers(models.Model):
   UPLOAD_TO = 'answers/images'
   nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
@@ -191,6 +194,12 @@ class Comment(models.Model):
 
     class Meta:
         db_table='nomination_comments'
+    
+    def format_date(self):
+        if (self.created_date.date() == datetime.today().date()):
+          return self.created_date.strftime("%I:%M %p")
+        else:
+          return self.created_date.strftime('%b %d, %Y')
 
     def approve(self):
         self.approved_comment = True
