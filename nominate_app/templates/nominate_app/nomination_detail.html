@@ -9,26 +9,26 @@
 	<div class="card">
   		<div class="card-body">
             <div class="row">
-    		  <div class="col-md-6"><h5 class="card-title">{{instance.nomination.award_template.award.name}} - {{instance.nomination.award_template.template_name}}</h5></div>
-              <div class="col-md-6" style="text-align:right;"><h6 class="text-muted">{{instance.user.email}}<p style="font-size:14px;color: #747591a6;">{{instance.get_submitted_at_date}}</p></h6></div>
+    		  <div class="col-md-6"><h5 class="card-title">{{submission.award_name}} - {{submission.template_name}}</h5></div>
+              <div class="col-md-6" style="text-align:right;"><h6 class="text-muted">{{submission.email}}<p style="font-size:14px;color: #747591a6;">{{submission.submitted_at}}</p></h6></div>
             </div>
     		<div class="card-text">
-    		{% for answer in detail.answers %}
+    		{% for qa in qa_list %}
                 <div class="qa">
-                    <p>{{answer.question}}</p>
-                    <p>{{answer.answer_text}}</p>
+                    <p>{{qa.question}}</p>
+                    <p>{{qa.answer}}</p>
                 </div>
     		{% endfor %}
     		</div>
 
             <div class="row" style="padding:10px 20px;">
                 <div class="col-md-6" style="text-align:left;padding: 10px 0px;color:#00d0ff;">    		
-                    <a href="" class="card-link like-link link-custom" value = "{{instance.id}}">{% if detail.is_liked %}<i class="fa fa-heart link-custom"></i>{% else %}<i class="fa fa-heart-o link-custom"></i>{% endif %} </a>  
-                    <a href="" class="comment-link link-custom card-link" value = "{{instance.id}}">Comments({{ detail.comments_count }})</a>
+                    <a href="" class="card-link like-link link-custom" value = "{{submission.id}}">{% if detail.is_liked %}<i class="fa fa-heart link-custom"></i>{% else %}<i class="fa fa-heart-o link-custom"></i>{% endif %} </a>  
+                    <a href="" class="comment-link link-custom card-link" value = "{{submission.id}}">Comments({{ detail.comments_count }})</a>
                 </div>
 
                 <div class="col-md-6" style="text-align:right;">            
-                    <a href="" class="card-link like-count link-custom" value = "{{instance.id}}">
+                    <a href="" class="card-link like-count link-custom" value = "{{submission.id}}">
                         {% if detail.is_liked %}You and {{ detail.likes_count }} {% else %} {{ detail.likes_count }} {% endif %}liked
                     </a>
                 </div>
@@ -38,7 +38,7 @@
                 <form method="POST" class="post-form">{% csrf_token %}
                         <div class="">{{ comment_form.text }}</div>
                         <span class="token">{% csrf_token %} </span>
-                        <div class="" style="text-align:right;margin:10px 0px;" ><button type="submit" class="send btn btn-info" value="{{instance.id}}" style="font-size: 12px;padding: 5px 7px;">Send</button></div>
+                        <div class="" style="text-align:right;margin:10px 0px;" ><button type="submit" class="send btn btn-info" value="{{submission.id}}" style="font-size: 12px;padding: 5px 7px;">Send</button></div>
                 </form>
                 <div class="comment-rows">
                     <!-- from template comment -->

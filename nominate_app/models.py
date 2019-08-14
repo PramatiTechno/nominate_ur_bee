@@ -45,6 +45,7 @@ class UserProfile(models.Model):
   def get_group_name(self):
     return self.user.groups.all()[0].name.lower()
 
+
 class Awards(models.Model):
   choice_type = (
       ('MONTHLY', 'Monthly'),
@@ -166,7 +167,7 @@ class NominationSubmitted(models.Model):
 class QuestionAnswers(models.Model):
   class Meta:
     db_table='question_answers'
-  nomination_submitted = models.ForeignKey(NominationSubmitted, on_delete=models.CASCADE)
+  nomination_submitted = models.ForeignKey(NominationSubmitted, on_delete=models.CASCADE, related_name='questions')
   question = models.CharField(max_length=100, null=False, blank=False)
   answer = models.CharField(max_length=500, null=True, blank=True)
   def get_status(self, status_code):
@@ -221,7 +222,7 @@ class NominationAnswers(models.Model):
     db_table='nomination_answers'
 
 class Comment(models.Model):
-    nomination = models.ForeignKey('NominationInstance', on_delete=models.CASCADE, related_name='comments')
+    submission = models.ForeignKey('NominationSubmitted', on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
@@ -244,11 +245,9 @@ class Comment(models.Model):
         return self.text 
 
 class Like(models.Model):
-  nomination = models.ForeignKey('NominationInstance', on_delete=models.CASCADE, related_name='likes')
+  submission = models.ForeignKey('NominationSubmitted', on_delete=models.CASCADE, related_name='likes')
   voter = models.ForeignKey(User, on_delete=models.CASCADE)
   created_date = models.DateTimeField(default=timezone.now)
 
   class Meta:
     db_table='nomination_likes'
-
-
