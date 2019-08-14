@@ -133,7 +133,7 @@ class Questions(SafeDeleteModel):
 
 class Nomination(models.Model):
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-  group = models.ForeignKey(Group, on_delete=models.CASCADE)
+  group = models.ForeignKey(Group ,on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
@@ -152,6 +152,7 @@ class NominationSubmitted(models.Model):
     ("Dismissed", 3),
     ("On hold", 4),
     )
+  nomination = models.ForeignKey('Nomination', related_name='submissions', on_delete=models.SET_NULL, blank=True, null=True,)
   status = models.IntegerField(null=False, blank=False,choices=statuses,default=0)
   submitted_at = models.DateTimeField(auto_now_add=True, null=False, blank=False) 
   email = models.CharField(max_length=50, null=False, blank=False)
@@ -164,6 +165,12 @@ class NominationSubmitted(models.Model):
   baselocation = models.CharField(max_length=30, null=False, blank=False, default="")
   template_name = models.CharField(max_length=150, null=False, blank=False)
 
+  def get_status(self, status_code):
+    for status in self.statuses:
+      if status[1] == status_code:
+        return status[0]
+
+        
 class QuestionAnswers(models.Model):
   class Meta:
     db_table='question_answers'
