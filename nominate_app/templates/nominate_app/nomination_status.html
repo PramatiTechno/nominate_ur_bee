@@ -237,7 +237,7 @@ table td {
         <button class="btn-outline-secondary form-control" type="button" data-toggle="dropdown">
         <div class="row">
             <div class="col-sm-11" id="award_name_container">
-                {{ award_selected.name.capitalize }}
+                {{ award_selected.capitalize }}
             </div>
             <div class="col-sm-1" id="caret_icon_container">
                 <i class="fa fa-one-half fa-chevron-down" style="vertical-align: top" ></i>
@@ -251,9 +251,9 @@ table td {
         {% endif %}
                 
                     {% if award_selected.name == award.name %}
-                        <a class="dropdown-item active" id="dropdown-item0" href="#"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award.id %}'" value='{{ award.id }}'>{{ award.name|title }}</a>
+                        <a class="dropdown-item active" id="dropdown-item0" href="#"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award %}'" value='{{ award.id }}'>{{ award|title }}</a>
                     {% else %}
-                        <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}" href="#"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award.id %}'" value='{{ award.id }}'>{{ award.name|title }}</a>
+                        <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}" href="#"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award %}'" value='{{ award.id }}'>{{ award|title }}</a>
                     {% endif %}
                     {% empty %}
                         <a class="dropdown-item">No Awards Found</a>
@@ -268,10 +268,10 @@ table td {
                         <div style="font-weight: bold;text-align: center;padding-top:20px;">Award Templates</div>
                         <ul class="template_ul">
                         {% for award_template in award_templates %}
-                            {% if selected_template.id == award_template.id %}
-                <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected.id award_template.id %}" style="text-decoration: none; color: #3b3b3e;">{{ award_template.template_name.capitalize }}</a></li>
+                            {% if selected_template == award_template %}
+                <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected award_template %}" style="text-decoration: none; color: #3b3b3e;">{{ award_template.capitalize }}</a></li>
                             {% else %}
-                <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected.id award_template.id %}" style="text-decoration: none;color: #68686d;">{{ award_template.template_name.capitalize }}</a></li>
+                <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected award_template %}" style="text-decoration: none;color: #68686d;">{{ award_template.capitalize }}</a></li>
                             {% endif %}
                         </ul>
                         <br>        
@@ -285,7 +285,7 @@ table td {
                     <div class="row filter-container">
                             <div class="col-sm-12">
                                 
-                                <form method = "GET" action="{% if selected_template %}{% url 'nominate_app:nomination_filter' award_selected.id selected_template.id %}{% endif %}">
+                                <form method = "GET" action="{% if selected_template %}{% url 'nominate_app:nomination_filter' award_selected selected_template %}{% endif %}">
                                     <div class="row">
                                         <div class="col-sm-5">
                                         <div class="row">
