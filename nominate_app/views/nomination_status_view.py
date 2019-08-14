@@ -61,8 +61,12 @@ def nomination_status(request):
   if request.method == 'GET':
     award = Awards.objects.first()
     page = request.GET.get('page', 1)
-  return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=award.id))
+    if award:
+      return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, id=award.id))
+    else: 
+      return render(request, 'nominate_app/nomination_status.html')
 
+      
 
 def nomination_status_load(request,id):
   if request.method == 'GET':
