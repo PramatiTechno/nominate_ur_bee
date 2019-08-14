@@ -14,28 +14,20 @@
       {% csrf_token %}
       <div class = "row award_top_margin">
         <div class="col-sm-8">    
-          {{ nomination_template.template_name }}
+          {{ nomination_submitted.template_name }}
         </div>
       </div> 
       <br>
-      {% for answer in nomination_answers %}
+      {% for qa in question_answerset %}
       <div class="form">
         <div class = "row award_top_margin ">
           <div class="col-sm-2">
-            <label class="col-form-label" for='{{answer.question}}' >{{answer.question}}</label>
+            <label class="col-form-label" for='{{qa.question}}' >{{qa.question}}</label>
           </div>
           <div class="col-sm-4">
-            {% if answer.answer_text %}   
-              <input type="text" name="answer_text" class="form-control" placeholder="" value="{{answer.answer_text}}" disabled />
+            {% if qa.answer %}   
+              <input type="text" name="answer_text" class="form-control" placeholder="" value="{{qa.answer}}" disabled />
             {% else %}
-
-              {%if answer.answer_option == "yes" %}
-                <input type="radio" value="yes" name="answer.answer_option" checked> Yes
-                <input type="radio" value="no" name="answer.answer_option"> No
-              {% else %}
-                  <input type="radio" value="yes" name="answer.answer_option"> Yes
-                  <input type="radio" value="no" name="answer.answer_option" checked> No
-              {% endif %}
             {% endif %}
             {% if answer.attachment_path %}   
               <img src="{{answer.attachment_path.url}}" alt="answer option" height="310" width="310" />

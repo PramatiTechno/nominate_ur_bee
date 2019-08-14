@@ -5,12 +5,17 @@ from nominate_app.models import Nomination,NominationPeriod, AwardTemplate, Nomi
 from django.http import HttpResponse
 from django.contrib import messages
 from django.db.models import Q
+from django.template.defaulttags import register
 import json
 from django.utils import timezone
 import os
 from django.conf import settings
 from datetime import datetime
 from IPython import embed
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 def index(request,nomination_id):
   if request.method == 'POST':  
@@ -34,6 +39,7 @@ def index(request,nomination_id):
         new_form.pop(key)
 
     if request.method == 'POST':
+      
       ans_obj_List = []
       for qid,answer in ques_answers_dict.items():
         ans_form1 = new_form.copy()
@@ -64,12 +70,20 @@ def index(request,nomination_id):
           condition1 = Q(nomination_instance_id=nomination_instance.id)
           condition2 = Q(question_id=ans['question'])
           na = NominationAnswers.objects.get(condition1 & condition2)
-          na.answer_text = ans['answer_text'][0]
+          if ans['option']:
+            na.answer_text = json.dumps(ans['answer_text'])
+          else:
+            na.answer_text = ans['answer_text'][0]
           na.answer_option = ans['option']
           na.save()
         except Exception as e:
           print(e)
-          na = NominationAnswers(answer_option=ans['option'], answer_text=ans['answer_text'][0],nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=ans['award_template'],question_id=ans['question'], submitted_by=request.user)
+          if ans['option']:
+            answer_text = json.dumps(ans['answer_text'])
+          else:
+            answer_text = ans['answer_text'][0]
+
+          na = NominationAnswers(answer_option=ans['option'], answer_text=answer_text,nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=ans['award_template'],question_id=ans['question'], submitted_by=request.user)
           na.save()
 
       # This code to be refactored. Multiple answer records submit
@@ -80,16 +94,16 @@ def index(request,nomination_id):
       elif request.POST['action'] == 'submit':
         user_details = UserProfile.objects.get(user_id=request.user.id)
         nomination_submitted = NominationSubmitted(status=0, email=request.user.username, firstname=request.user.first_name, \
-          lastname=request.user.last_name, award_name=nomination_template.award.name, \
+          lastname=request.user.last_name, nomination_id=nomination.id, award_name=nomination_template.award.name, \
           group_id=request.user.groups.all()[0].id, designation=user_details.designation, \
           worklocation=user_details.worklocation, baselocation=user_details.baselocation, \
           template_name=nomination_template.template_name, submitted_at=timezone.now())
         nomination_submitted.save()
         for ans_obj in ans_obj_List:
           if ans_obj['action'] == 'submit':
-            
+            answer_text = ", ".join(ans_obj['answer_text'])
             qa = QuestionAnswers(nomination_submitted_id=nomination_submitted.id, \
-              question=Questions.objects.get(id=ans_obj['question']).qname, answer=ans_obj['answer_text'][0])
+              question=Questions.objects.get(id=ans_obj['question']).qname, answer=answer_text)
             qa.save()
         nomination_instance.status = 2
         nomination_instance.submitted_at = timezone.now()
@@ -138,7 +152,23 @@ def edit(request,nomination_id,nomination_instance_id):
   for key in edit_new_form.keys():
     if key.endswith('answer'):
       new_form.pop(key)
-  return render(request, 'nominate_app/nomination_instances/new.html', {'answers_form':answers_form,'nomination':nomination,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'questions':questions })
+  answers = {}
+  for question in questions:
+    try:
+      answer_text = question.nominationanswers_set.get(submitted_by=request.user.id).answer_text
+      if question.qtype == "SUBJECTIVE":
+        answers[question.id] = answer_text
+      else:
+        answers[question.id] = json.loads(answer_text)
+    except:
+      answers[question.id] = []
+      
+
+  return render(request, 'nominate_app/nomination_instances/edit.html', {'answers_form':answers_form,'nomination':nomination,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'questions':questions, 'answers': answers })
+
+def submitted_nomination(request, nomination_submitted_id):
+  qa = QuestionAnswers.objects.filter(nomination_submitted_id=nomination_submitted_id)
+  return render(request, 'nominate_app/nomination_instances/show.html', {'question_answerset':qa, 'nomination_submitted':NominationSubmitted.objects.get(id=nomination_submitted_id)})
 
 def nomination_instance(request,nomination_id,nomination_instance_id):
   answers_form = NominationAnswersForm(instance=NominationAnswers())
