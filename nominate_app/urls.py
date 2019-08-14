@@ -46,11 +46,11 @@ urlpatterns = [
   path('nomination_status_load/awards/<id>/templates/<template_id>/filter', nomination_status_view.nomination_status_load_filter, name="nomination_filter"),
   path('nomination_feed/', nomination_index.NominationIndexView.as_view(), name='nomination_feed'),
   
-  path('nomination_feed/<int:nomination_instance_id>/', nomination_index.nomination_instance_post, name='nomination_instance_post'),
-  path('nomination_feed/<int:nomination_instance_id>/comment/', nomination_index.CommentList.as_view(), name='add_comment'),
-  path('nomination_feed/<int:nomination_instance_id>/comment/<int:comment_id>/delete', nomination_index.comment_remove, name='comment_remove'),
-  path('nomination_feed/<int:nomination_instance_id>/like/', nomination_index.nomination_like, name='nomination_like'),
-  path('nomination_feed/<int:nomination_instance_id>/liked_people/', nomination_index.nomination_liked_people, name='nomination_liked_people'),
+  path('nomination_feed/<int:nomination_submittion_id>/', nomination_index.nomination_instance_post, name='nomination_instance_post'),
+  path('nomination_feed/<int:nomination_submittion_id>/comment/', nomination_index.CommentList.as_view(), name='add_comment'),
+  path('nomination_feed/<int:nomination_submittion_id>/comment/<int:comment_id>/delete', nomination_index.comment_remove, name='comment_remove'),
+  path('nomination_feed/<int:nomination_submittion_id>/like/', nomination_index.nomination_like, name='nomination_like'),
+  path('nomination_feed/<int:nomination_submittion_id>/liked_people/', nomination_index.nomination_liked_people, name='nomination_liked_people'),
 
 ]
 

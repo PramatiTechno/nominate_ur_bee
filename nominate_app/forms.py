@@ -38,8 +38,8 @@ class NominationFilterForm(forms.Form):
       super(NominationFilterForm, self).__init__(*args, **kwargs)
       self.fields['from_'].required = False
       self.fields['to'].required = False
-      self.fields['Awards'].choices = [('ALL', 'ALL'), ] + [(award.id, award.name) for award in Awards.objects.all()]
-      self.fields['Templates'].choices = [('ALL', 'ALL'), ] + [(template.id, template.template_name) for template in AwardTemplate.objects.all()]
+      self.fields['Awards'].choices = [('ALL', 'ALL'), ] + [(award, award) for award in NominationSubmitted.objects.values_list('award_name', flat=True).distinct()]
+      self.fields['Templates'].choices = [('ALL', 'ALL'), ] + [(template, template) for template in NominationSubmitted.objects.values_list('template_name', flat=True).distinct()]
 
 
 class CommentForm(forms.ModelForm):

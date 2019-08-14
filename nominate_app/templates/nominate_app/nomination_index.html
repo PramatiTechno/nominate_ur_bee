@@ -99,7 +99,7 @@ color:#067084d6;
 	<div class="row nomination-feed infinite-container" style="padding:0px 20px;">
 		{% for instance in instances %}
 		<div class="infinite-item">
-			{% include 'nominate_app/nomination_detail.html' with instance=instance.instance detail=instance.detail comment_form=comment_form  %}
+			{% include 'nominate_app/nomination_detail.html' with submission=instance.submission qa_list=instance.qa detail=instance.detail comment_form=comment_form  %}
 		</div>
 		{% endfor %}
 	</div>
@@ -126,7 +126,7 @@ color:#067084d6;
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-        <p>Some text in the modal.</p>
+      
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
