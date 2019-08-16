@@ -32,6 +32,8 @@ urlpatterns = [
   path("awards/<award_id>/award_templates/<award_template_id>/edit/",award_templates.edit,name="edit_award_template"),
   path('awards/<award_id>/award_templates/<award_template_id>/', award_templates.award_template,name="award_template"),
   path("nominations/",nominations.index,name="nominations"),
+  path('nominations/status/<status_value>', nominations.status_index, name="nomination_status_index"),
+  path('nominations/submitted/<nomination_submitted_id>', nomination_instances.submitted_nomination, name="nomination_submitted"),
   path("nominations/<nomination_id>/",nominations.change_date,name="nominations_end_date"),
   path("nominations/<nomination_id>/nomination_instances/new/",nomination_instances.new,name="new_nomination_instance"),
   path("nominations/<nomination_id>/nomination_instances/",nomination_instances.index,name="create_nomination_instance"),
@@ -41,9 +43,9 @@ urlpatterns = [
   path("graphs/<award_id>",graphs.load_graph,name="load_graph"),    
 
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
-  path('nomination_status_load/<id>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
-  path('nomination_status_load/awards/<id>/templates/<template_id>', nomination_status_view.nomination_status_load_template, name='nomination_status_load_template'),
-  path('nomination_status_load/awards/<id>/templates/<template_id>/filter', nomination_status_view.nomination_status_load_filter, name="nomination_filter"),
+  path('nomination_status_load/<award_name>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
+  path('nomination_status_load/awards/<award_name>/templates/<template_name>', nomination_status_view.nomination_status_load_template, name='nomination_status_load_template'),
+  path('nomination_status_load/awards/<award_name>/templates/<template_name>/filter', nomination_status_view.nomination_status_load_filter, name="nomination_filter"),
   path('nomination_feed/', nomination_index.NominationIndexView.as_view(), name='nomination_feed'),
   
   path('nomination_feed/<int:nomination_submittion_id>/', nomination_index.nomination_instance_post, name='nomination_instance_post'),

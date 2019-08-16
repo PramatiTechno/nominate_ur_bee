@@ -133,7 +133,7 @@ class Questions(SafeDeleteModel):
 
 class Nomination(models.Model):
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-  group = models.ForeignKey(Group, on_delete=models.CASCADE)
+  group = models.ForeignKey(Group ,on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
@@ -152,17 +152,23 @@ class NominationSubmitted(models.Model):
     ("Dismissed", 3),
     ("On hold", 4),
     )
+  nomination = models.ForeignKey('Nomination', related_name='submissions', on_delete=models.SET_NULL, blank=True, null=True,)
   status = models.IntegerField(null=False, blank=False,choices=statuses,default=0)
   submitted_at = models.DateTimeField(auto_now_add=True, null=False, blank=False) 
   email = models.CharField(max_length=50, null=False, blank=False)
   firstname = models.CharField(max_length=30, null=False, blank=False)
-  group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False, default=Group.objects.get(name="Manager").id)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
   designation = models.CharField(max_length=30, null=False, default="")
   lastname = models.CharField(max_length=30, null=False, blank=False)
   award_name = models.CharField(max_length=30, null=False, blank=False)
   worklocation = models.CharField(max_length=30, null=False, blank=False, default="")
   baselocation = models.CharField(max_length=30, null=False, blank=False, default="")
   template_name = models.CharField(max_length=150, null=False, blank=False)
+
+  def get_status(self, status_code):
+    for status in self.statuses:
+      if status[1] == status_code:
+        return status[0]
 
 class QuestionAnswers(models.Model):
   class Meta:
@@ -187,7 +193,7 @@ class NominationInstance(models.Model):
     ("Dismissed",5),
     ("On hold",6)
   )
-  nomination = models.ForeignKey(Nomination, on_delete=models.CASCADE)
+  nomination = models.ForeignKey(Nomination, on_delete=models.CASCADE, default=None)
   status = models.IntegerField(null=False, blank=False,choices=statuses,default=0)
   result = models.CharField(max_length=50, null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
