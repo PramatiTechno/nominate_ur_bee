@@ -157,7 +157,7 @@ class NominationSubmitted(models.Model):
   submitted_at = models.DateTimeField(auto_now_add=True, null=False, blank=False) 
   email = models.CharField(max_length=50, null=False, blank=False)
   firstname = models.CharField(max_length=30, null=False, blank=False)
-  group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False, default=Group.objects.get(name="Manager").id)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
   designation = models.CharField(max_length=30, null=False, default="")
   lastname = models.CharField(max_length=30, null=False, blank=False)
   award_name = models.CharField(max_length=30, null=False, blank=False)
@@ -170,7 +170,6 @@ class NominationSubmitted(models.Model):
       if status[1] == status_code:
         return status[0]
 
-        
 class QuestionAnswers(models.Model):
   class Meta:
     db_table='question_answers'
@@ -194,7 +193,7 @@ class NominationInstance(models.Model):
     ("Dismissed",5),
     ("On hold",6)
   )
-  nomination = models.ForeignKey(Nomination, on_delete=models.CASCADE)
+  nomination = models.ForeignKey(Nomination, on_delete=models.CASCADE, default=None)
   status = models.IntegerField(null=False, blank=False,choices=statuses,default=0)
   result = models.CharField(max_length=50, null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)

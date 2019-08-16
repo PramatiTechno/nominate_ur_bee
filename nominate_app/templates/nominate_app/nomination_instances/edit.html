@@ -5,7 +5,44 @@
 {% block content %}
 
 {% load staticfiles %}
-<script src="{% static 'js/award_templates.js' %}"></script>
+<style>
+.hidden{
+  visibility:hidden;
+}
+</style>
+<script>
+  $(document).ready(function(){
+    $("#submit_button").on("click", function(event){
+      validate_checkbox(event)
+    });
+    $("#save_button").on("click", function(event){
+      validate_checkbox(event)
+  });
+  $('.multichoice-option').on('change', function(){
+    
+    if($(this).attr("checked")){
+      $(this).removeAttr("checked")
+    }else{
+      $(this).attr("checked", "checked")
+    }
+  })
+  function validate_checkbox(event){
+    $('.checkbox-container').map(function(){
+
+      flag = false
+      $(this).children().toArray().forEach(element => {
+        if($(element).attr("checked")){
+          flag = true
+        }
+      });
+      if(!flag){
+        event.preventDefault()
+        $(this).find('.hidden').removeClass('hidden')
+      }
+    });
+  }
+  });
+</script>
 <div class = "container">
   <div class="form-group">
     <form method="post"  enctype="multipart/form-data" action="/nominations/{{nomination.id}}/nomination_instances/">
@@ -26,14 +63,14 @@
           <div class="col-sm-4">
             {% if question.qtype == 'SUBJECTIVE'%}   
               {% if question.nominationanswers_set.count > 0 %}
-              <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="{{ question.nominationanswers_set.first.answer_text }}" required />
+              <input type="text" name="{{ question.id }}_answer" class="form-control" placeholder="" value="{{ answers|get_item:question.id }}" required />
               {% else %}
-              <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="" required />
+              <input type="text" name="{{ question.id }}_answer" class="form-control" placeholder="" value="" required />
               {% endif %}
             {% endif %}
             {% if question.qtype == 'OBJECTIVE' %}
                 {% for option in question.options %}
-                  {% if option in question.nominationanswers_set.first.answer_text %}
+                  {% if option in answers|get_item:question.id %}
                     <input type="radio" value="{{ option }}" name="{{question.id}}_answer_option" checked> {{ option }}   
                   {% else %}
                     <input type="radio" value="{{ option }}" name="{{question.id}}_answer_option"> {{ option }}   
@@ -42,13 +79,18 @@
             {% endif %}
 
             {% if question.qtype == 'MULTIPLE-CHOICE' %}
-              {% for option in question.options %}
-                {% if option in question.nominationanswers_set.first.answer_text %}
-                  <input type="checkbox" value="{{ option }}" name="{{question.id}}_answer_option" checked> {{ option }}   
-                {% else %}
-                  <input type="checkbox" value="{{ option }}" name="{{question.id}}_answer_option" > {{ option }}   
-                {% endif %}
-              {% endfor %}
+              <div class="checkbox-container">
+                {% for option in question.options %}
+                  {% if option in answers|get_item:question.id %}
+                    <input type="checkbox" value="{{ option }}" class="multichoice-option" name="{{question.id}}_answer_option" checked> {{ option }}   
+                  {% else %}
+                    <input type="checkbox" value="{{ option }}" class="multichoice-option" name="{{question.id}}_answer_option" > {{ option }}   
+                  {% endif %}
+                {% endfor %}
+                <div class="alert alert-danger hidden">
+                  Select atleast one option.
+                </div>
+              </div>
             {% endif %}
           </div>
           {% if question.attachment_need %}
@@ -68,8 +110,8 @@
       <div class ="row award_top_margin justify-content-md-center">
         <div class="col-sm-4">
           <button type="button" class="btn btn-danger">Cancel</button>
-          <button type="submit" class="btn btn-success" name="action" value="submit">Submit</button>
-          <button type="submit" class="btn btn-primary" name="action" value="save">Save</button>
+          <button type="submit" class="btn btn-success" id="submit_button" name="action" value="submit">Submit</button>
+          <button type="submit" class="btn btn-primary" id="save_button" name="action" value="save">Save</button>
         </div>  
       </div>    
     </form> 
