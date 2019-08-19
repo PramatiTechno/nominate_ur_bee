@@ -6,6 +6,7 @@ from nominate_app.models import *
 from django.db.models import Avg
 from django.views.generic.base import View
 from nominate_app.utils import group_required
+from braces.views import GroupRequiredMixin
 from IPython import embed
 
 
@@ -20,9 +21,10 @@ def index(request):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class nomination_rating(View):
+class nomination_rating(GroupRequiredMixin, View):
+
+	group_required = u"Technical Jury Member"
 	
-	@group_required('Technical Jury Member', raise_exception=True)
 	def get(self, request, nomination_submitted_id):
 		submission = NominationSubmitted.objects.get(id=nomination_submitted_id)
 		created = NominationRating.objects.filter(user=request.user, submission=submission).exists()
@@ -36,7 +38,6 @@ class nomination_rating(View):
 		return render(request, 'nominate_app/nomination_review/show.html', {'submission': submission, 'rating': nomination_rating.rating, 'review': nomination_rating.review, 'average_rating': avg_rating, 'total_rating': total_rating})		
 
 
-	@group_required('Technical Jury Member', raise_exception=True)
 	def post(self, request, nomination_submitted_id):
 		submission = NominationSubmitted.objects.get(id=nomination_submitted_id)
 		rating = request.POST['rating']
