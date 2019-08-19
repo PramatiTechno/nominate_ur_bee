@@ -29,6 +29,7 @@ def change_date(request, nomination_id):
 def index(request):
   
   current_user = User.objects.get(id=request.user.id)
+  group = current_user.groups.first()
   nominations = Nomination.objects.filter(group__in=list(map(lambda x: x['id'],current_user.groups.values()))) #,start_day__gt= datetime.today(),end_day__lt= datetime.today() )#list(map(lambda g: g.id,current_user.groups.all()))) 
   new_nominations = []
   
@@ -37,7 +38,11 @@ def index(request):
       if nomination_instance.count() == 0:
         new_nominations.append(nomination)   
   statuses = ['New', 'Saved']
-  statuses.extend(status[0] for status in NominationSubmitted.statuses)
+
+  if group.name.lower() == "directorial board member":
+    statuses.append('Submitted')
+  else:
+    statuses.extend(status[0] for status in NominationSubmitted.statuses) 
   page = request.GET.get('page', 1)
   paginator = Paginator(new_nominations, 9)
   try:
@@ -50,10 +55,13 @@ def index(request):
 
 def status_index(request, status_value):
   current_user = User.objects.get(id=request.user.id)
+  group = current_user.groups.first()
   statuses = ['New', 'Saved']
   nomination_data = []
-  statuses.extend(status[0] for status in NominationSubmitted.statuses)
-  
+  if group.name.lower() == "directorial board member":
+    statuses.append('Submitted')
+  else:
+    statuses.extend(status[0] for status in NominationSubmitted.statuses) 
   if status_value.lower() == "new":
     
     return redirect('nominate_app:nominations')
@@ -65,15 +73,15 @@ def status_index(request, status_value):
         nomination.nomination_instance_id = nomination_instance[0].id
         nomination_data.append(nomination)
   elif status_value.lower() == "submitted":
-    nomination_data = NominationSubmitted.objects.filter(status=0)
+    nomination_data = NominationSubmitted.objects.filter(status=0, email=request.user.email)
   elif status_value.lower() == "reviewed":
-    nomination_data = NominationSubmitted.objects.filter(status=1)
+    nomination_data = NominationSubmitted.objects.filter(status=1, email=request.user.email)
   elif status_value.lower() == "approved":
-    nomination_data = NominationSubmitted.objects.filter(status=2)
+    nomination_data = NominationSubmitted.objects.filter(status=2, email=request.user.email)
   elif status_value.lower() == "dismissed":
-    nomination_data = NominationSubmitted.objects.filter(status=3)
+    nomination_data = NominationSubmitted.objects.filter(status=3, email=request.user.email)
   else:
-    nomination_data = NominationSubmitted.objects.filter(status=4)
+    nomination_data = NominationSubmitted.objects.filter(status=4, email=request.user.email)
   page = request.GET.get('page', 1)
   paginator = Paginator(nomination_data, 9)
   try:

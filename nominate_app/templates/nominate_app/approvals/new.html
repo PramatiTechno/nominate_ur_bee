@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+{% load staticfiles %}
+<script src="{% static 'js/award_creation.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
+<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}">
+</script>
+<script>
+$(document).ready(function(){
+	$('.submission-rating').starRating({
+   		starSize: 18,
+		readOnly: true,
+    	callback: function(currentRating, $el){
+        // make a server call here
+    	}
+	})
+})</script>
+<!-- header -->
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+  <h5>
+    <a href="{% url 'nominate_app:awards' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    {{ selected_nomination.award_name.capitalize }}
+  </h5>
+</div>
+
+<div class = "container" style="margin-top: 3em; padding-left: 3em;">
+  <div class="row">
+    <div class="col-sm-3">
+        First Name:
+    </div>
+    <div class="col-sm-9" style='text-align: left'>
+            {{ selected_nomination.firstname.capitalize }}
+    </div>
+  </div>
+    <div class="row">
+        <div class="col-sm-3">
+            Last Name:
+        </div>
+        <div class="col-sm-9" style='text-align: left'>
+                {{ selected_nomination.lastname.capitalize }}
+        </div>
+    </div>
+    <div class="row">
+            <div class="col-sm-3">
+                Template Name:
+            </div>
+            <div class="col-sm-9" style='text-align: left'>
+                    {{ selected_nomination.template_name.capitalize }}
+            </div>
+    </div>
+    <div class="row">
+            <div class="col-sm-3">
+                Average Rating:
+            </div>
+            <div class="col-sm-9" style='text-align: left'>
+                    <div class="row">
+                            {{ average_rating }}<div class="submission-rating ml-1 mr-1" data-rating="{{ avg_rating }}"></div>  
+                      </div>
+            </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-12">
+            Reviews
+        </div>
+    </div>
+        <div class="reviews" style="padding-top:1em">
+            {% for rating in ratings %}
+                <div class="row" style="padding-top:1em">
+                    <div class="col-sm-3">
+                            Reviewer: 
+                    </div>
+                    <div class="col-sm-9">
+                            {{ rating|get_user:rating.user_id }} 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                            Comment:
+                        </div>
+                        <div class="col-sm-9">
+                            {{ rating.review }}
+                        </div>
+                    </div>
+                </div>  
+            {% endfor %}
+        <form method = "POST" action="/approvals/{{ selected_nomination.id }}">
+            {% csrf_token %}
+            <div class="director-action row" style="padding-top:2em">
+                <div class="col-sm-3">Action:</div>
+                <div class="col-sm-9">
+                    <div class="row">
+                        <div class="form-group">
+                                <input type="radio" name='selected_option' value="approved" />Approve
+                                <input type="radio" name='selected_option' value="dismissed" />Dismiss
+                                <input type="radio" name='selected_option' value="hold" checked/>Hold
+                        </div>
+                            
+                    </div>
+                </div>
+                    
+                </div>
+                <div class="director-action row" >
+                        <div class="col-sm-3">Comment:</div>
+                        <div class="col-sm-9">
+                        <textarea class="form-control" rows="5" name='comment' required></textarea>   
+                        </div>
+                            
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+
+                    </div>
+                    <div class="col-sm-9" style="padding-top:1em">
+                            <input type="submit" class="btn btn-primary"/>
+                    </div>
+                        
+                    
+                </div>
+            </form>    
+        </div>
+
+            
+
+<style>
+  .was-validated .form-control:valid{
+    background-image: none;
+    border-color: #ced4da;
+  }
+</style>
+{% endblock %}
