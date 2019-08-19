@@ -257,3 +257,21 @@ class Like(models.Model):
 
   class Meta:
     db_table='nomination_likes'
+
+class NominationRating(models.Model):
+  ratings = (
+    ("null", 0),
+    ("one", 1),
+    ("two", 2),
+    ("three", 3),
+    ("four", 4),
+    ("five", 5),
+    )
+  submission = models.ForeignKey('NominationSubmitted', on_delete=models.CASCADE, related_name='ratings')
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  rating = models.IntegerField(null=False, blank=False,choices=ratings,default=0)
+  review = models.TextField()
+  reviewed_at = models.DateTimeField(default=timezone.now)
+
+  class Meta:
+    db_table='nomination_rating'
