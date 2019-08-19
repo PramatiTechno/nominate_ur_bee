@@ -1,0 +1,265 @@
+{% extends 'base.html' %} {% block content %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+    .page-content {
+        margin: 8px;
+    }
+    
+    .header {
+        padding: 8px;
+        background-color: #1a3d6e;
+    }
+    
+    .header h1 {
+        text-align: center;
+        color: white;
+    }
+    
+    .instructions {
+        text-align: center;
+    }
+    
+    table {
+        margin: 0 auto;
+        border-spacing: 0;
+        border-collapse: 0;
+        width: 100%
+    }
+    
+    .row {
+        margin-right: 0px;
+    }
+    
+    table td {
+        padding: 8px 0px 8px 0px;
+        border-top: 1px solid #ddd;
+    }
+    
+    .material-icons.clear {
+        color: red;
+        font-weight: bold;
+    }
+    
+    .enddate {
+        background-color: transparent;
+        border: none;
+        padding-left: 0px;
+        text-decoration: underline;
+    }
+    
+    .btn-none {
+        background-color: transparent;
+        border: none;
+    }
+    
+    .material-icons.check {
+        color: green;
+        font-weight: bold;
+    }
+    
+    .material-icons.edit {
+        color: DodgerBlue;
+        font-weight: bold;
+    }
+    
+    .user {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+    
+    .user:nth-child(2) {
+        background: #f2f5f8;
+    }
+    
+    .user:nth-child(1) {
+        background: #D4E4F7;
+    }
+    
+    @media screen and (max-width: 650px) {
+        table thead {
+            border: none;
+            height: 0px;
+            width: 0px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+        }
+        table tr {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            display: block;
+            margin-bottom: 0.5em;
+        }
+        table tr.selected {
+            background-color: white;
+            border-color: DodgerBlue;
+        }
+        table td {
+            border-top: none;
+            border-bottom: 1px solid #ddd;
+            display: block;
+            text-align: right;
+            clear: both;
+        }
+        table td.row-function {
+            display: inline;
+            border: none;
+            clear: none;
+        }
+        table tr td:last-child {
+            border-bottom: none;
+        }
+        .dropdown-item table tr td.row-function:nth-child(1) {
+            float: left;
+        }
+        table tr td.row-function:nth-child(2) {
+            float: right;
+        }
+        table td.row-function::before {
+            content: none;
+        }
+        table td::before {
+            /*
+  * aria-label has no advantage, it won't be read inside a table
+  content: attr(aria-label);
+  */
+            content: attr(data-label);
+            float: left;
+            font-weight: bold;
+        }
+    }
+    
+    .dropdown-menu-awards {
+        width: 100%;
+        left: 5px;
+    }
+    
+    .form_det {
+        font-size: 24px;
+        display: inline;
+        color: #d22b2b;
+    }
+    
+    #caret_icon_container {
+        text-align: right;
+        font-size: 20px;
+    }
+    
+    #award_name_container {
+        text-align: left;
+    }
+    
+    .edit_fa {
+        font-size: 24px !important;
+        display: inline;
+        color: #2c54c5;
+        margin: 0px 10px
+    }
+    
+    .container-fluid {
+        padding-right: 0px;
+    }
+    
+    .add-icon {
+        border-radius: 110px;
+        background: #8a8a8a8f;
+        padding: 5px 8px;
+        font-size: 10px;
+        color: white;
+    }
+    
+    .btn-outline-secondary {
+        text-align: left;
+        border-radius: 0px;
+        box-shadow: 0px 5px 10px #00000036;
+        border: 0px;
+    }
+    
+    .btn-outline-secondary:focus,
+    .btn-outline-secondary:hover {
+        background: #afbcc7 !important;
+    }
+    
+    .filter-container {
+        margin-top: 1em;
+        margin-bottom: 2em;
+    }
+    
+    .date-filter-tag {
+        padding-top: 0.5em;
+    }
+    
+    .template_ul li {
+        list-style-type: none;
+        padding: 20px 10px;
+        border-bottom: 1px solid #c2c2c2;
+    }
+    
+    .sidenav {
+        border-right: 1px solid #c2c2c2;
+        box-shadow: 5px 1px 5px rgba(110, 110, 110, 0.3);
+    }
+    
+    .template_ul li a {
+        padding: 40px 0px;
+        color: #68686d;
+    }
+    
+    .template_ul {
+        padding: 20px 0px;
+    }
+    
+    .nom_content {
+        padding: 0px 50px;
+    }
+</style>
+<div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
+    <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+        <h5>Approvals</h5>
+
+    </div>
+    <div class="dropdown">
+        {% for status in statuses %} {% if forloop.counter == 1 %}
+        <button class="btn-outline-secondary form-control" type="button" data-toggle="dropdown">
+            <div class="row">
+                <div class="col-sm-11" id="award_name_container">
+                    {{ selected_status.capitalize }}
+                </div>
+                <div class="col-sm-1" id="caret_icon_container">
+                    <i class="fa fa-one-half fa-chevron-down" style="vertical-align: top" ></i>
+                </div>
+            </div>
+          </button>
+        <div class="dropdown-menu dropdown-menu-awards">
+            {% endif %} {% if status.lower == selected_status %}
+            <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:nomination_status_index' status_value=status.lower %}">{{ status }}</a> {% else %}
+            <a class="dropdown-item" href="{% url 'nominate_app:nomination_status_index' status_value=status.lower %}" id="dropdown-item{{ forloop.counter }}">{{ status }}</a> {% endif %} {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="row" style="justify-content: center; font-size: 1.5em">
+        {% if data.has_other_pages %}
+        <ul class="pagination">
+            {% if data.has_previous %}
+            <li><a href="?page={{ data.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+            {% endif %} {% for i in data.paginator.page_range %} {% if data.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span>
+            </li>
+            {% else %}
+            <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %} {% endfor %} {% if data.has_next %}
+            <li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
