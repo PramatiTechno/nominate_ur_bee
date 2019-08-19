@@ -225,7 +225,8 @@
         <button class="btn-outline-secondary form-control" type="button" data-toggle="dropdown">
             <div class="row">
                 <div class="col-sm-11" id="award_name_container">
-                    {{ selected_status.capitalize }}
+                    {% if selected_status == 'reviewed' %} To be Approved {% endif %}
+                    {% if selected_status == 'approved' %} History {% endif %}
                 </div>
                 <div class="col-sm-1" id="caret_icon_container">
                     <i class="fa fa-one-half fa-chevron-down" style="vertical-align: top" ></i>
@@ -234,12 +235,51 @@
           </button>
         <div class="dropdown-menu dropdown-menu-awards">
             {% endif %} {% if status.lower == selected_status %}
-            <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:nomination_status_index' status_value=status.lower %}">{{ status }}</a> {% else %}
-            <a class="dropdown-item" href="{% url 'nominate_app:nomination_status_index' status_value=status.lower %}" id="dropdown-item{{ forloop.counter }}">{{ status }}</a> {% endif %} {% endfor %}
+            <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:approval' %}?status={{status.lower}}">
+                    {% if status == 'reviewed' %} To be Approved {% endif %}
+                    {% if status == 'approved' %} History {% endif %}
+            </a> {% else %}
+            <a class="dropdown-item" href="{% url 'nominate_app:approval' %}?status={{status.lower}}" id="dropdown-item{{ forloop.counter }}">
+                {% if status == 'reviewed' %} To be Approved {% endif %}
+                    {% if status == 'approved' %} History {% endif %}
+            </a> {% endif %} {% endfor %}
         </div>
 
     </div>
-
+    <div class="page-content">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Award Name</th>
+                    <th scope="col">Template Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+            {% for submission in data %}
+                <tr data-rowId={{submission.id}}>
+            
+                    <td scope="row" data-label="Award Name">{{submission.award_name}}</td>
+                    <td scope="row" data-label="Template Name">{{submission.template_name}}</td>
+                    <td scope="row" data-label="Email">{{submission.email}}</td>
+                    <td scope="row" data-label="Action">
+                            {% if selected_status.lower == "reviewed" %}
+                            <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}'" type="button" class="btn btn-success" value = "Approve">
+                            {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No nominations reviewed. </td>
+                        
+                </tr>
+                    
+                {% endfor %}
+                </tbody>
+                </table>
+    </div>
+            
     <div class="row" style="justify-content: center; font-size: 1.5em">
         {% if data.has_other_pages %}
         <ul class="pagination">

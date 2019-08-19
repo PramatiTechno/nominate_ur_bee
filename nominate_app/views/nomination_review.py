@@ -10,7 +10,6 @@ from braces.views import GroupRequiredMixin
 from IPython import embed
 
 
-@group_required('Technical Jury Member', raise_exception=True)
 def index(request):
 	statuses = ('Submitted', 'Reviewed')
 	status = request.GET['status'] if 'status' in request.GET else statuses[0]
@@ -27,14 +26,14 @@ class nomination_rating(GroupRequiredMixin, View):
 	
 	def get(self, request, nomination_submitted_id):
 		submission = NominationSubmitted.objects.get(id=nomination_submitted_id)
-		created = NominationRating.objects.filter(user=request.user, submission=submission).exists()
+		created = NominationRating.objects.filter(user_id=request.user.id, submission=submission).exists()
 
 		total_rating = submission.ratings.count()
 		avg_rating = NominationRating.objects.filter(submission=submission).aggregate(Avg('rating'))['rating__avg'] if total_rating > 0 else 0.0 
 		if not created:
 			return render(request, 'nominate_app/nomination_review/new.html', {'submission': submission, 'average_rating': avg_rating, 'total_rating': total_rating})
 
-		nomination_rating = NominationRating.objects.get(user=request.user, submission=submission)
+		nomination_rating = NominationRating.objects.get(user_id=request.user.id, submission=submission)
 		return render(request, 'nominate_app/nomination_review/show.html', {'submission': submission, 'rating': nomination_rating.rating, 'review': nomination_rating.review, 'average_rating': avg_rating, 'total_rating': total_rating})		
 
 
@@ -42,7 +41,7 @@ class nomination_rating(GroupRequiredMixin, View):
 		submission = NominationSubmitted.objects.get(id=nomination_submitted_id)
 		rating = request.POST['rating']
 		review = request.POST['review']
-		nomination_rating, created = NominationRating.objects.get_or_create(user=request.user, submission=submission)
+		nomination_rating, created = NominationRating.objects.get_or_create(user_id=request.user.id, submission=submission)
 		if created:
 			if rating != 0 and review != '':
 				nomination_rating.rating = rating
