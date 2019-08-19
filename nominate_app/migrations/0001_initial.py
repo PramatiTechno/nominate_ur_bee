@@ -13,8 +13,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('auth', '0010_group_group'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        
     ]
 
     operations = [
