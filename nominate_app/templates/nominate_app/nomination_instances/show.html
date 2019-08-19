@@ -6,17 +6,18 @@
 
 {% load staticfiles %}
 
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+    <h5>
+      <a href="{% url 'nominate_app:nominations'  %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+      {{ nomination_submitted.template_name.capitalize }}
 
+    </h5>
+</div>
 
 
 <div class = "container">
   <div class="form-group">
       {% csrf_token %}
-      <div class = "row award_top_margin">
-        <div class="col-sm-8">    
-          {{ nomination_submitted.template_name }}
-        </div>
-      </div> 
       <br>
       {% for qa in question_answerset %}
       <div class="form">
