@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
+<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}"></script>
+
+<script>
+$(document).ready(function(){
+	$('.submission-rating').starRating({
+		ratedColor: 'gold',
+    	starSize: 18,
+		useFullStars: true,
+    	callback: function(currentRating, $el){
+        // make a server call here
+    	}
+	})
+
+	$('.post-review').on("click", function() {
+	   	var rating = $('.submission-rating').starRating('getRating')
+	   	var review = $('.review').val()
+	   	var submission_id = $('.submission-id-field').val()
+
+	    nojax_post('/nomination_review/'+submission_id, {
+	    	'review': review,
+	    	'rating': rating
+	    })
+	  });
+
+
+	    function nojax_post (to,p) {
+		  var myForm = document.createElement("form");
+		  myForm.method="post" ;
+		  myForm.action = to ;
+		  for (var k in p) {
+		    var myInput = document.createElement("input") ;
+		    myInput.setAttribute("name", k) ;
+		    myInput.setAttribute("value", p[k]);
+		    myForm.appendChild(myInput) ;
+		  }
+		  document.body.appendChild(myForm) ;
+		  myForm.submit() ;
+		  document.body.removeChild(myForm) ;
+		}
+
+
+})
+
+</script>
+
+<div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
+  <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+        <h5>Nomination Review</h5>
+  </div>
+</div>
+
+
+<div class="container p-4">
+	<div class="card">
+
+		<div class="card-header">
+			<div class="row">
+				<div class="col-md-6">
+					<strong> {{submission.award_name}} / {{ submission.template_name }} </strong>
+				</div>
+				<div class="col-md-6">
+					<p class="pull-right text-muted">{{ submission.email}}</p>
+				</div>
+			</div>
+		</div>
+
+  	<div class="card-body">
+			{% for qa in submission.questions.values %}
+				<p>question: {{ qa.question }} </p>
+				<p>answer: {{ qa.answer }} </p>
+			{% endfor %}  		
+  	</div>
+
+  	<div class="card-footer">
+  		<div class="row">
+  			<div class="col-md-3">
+  				<div class="row">
+  					{{ average_rating }}<div class="submission-rating ml-1 mr-1" data-rating="{{ average_rating }}"></div>  ({{total_rating}} votes)
+				</div>
+   			</div>
+  			<div class="col-md-8">
+  				<div class="row">
+  					<div class="col-md-2">review </div>
+  					<textarea class="col-md-10 review" rows='1'></textarea>
+				</div>
+			</div>
+
+			<div class="col-md-1">
+				<input type='hidden' class="submission-id-field" value="{{ submission.id }}">
+				<button class="btn btn-outline-primary post-review">POST</button>
+			</div>
+		</div>
+  	</div>
+
+	</div>
+</div>
+
+
+{% endblock %}
