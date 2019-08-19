@@ -142,6 +142,14 @@ class Nomination(models.Model):
   class Meta:
     db_table='nominations'  
 
+class DirectorComments(models.Model):
+  class Meta:
+    db_table='director_comment'
+  comment = models.CharField(max_length=200, null=False)
+  nomination_submitted = models.ForeignKey('NominationSubmitted', on_delete=models.CASCADE, related_name='director_comment')
+  submitted_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='director_comment')
+
 class NominationSubmitted(models.Model):
   class Meta:
     db_table='nomination_submitted'

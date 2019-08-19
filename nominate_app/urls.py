@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin  
 from django.urls import path  
-from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances, graphs, nomination_review, results
+from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances, graphs, nomination_review, approvals, results
 from django.conf import settings 
 from django.conf.urls.static import static
 from django.urls import path, include
@@ -34,15 +34,17 @@ urlpatterns = [
   path("awards/<award_id>/award_templates/<award_template_id>/edit/",award_templates.edit,name="edit_award_template"),
   path('awards/<award_id>/award_templates/<award_template_id>/', award_templates.award_template,name="award_template"),
   path("nominations/",nominations.index,name="nominations"),
-  path('nominations/status/<status_value>', nominations.status_index, name="nomination_status_index"),
+  path('nominations/<status_value>', nominations.status_index, name="nomination_status_index"),
   path('nominations/submitted/<nomination_submitted_id>', nomination_instances.submitted_nomination, name="nomination_submitted"),
   path("nominations/<nomination_id>/",nominations.change_date,name="nominations_end_date"),
   path("nominations/<nomination_id>/nomination_instances/new/",nomination_instances.new,name="new_nomination_instance"),
   path("nominations/<nomination_id>/nomination_instances/",nomination_instances.index,name="create_nomination_instance"),
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/edit/",nomination_instances.edit,name="edit_nomination_instance"),
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/",nomination_instances.nomination_instance,name="nomination_instance"),
-  path("graphs/",graphs.index,name="graphs"),    
-  path("graphs/<award_id>",graphs.load_graph,name="load_graph"),    
+  path("graphs/",graphs.index,name="graphs"),     
+  path("graphs/<award_id>",graphs.load_graph,name="load_graph"), 
+  path("approvals/",approvals.index,name="approval"),
+  path("approvals/<submission_id>",approvals.approve,name="approve"),    
 
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
   path('nomination_status_load/<award_name>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
