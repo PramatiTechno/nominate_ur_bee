@@ -7,15 +7,19 @@ from django.db.models import Avg
 from django.views.generic.base import View
 from nominate_app.utils import group_required
 from braces.views import GroupRequiredMixin
+from django.contrib import messages
 from IPython import embed
 
 
 def index(request):
-	statuses = ('Submitted', 'Reviewed')
+	statuses = ('To be Submitted', 'Reviewed')
 	status = request.GET['status'] if 'status' in request.GET else statuses[0]
 
-	status_code = 0 if status == 'Submitted' else 1
-	submissions = NominationSubmitted.objects.filter(status=status_code)
+	if status == 'To be Submitted':
+		submissions = NominationSubmitted.objects.filter(status=0) # status for submitted
+	else:
+		submissions = NominationSubmitted.objects.filter(ratings__user=request.user)
+
 	return render(request, 'nominate_app/nomination_review/index.html', {'statuses': statuses, 'c_status':status, 'submissions': submissions}) 
 
 
@@ -41,15 +45,17 @@ class nomination_rating(GroupRequiredMixin, View):
 		submission = NominationSubmitted.objects.get(id=nomination_submitted_id)
 		rating = request.POST['rating']
 		review = request.POST['review']
-		nomination_rating, created = NominationRating.objects.get_or_create(user_id=request.user.id, submission=submission)
-		if created:
-			if rating != 0 and review != '':
-				nomination_rating.rating = rating
-				nomination_rating.review = review
+		created = NominationRating.objects.filter(user_id=request.user.id, submission=submission).exists()
+		if not created:
+			if rating != '0.0' and review != '':
+				nomination_rating = NominationRating(user=request.user, submission=submission, rating=rating, review=review)
 				submission.status = 1                # status code for reviewed
 				nomination_rating.save()
 				submission.save()
-
-				avg_rating = NominationRating.objects.filter(submission=submission).aggregate(Avg('rating'))['rating__avg']
-				total_rating = submission.ratings.count()
 				return redirect('nominate_app:nomination_review_rating', nomination_submitted_id=submission.id)
+
+			else:
+				messages.error(request, "ratings and reviews can't be blank")
+				total_rating = submission.ratings.count()
+				avg_rating = NominationRating.objects.filter(submission=submission).aggregate(Avg('rating'))['rating__avg'] if total_rating > 0 else 0.0
+				return render(request, 'nominate_app/nomination_review/new.html', {'submission': submission, 'average_rating': avg_rating, 'total_rating': total_rating})
