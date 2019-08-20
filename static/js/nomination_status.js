@@ -1,14 +1,23 @@
 $(document).ready(function(){
-
-  $.fn.editable.defaults.mode = 'inline';
-  $('.fa-edit').on('click', function(event){
-    event.stopPropagation()
+  $("#start_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
+  $("#end_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
+  $('.datepicker').attr('autocomplete',"off");
+  $('.nomination-instances').hide()
+  $(document).ajaxStop(function(){
+    window.location.reload();
   });
+  $(".show-nominations").on('click', function(){
+    $(this).parent().parent().next().toggle();
+  });
+  $.fn.editable.defaults.mode = 'inline';
+
   $('.enddate').click(function(e) {
     e.stopPropagation();
     $(this).editable('show');
   });
+  
   $('.enddate').on('shown', function(e, editable) {
+
     datetext = $(this).next().find('.datetext')
     $('.editable-submit').addClass('fa fa-check')
     $('.editable-cancel').addClass('fa fa-times')
@@ -26,13 +35,14 @@ $(document).ready(function(){
         },
         dataType: 'json',
         success: function (data) {
-          window.location.reload();
+          
         }
       });
     })
 
     $(this).next().find('.datetext')
     $(datetext).datepicker({ startDate: "today",  maxViewMode: 1, orientation: "bottom",});
+
     $(datetext).on('click', function(e){
       e.stopPropagation()
     })
@@ -41,6 +51,5 @@ $(document).ready(function(){
   $('.enddate').on('hidden', function(e, editable) {
     $(this).editable('destroy');
   });
-  $('#vacation').editable();
 
 });

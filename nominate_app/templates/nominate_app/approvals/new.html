@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+{% load staticfiles %}
+<script src="{% static 'js/award_creation.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
+<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}">
+</script>
+<script>
+$(document).ready(function(){
+	$('.submission-rating').starRating({
+   		starSize: 18,
+		readOnly: true,
+    	callback: function(currentRating, $el){
+        // make a server call here
+    	}
+	})
+})</script>
+<!-- header -->
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+  <h5>
+    <a href="{% url 'nominate_app:approval' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    {{ selected_nomination.award_name.capitalize }}
+  </h5>
+</div>
+
+<div class = "container" style="padding: 40px;">
+                   {{ selected_nomination.template_name.capitalize }}
+                   <div style="display: flex;">
+                        <div class="submission-rating  mr-1"  data-rating="{{ avg_rating }}"></div>
+                        <span>({{ avg_rating }})</span>
+                   </div>
+                    
+          
+    <br>
+        <div class="reviews" style="">
+            {% for rating in ratings %}
+                
+                <div class="rating_comment">
+                    <div class="rating_user">
+                        <div class="pull-left">Review</div>
+                        <div class=" pull-right">{{ rating|get_user:rating.user_id }}</div>
+                        <div class="clearfix"></div>
+                    </div>
+                        <div class="rating_review"> {{ rating.review }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        <form method = "POST" action="/approvals/{{ selected_nomination.id }}">
+            {% csrf_token %}
+            <div class="director-action" style="padding-top:2em">
+                    <div class="form-group" style="padding-left:1em">
+                                <input type="radio" name='selected_option' value="approved" />Approve
+                                <input type="radio" name='selected_option' value="dismissed" />Dismiss
+                                <input type="radio" name='selected_option' value="hold" checked/>Hold
+                        </div>
+                            
+                    
+                    
+                </div>
+                <div class="director-action">
+
+                        <textarea class="form-control" rows="5" name='comment' required></textarea>   
+                        
+                        <div class="row" >
+                            <div class="col-md-2 offset-5">
+                                <input id="submit_btn" type="submit" class="btn btn-lg btn-primary" value="Submit"/>
+                            </div>
+                                
+                        </div>
+                            
+                </div>
+            </form>    
+        </div>
+
+            
+
+<style>
+  #submit_btn{
+      margin-top:30px;
+  }
+  .was-validated .form-control:valid{
+    background-image: none;
+    border-color: #ced4da;
+  }
+  .submission-rating{
+      margin-left: 0px;
+      padding-left: 0px;
+  }
+  
+  .rating_comment{
+    padding: 10px 10px 10px 0px;
+    border-bottom: 1px solid rgba(110,110,110,0.3);
+  }
+  .rating_user {
+    color: grey;
+    font-size:16px;
+    padding:15px 0px;
+  }
+  .rating_review{
+    font-size:14px;
+    padding:10px 0px;
+  }
+  .jq-star-svg{
+      padding-left:0px;
+  }
+</style>
+{% endblock %}

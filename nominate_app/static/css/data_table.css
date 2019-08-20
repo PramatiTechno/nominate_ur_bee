@@ -1,0 +1,143 @@
+.page-content {
+  margin: 8px;
+}
+
+.header {
+  padding: 8px;
+  background-color: #1a3d6e;
+}
+
+.header h1 {
+  text-align: center;
+  color: white;
+}
+
+.instructions {
+  text-align: center;
+}
+
+table {
+  margin: 0 auto;
+  border-spacing: 0;
+  border-collapse: 0;
+  width: 100%
+}
+
+table thead th {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+table tr.selected {
+  background-color: #ddd;
+}
+
+table td {
+  padding: 8px;
+  border-top: 1px solid #ddd;
+}
+
+table td .edit {
+  cursor: pointer;
+}
+
+.material-icons.clear {
+  color: red;
+  font-weight: bold;
+}
+
+.material-icons.check {
+  color: green;
+  font-weight: bold;
+}
+
+.material-icons.edit {
+  color: DodgerBlue ;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 650px) {
+    table thead {
+    border: none;
+    height: 0px;
+    width: 0px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+  }
+  
+  table tr {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    display: block;
+    margin-bottom: 0.5em;
+  }
+  
+  table tr.selected {
+    background-color: white;
+    border-color: DodgerBlue;
+  }
+  
+  table td {
+    border-top: none;
+    border-bottom: 1px solid #ddd;
+    display: block;
+    text-align: right;
+    clear: both;
+  }
+  
+  table td.row-function {
+    display: inline;
+    border: none;
+    clear: none;
+  }
+  
+  table tr td:last-child {
+    border-bottom: none;
+  }
+  
+  table tr td.row-function:nth-child(1) {
+    float: left;
+  }
+  
+    table tr td.row-function:nth-child(2) {
+    float: right;
+  }
+  
+  table td.row-function::before {
+    content: none;
+  }
+  
+  table td::before {
+  /*
+  * aria-label has no advantage, it won't be read inside a table
+  content: attr(aria-label);
+  */
+  content: attr(data-label);
+  float: left;
+  font-weight: bold;
+  }
+}
+
+.form_det{
+    font-size: 24px;
+    display: inline;
+    color: #d22b2b;
+}
+
+.edit_fa{
+    font-size: 24px !important;
+    color: #2c54c5;
+    margin:0px 10px;
+    text-decoration: inline;
+}
+
+.add-icon{
+  border-radius: 110px;
+  background: #8a8a8a8f;
+  padding: 5px 8px;
+  font-size: 10px;
+  color: white;
+}
+}

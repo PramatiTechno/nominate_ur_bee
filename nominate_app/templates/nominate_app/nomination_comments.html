@@ -1,43 +1,28 @@
 
 {% block content %}
-	<span class = "instance_id_span" style="visibility: hidden">{{ instance.id }}</span>
-    {% for comment in instance.comments.all %}
-        <div class="comment row">
-            <div class="col-md-8">
-                <strong>{{ comment.author }}</strong>
+	<span class = "instance_id_span" style="display:none">{{ instance.id }}</span>
+    {% if comments.has_next %}
+    	<a class="more-comments" href="" value="{{ comments.next_page_number }}" style="padding: 0px 0px 20px 0px;display: block;">view more comments</a>
+    {% endif %}
+    {% for comment in comments %}
+        <div class="comment row" style="border-bottom:1px solid #e8e8e8;padding:10px 0px;">
+            <div class="col-md-10">
+                <span>{{ comment.author.first_name }} {{ comment.author.last_name }}</span>
                 <p>{{ comment.text|linebreaks }}</p>
             </div>
-            <div class="date col-md-4">
-                <h6 class="text-muted">{{ comment.created_date }}</h6>
+            <div class="date col-md-2">
+                <span class="text-muted" style="font-size:12px;">{{ comment.format_date }}</span>
                 {% if user == comment.author %}
-                    <a class="btn btn-default comment-delete" value="{{ comment.id }}" href=""><span class="glyphicon glyphicon-remove"></span>Delete</a>
+                    <a class="btn btn-default comment-delete" value="{{ comment.id }}" href=""><span class="glyphicon glyphicon-remove"></span><i class="fa fa-trash" style="color:red;"></i></a>
                 {% endif %}
             </div>
         </div>
-    {% empty %}
-        <p>No comments here yet :(</p>
     {% endfor %}
 {% endblock %}
 
 <script>
 
-$(document).on('click', '.comment-delete', function() {
-	var comment_section =$(this).parents('div.comment-section')
-	var instance_id = comment_section.find('span.instance_id_span').html()
-	var comment_id = $(this).attr('value')
-	$.ajax({
-	    type: "GET",
-	    url: instance_id + "/comment/"+ comment_id+ "/delete", 
-	    success : function(data) {
-	        console.log("success");
-	        comment_section.html(data)
-	    },
-	    error: function(response) {
-	        console.log("error",response)
-	    }
-	});
-	return false;
-});
+
 
 </script>
                     

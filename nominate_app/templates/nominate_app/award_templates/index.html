@@ -1,24 +1,69 @@
-{% extends 'base.html' %}
-{% block content %}
-{% load staticfiles %}
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+{% extends 'base.html' %} {% block content %} {% load staticfiles %}
 <script src="{% static 'js/award_index.js' %}"></script>
-<h1 align="center" class="text-info">Award Templates</h1>
-<div class="container">
-<div class="form-group">
-  <div class = "row award_top_margin">
-    <div class="col-sm-12">
-      <div style="position: relative; top: 50">
-        <div style="position: absolute; top: -40; right: 5;"><a href="{% url 'nominate_app:new_template' award.id %}" type="button" id="create_link" class="btn btn-success float-sm-right" value="Create New Template" >Create New Template</a></div>
-      </div>
+<link rel="stylesheet" href="{% static 'css/data_table.css' %}">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+    .dropdown-menu-awards {
+        width: 100%;
+        left: 5px;
+    }
+    
+    .btn-outline-secondary {
+        text-align: left;
+        border-radius: 0px;
+        box-shadow: 0px 5px 10px #00000036;
+        border: 0px;
+    }
+    
+    .btn-outline-secondary:focus,
+    .btn-outline-secondary:hover {
+        background: #afbcc7 !important;
+    }
+    
+    #caret_icon_container {
+        text-align: right;
+        font-size: 20px;
+    }
+</style>
+
+<!-- header -->
+<div class="container" style="padding-left:0px !important;padding-right:0px !important;">
+    <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+        {% if award.id %}
+        <h5>Award Templates <a href="{% url 'nominate_app:new_template' award.id %}" class="pull-right"><i class="fa fa-plus add-icon"></i></a></h5>
+        {% else %}
+        <h5>Award Templates <a class="pull-right"><i class="fa fa-plus add-icon"></i></a></h5>
+        {% endif %}
     </div>
-  </div>
 </div>
 
-<div id="templates" style="position: relative; top: 50 ">
-  <form method = "POST">
+
+<div class="dropdown">
+    {% for form in forms %} {% if forloop.counter == 1 %}
+    <button class="btn-outline-secondary form-control" type="button" data-toggle="dropdown">
+        <div class="row" style="margin:0px;">
+            <div class="col-sm-11" id="award_name_container">
+                {{ award.name.capitalize }}
+            </div>
+            <div class="col-sm-1" id="caret_icon_container">
+                <i class="fa fa-one-half fa-chevron-down" style="vertical-align: top" ></i>
+            </div>
+        </div>
+      </button>
+
+    <div class="dropdown-menu dropdown-menu-awards">
+
+        {% endif %} {% if form.name == award.name %}
+        <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:award_templates_index' award_id=form.id %}" value='{{ form.id }}'>{{ form.name|title }}</a> {% else %}
+        <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}" href="{% url 'nominate_app:award_templates_index' award_id=form.id %}" value='{{ form.id }}'>{{ form.name|title }}</a> {% endif %} {% empty %}
+        <a class="dropdown-item">No Awards Found</a> {% endfor %}
+
+    </div>
+</div>
+
+<!-- <form method = "POST">
     {% csrf_token %}
-    <select type="selection" class="mySelect btn btn-info" id = "award" onchange="location = this.value;" style="text-align-last: center; text-align: center;">
+    <select type="selection" class="mySelect form-control" id = "award" onchange="location = this.value;" style="">
       {% for form in forms %}
             <option value={% url 'nominate_app:award_templates_index' award_id=form.id %} {% if award.id == form.id %}selected{% endif %}>
         {{ form.name }}
@@ -27,46 +72,47 @@
       <option> No Awards Found </option>
       {% endfor %}
     </select>
-  </form>
-</div>
+  </form> -->
 
-<div id="accordion" style="position: relative; top: 100">
-  <div class="card">
-    <div class="card-header" data-toggle="collapse" href="#collapseThree">
-      <a class="collapsed card-link" >
-      Award Templates
-      </a>
-    </div>
-    <div id="collapseThree" class="collapse show" data-parent="#accordion">
-      <div class="card-body">
-        <div class="container">
-            <table class="table table-borderless" id="templates_table">
-              <tbody>
 
-                {% for lt in load_templates %}
-                <tr class="d-flex">
-                  <td class="col-9" style="padding-bottom: 6px; padding-top: 0;"> {{ lt.template_name }} </td>
-                  <td class="col-1" style="padding-bottom: 6px; padding-top: 0;"><a href="{% url 'nominate_app:award_template' award.id lt.id %}" type="button" class="btn btn-success" value = "View">View</a></td>
-                  <td class="col-1" style="padding-bottom: 6px; padding-top: 0;"><a href="{% url 'nominate_app:edit_award_template' award.id lt.id %}" type="button" class="btn btn-info" value = "View">Edit</a></td>
-                  <td class="col-1" style="padding-bottom: 6px; padding-top: 0;">
 
-                    <form action="{% url 'nominate_app:award_template' award.id lt.id %}" method="POST">
-                        {% csrf_token %} 
-                      <input type="hidden" name="_method" value="delete">
-                      <input type="submit" class="btn btn-danger" value="Delete">
-                  </form>
+<div class="page-content">
+    <table>
+        <thead>
+            <tr>
+                <th scope='col'></th>
+                <th scope="col">Name</th>
+                <th scope="col">Created at</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for template in load_templates %}
+            <tr data-rowId={{form.id}}>
+                <td scope="row" data-label="Select" class="row-function row-selection" onclick="handleSelectCellClick(event);"><input type="checkbox" onclick="checkboxClick(event);" /></td>
+
+                <td scope="row" data-label="Name"><a href="{% url 'nominate_app:award_template' award.id template.id %}">{{template.template_name}}</a></td>
+
+                <td scope="row" data-label="Created at">{{template.created_at|date:'d-m-Y'}}</td>
+
+                <td scope="row" data-label="Actions">
+                    <a href="{% url 'nominate_app:edit_award_template' award.id template.id %}"><i class="fa fa-edit edit_fa"></i></a>
+
+                    <form action="{% url 'nominate_app:award_template' award.id template.id %}" method="post" id="form_{{form.id}}" class="form_det">
+                        {% csrf_token%}
+                        <input type="hidden" name="_method" value="delete">
+                        <i class="fa fa-trash" type="submit" value="Delete" onclick='$("#form_{{form.id}}").submit()'></i>
+                    </form>
                 </td>
-                </tr>
-                {% empty %}
-                <tr class="d-flex">
-                  <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> No Templates Found For Selected Award </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-        </div>
-      </div>
-    </div>
-  </div>
+
+            </tr>
+            {% empty %}
+            <tr class="d-flex">
+                <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> No Awards Found </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
+
 {% endblock %}

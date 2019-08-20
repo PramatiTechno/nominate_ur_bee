@@ -26,14 +26,21 @@ class AwardsActiveForm(forms.ModelForm):
 
 
 class NominationFilterForm(forms.Form):
-    AWARD_CHOICES = [('ALL', 'ALL'), ] + [(award.id, award.name) for award in Awards.objects.all()]
-    AWARD_TEMPLATE_CHOICES = [(template.id, template.template_name) for template in AwardTemplate.objects.all()]
-    AWARD_TEMPLATE_CHOICES.insert(0, ('ALL', 'ALL'))
     SORT_CHOICES = [('latest', 'Latest'), ('oldest', 'Oldest')]
 
-    Awards = forms.ChoiceField(choices=AWARD_CHOICES, widget=forms.Select(attrs={'onchange':'get_templates();'}))
-    Templates = forms.ChoiceField(choices=AWARD_TEMPLATE_CHOICES)
-    Sort = forms.ChoiceField(choices=SORT_CHOICES)
+    Awards = forms.ChoiceField(widget=forms.Select(attrs={'onchange':'get_templates();','class': "mySelect btn btn-info"}))
+    Templates = forms.ChoiceField(widget=forms.Select(attrs={'class': "mySelect btn btn-info"}))
+    Sort = forms.ChoiceField(choices=SORT_CHOICES, widget=forms.Select(attrs={'class': "mySelect btn btn-info"}))
+    from_ = forms.CharField(label='From', widget=forms.TextInput(attrs={'class': "form-control datepicker", 'id': "start_date", 'name': "start_date"}))
+    to = forms.CharField(label='To', widget=forms.TextInput(attrs={'class': "form-control datepicker", 'id': "end_date", 'name': "end_date"}))
+
+    def __init__(self, *args, **kwargs):
+      super(NominationFilterForm, self).__init__(*args, **kwargs)
+      self.fields['from_'].required = False
+      self.fields['to'].required = False
+      self.fields['Awards'].choices = [('ALL', 'ALL'), ] + [(award, award) for award in NominationSubmitted.objects.values_list('award_name', flat=True).distinct()]
+      self.fields['Templates'].choices = [('ALL', 'ALL'), ] + [(template, template) for template in NominationSubmitted.objects.values_list('template_name', flat=True).distinct()]
+
 
 class CommentForm(forms.ModelForm):
 

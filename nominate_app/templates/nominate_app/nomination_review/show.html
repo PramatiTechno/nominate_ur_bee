@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
+<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}"></script>
+
+<script>
+$(document).ready(function(){
+	$('.submission-rating').starRating({
+   		starSize: 18,
+		readOnly: true,
+    	callback: function(currentRating, $el){
+        // make a server call here
+    	}
+	})
+})
+
+</script>
+
+<div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
+  <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+  		<a href="{% url 'nominate_app:nomination_review_index' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+        <h5>Nomination Review</h5>
+  </div>
+</div>
+
+
+<div class="container p-4">
+	<div class="card">
+
+		<div class="card-header">
+			<div class="row">
+				<div class="col-md-6">
+					<strong> {{submission.award_name}} / {{ submission.template_name }} </strong>
+				</div>
+				<div class="col-md-6">
+					<p class="pull-right text-muted">{{ submission.email}}</p>
+				</div>
+			</div>
+		</div>
+
+  	<div class="card-body">
+			{% for qa in submission.questions.values %}
+				<p>question: {{ qa.question }} </p>
+				<p>answer: {{ qa.answer }} </p>
+			{% endfor %}  		
+  	</div>
+
+  	<div class="card-footer">
+  		<div class="row">
+  			<div class="col-md-4">
+  				<div class="row">
+  					{{ average_rating }}<div class="submission-rating ml-1 mr-1" data-rating="{{ average_rating }}"></div>  ({{total_rating}} votes)
+				</div>
+				your rating : {{ rating }}
+   			</div>
+  			<div class="col-md-8">
+  				<div class="row">
+  					<div class="col-md-2">review </div>
+  					<textarea class="col-md-10 review" rows='1' readonly>{{review}}</textarea>
+				</div>
+			</div>
+		</div>
+  	</div>
+
+	</div>
+</div>
+
+
+{% endblock %}

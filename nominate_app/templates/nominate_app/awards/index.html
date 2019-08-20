@@ -1,49 +1,122 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block content %}
+
+
+<link rel="stylesheet" href="{% static 'css/data_table.css' %}">
+
+<script>
+var rows = document.querySelectorAll("[data-rowid]");
+var selectInputCellWrappers = document.getElementsByClassName('row-selection');
+
+function getInputsOfType(inputsArray, type) {
+  return Array.prototype.filter.call(inputsArray, function(input) {
+    return input.type.toLowerCase() === type.toLowerCase();
+  });
+}
+
+var selectInputs = Array.prototype.map.call(rows, function(row) {
+  return getInputsOfType(row.getElementsByTagName('input'), 'checkbox')[0];
+});
+
+function getSelectedRowId(child) {
+  var tableRows = document.getElementsByTagName('TR');
+  var selectedRow = Array.prototype.filter.call(tableRows, function(tableRow) {
+    return tableRow.contains(child);
+  })[0];
+  
+  return selectedRow.dataset.rowid;
+}
+
+function handleSelectCellClick(event) {
+  var selectedRowId;
+  
+  if (event.target.tagName.toLowerCase() === "input") {
+    selectedRowId = getSelectedRowId(Array.prototype.filter.call(selectInputCellWrappers, function(cell) {
+      return cell.contains(event.target);
+    })[0]);
+  } else {
+    selectedRowId = getSelectedRowId(event.target);
+  }
+  
+  var selectedRow = document.querySelectorAll("[data-rowid='" + selectedRowId + "']")[0];
+  var selectedRowCheckbox = getInputsOfType(selectedRow.getElementsByTagName('input'), 'checkbox')[0];
+  
+  if (event.target.checked == undefined) {
+    
+    if (selectedRowCheckbox.checked === true) {
+      selectedRowCheckbox.checked = false;
+      selectedRow.classList.remove('selected');
+    } else {
+      console.log("select");
+      selectedRowCheckbox.checked = true;
+      selectedRow.classList.add('selected');
+    }
+  } else {
+    if (event.target.checked) {
+      selectedRow.classList.add('selected');
+    } else {
+      selectedRow.classList.remove('selected');
+    }
+  }
+}
+
+
+// Prevent the checkbox from preforming its on check, we will control this.
+function checkboxClick(event) {
+  // event.preventDefault();
+  return false;
+}
+
+</script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<h1 align="center" class="text-info">Awards</h1>
-<div class="container">
-<div class="form-group">
-  <div class = "row award_top_margin">
-    <div class="col-sm-12">
-      <input input onclick="location.href='{% url 'nominate_app:new_award' %}'" type="button" class="btn btn-success float-sm-right" value = "Create New Award">
-    </div>
+
+<div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
+  <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+        <h5>Award <a href="{% url 'nominate_app:new_award'%}" class="pull-right"><i class="fa fa-plus add-icon"></i></a></h5>
   </div>
 </div>
-<div id="accordion">
-  <div class="card">
-    <div class="card-header" data-toggle="collapse" href="#collapseThree">
-      <a class="collapsed card-link" >
-      Awards
-      </a>
-    </div>
-    <div id="collapseThree" class="collapse show" data-parent="#accordion">
-      <div class="card-body">
-        <div class="container">
-            <table class="table table-borderless">
-              <tbody>
-                {% for form in forms %}
-                  <tr class="d-flex">
-                    <td class="col-9" style="padding-bottom: 6px; padding-top: 0;"> {{ form.name }} </td>
-                    <td class="col-1" style="padding-bottom: 6px; padding-top: 0;"><input onclick="location.href='{% url 'nominate_app:award' form.id %}'" type="button" class="btn btn-success" value = "View"></td>
-                    <td class="col-1" style="padding-bottom: 6px; padding-top: 0;"><input onclick="location.href='{% url 'nominate_app:edit_award' form.id %}'" type="button" class="btn btn-info" value = "Edit"></td>
-                    <td class="col-1" style="padding-bottom: 6px; padding-top: 0;">
-                    <form action="{% url 'nominate_app:award' form.id %}" method="post">
-                      {% csrf_token%}
-                      <input type="hidden" name="_method" value="delete">
-                      <input type="submit" class="btn btn-danger" value="Delete">
-                    </form>
-                  </tr>
-                {% empty %}
-                  <tr class="d-flex">
-                    <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> No Awards Found </td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-        </div>
-      </div>
-    </div>
-  </div>
+
+<div class="page-content">
+<table>
+  <thead>
+    <tr>
+      <th scope='col'></th>
+      <th scope="col">Name</th>
+      <th scope="col">Number of Templates</th>
+      <th scope="col">Status</th>
+      <th scope="col">Created at</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for form in forms %}
+    <tr data-rowId={{form.id}}>
+      <td scope="row" data-label="Select" class="row-function row-selection" onclick="handleSelectCellClick(event);"><input type="checkbox" onclick="checkboxClick(event);"/></td>
+      <td scope="row" data-label="Name"><a href="{% url 'nominate_app:award' form.id %}">{{form.name}}</a></td>
+      <td scope="row" data-label="Templates"><a href="{% url 'nominate_app:award_templates_index' form.id%}">{{form.awardtemplate_set.count}}</a></td>
+      <td scope="row" data-label="Status">{{form.is_active}}</td>
+      <td scope="row" data-label="Created at">{{form.created_at|date:'d-m-Y'}}</td>
+      <td scope="row" data-label="Actions">
+        <a href="{% url 'nominate_app:edit_award' form.id %}"><i class="fa fa-edit edit_fa"></i></a>      
+        <form action="{% url 'nominate_app:award' form.id %}" method="post" id="form_{{form.id}}" class="form_det">
+          {% csrf_token%}
+          <input type="hidden" name="_method" value="delete">
+          <i class="fa fa-trash" type="submit" value="Delete" onclick='$("#form_{{form.id}}").submit()'></i>
+        </form>
+      </td>
+      </tr>
+      {% empty %}
+        <tr class="d-flex">
+          <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> No Awards Found </td>
+        </tr>
+      {% endfor %}
+  </tbody>
+</table>
 </div>
 {% endblock %}
+
+
+
+
+

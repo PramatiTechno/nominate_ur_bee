@@ -45,6 +45,7 @@ class UserProfile(models.Model):
   def get_group_name(self):
     return self.user.groups.all()[0].name.lower()
 
+
 class Awards(models.Model):
   choice_type = (
       ('MONTHLY', 'Monthly'),
@@ -132,7 +133,7 @@ class Questions(SafeDeleteModel):
 
 class Nomination(models.Model):
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
-  group = models.ForeignKey(Group, on_delete=models.CASCADE)
+  group = models.ForeignKey(Group ,on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
@@ -140,6 +141,55 @@ class Nomination(models.Model):
 
   class Meta:
     db_table='nominations'  
+
+class DirectorComments(models.Model):
+  class Meta:
+    db_table='director_comment'
+  comment = models.CharField(max_length=200, null=False)
+  nomination_submitted = models.ForeignKey('NominationSubmitted', on_delete=models.CASCADE, related_name='director_comment')
+  submitted_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='director_comment')
+
+class NominationSubmitted(models.Model):
+  class Meta:
+    db_table='nomination_submitted'
+  statuses = (
+    ("Submitted", 0),
+    ("Reviewed", 1),
+    ("Approved", 2),
+    ("Dismissed", 3),
+    ("On hold", 4),
+    )
+  nomination = models.ForeignKey('Nomination', related_name='submissions', on_delete=models.SET_NULL, blank=True, null=True,)
+  status = models.IntegerField(null=False, blank=False,choices=statuses,default=0)
+  submitted_at = models.DateTimeField(auto_now_add=True, null=False, blank=False) 
+  email = models.CharField(max_length=50, null=False, blank=False)
+  firstname = models.CharField(max_length=30, null=False, blank=False)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE, null=False, blank=False)
+  designation = models.CharField(max_length=30, null=False, default="")
+  lastname = models.CharField(max_length=30, null=False, blank=False)
+  award_name = models.CharField(max_length=30, null=False, blank=False)
+  worklocation = models.CharField(max_length=30, null=False, blank=False, default="")
+  baselocation = models.CharField(max_length=30, null=False, blank=False, default="")
+  template_name = models.CharField(max_length=150, null=False, blank=False)
+
+  def get_status(self, status_code):
+    for status in self.statuses:
+      if status[1] == status_code:
+        return status[0]
+
+class QuestionAnswers(models.Model):
+  class Meta:
+    db_table='question_answers'
+  nomination_submitted = models.ForeignKey(NominationSubmitted, on_delete=models.CASCADE, related_name='questions')
+  question = models.CharField(max_length=100, null=False, blank=False)
+  answer = models.CharField(max_length=500, null=True, blank=True)
+  def get_status(self, status_code):
+    for status in self.statuses:
+      if status[1] == status_code:
+        return status[0]
+
+
 
 class NominationInstance(models.Model):
   statuses =( 
@@ -151,7 +201,7 @@ class NominationInstance(models.Model):
     ("Dismissed",5),
     ("On hold",6)
   )
-  nomination = models.ForeignKey(Nomination, on_delete=models.CASCADE)
+  nomination = models.ForeignKey(Nomination, on_delete=models.CASCADE, default=None)
   status = models.IntegerField(null=False, blank=False,choices=statuses,default=0)
   result = models.CharField(max_length=50, null=True, blank=True)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -164,6 +214,9 @@ class NominationInstance(models.Model):
     for status in self.statuses:
       if status[1] == status_code:
         return status[0]
+
+  def get_submitted_at_date(self):
+        return self.submitted_at.strftime('%b %d, %Y')
 
 class NominationAnswers(models.Model):
   UPLOAD_TO = 'answers/images'
@@ -183,7 +236,7 @@ class NominationAnswers(models.Model):
     db_table='nomination_answers'
 
 class Comment(models.Model):
-    nomination = models.ForeignKey('NominationInstance', on_delete=models.CASCADE, related_name='comments')
+    submission = models.ForeignKey('NominationSubmitted', on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
@@ -191,6 +244,12 @@ class Comment(models.Model):
 
     class Meta:
         db_table='nomination_comments'
+    
+    def format_date(self):
+        if (self.created_date.date() == datetime.today().date()):
+          return self.created_date.strftime("%I:%M %p")
+        else:
+          return self.created_date.strftime('%b %d, %Y')
 
     def approve(self):
         self.approved_comment = True
@@ -200,11 +259,27 @@ class Comment(models.Model):
         return self.text 
 
 class Like(models.Model):
-  nomination = models.ForeignKey('NominationInstance', on_delete=models.CASCADE, related_name='likes')
+  submission = models.ForeignKey('NominationSubmitted', on_delete=models.CASCADE, related_name='likes')
   voter = models.ForeignKey(User, on_delete=models.CASCADE)
   created_date = models.DateTimeField(default=timezone.now)
 
   class Meta:
     db_table='nomination_likes'
 
+class NominationRating(models.Model):
+  ratings = (
+    ("null", 0),
+    ("one", 1),
+    ("two", 2),
+    ("three", 3),
+    ("four", 4),
+    ("five", 5),
+    )
+  submission = models.ForeignKey('NominationSubmitted', on_delete=models.CASCADE, related_name='ratings')
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  rating = models.IntegerField(null=False, blank=False,choices=ratings,default=0)
+  review = models.TextField()
+  reviewed_at = models.DateTimeField(default=timezone.now)
 
+  class Meta:
+    db_table='nomination_rating'

@@ -5,17 +5,27 @@
 {% block content %}
 
 {% load staticfiles %}
+<style>
+.row{
+    margin-right: 0px;
+}
+.container-fluid{
+  padding-right: 0px;
+}
+</style>
 <script src="{% static 'js/award_templates.js' %}"></script>
-<div class = "container">
+<div class = "container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
+    <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+        <h5>
+          <a href="{% url 'nominate_app:nominations'  %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+          {{ nomination_template.template_name.capitalize }}
+
+        </h5>
+      </div>
   <div class="form-group">
     <form method="post"  enctype="multipart/form-data" action="/nominations/{{nomination.id}}/nomination_instances/">
       {% csrf_token %}
-      <input type="hidden" name="nomination_instance" class="form-control" placeholder="" value="{{ nomination_instance.id}}" required />
-      <div class = "row award_top_margin">
-        <div class="col-sm-8">    
-          {{ nomination_template.template_name }}
-        </div>
-      </div> 
+      <input type="hidden" name="nomination_instance" class="form-control" placeholder="" value="{{ nomination_instance.id }}" required />
       <br>
       {% for question in questions %}
       <div class="form">
@@ -30,9 +40,14 @@
               {% else %}
               <input type="text" name="{{ question.id}}_answer" class="form-control" placeholder="" value="" required />
               {% endif %}
-            {% else %}
-              <input type="radio" value="yes" name="{{question.id}}_answer_option" checked> Yes   
-              <input type="radio" value="no" name="{{question.id}}_answer_option"> No
+            {% elif question.qtype == 'OBJECTIVE' %}
+              {% for option in question.options %}
+              <input type="radio" value="{{ option }}" name="{{question.id}}_answer_option"> {{ option }}
+              {% endfor %}
+            {% elif question.qtype == 'MULTIPLE-CHOICE' %}
+              {% for option in question.options %}
+                <input type="checkbox" value="{{ option }}" name="{{question.id}}_answer_option"> {{ option }}
+              {% endfor %}
             {% endif %}
           </div>
           {% if question.attachment_need %}
