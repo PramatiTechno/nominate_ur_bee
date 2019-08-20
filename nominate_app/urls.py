@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin  
 from django.urls import path  
-from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances, graphs, nomination_review, approvals
+from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances, graphs, nomination_review, approvals, results
 from django.conf import settings 
 from django.conf.urls.static import static
 from django.urls import path, include
@@ -61,6 +61,7 @@ urlpatterns = [
   path('nomination_review/', nomination_review.index, name='nomination_review_index'),
   path('nomination_review/<int:nomination_submitted_id>', nomination_review.nomination_rating.as_view(), name='nomination_review_rating'),
 
+  path('results/', results.index, name='results'),
 ]
 
 if settings.DEBUG:
