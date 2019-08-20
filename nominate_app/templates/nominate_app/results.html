@@ -42,10 +42,10 @@ $(function(){
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-4 offset-4">
+		<div class="col-md-4 offset-8">
 			<form id = "date-form" action="/results/" method="GET">
 				<label for="datepicker"> Date </label>
-				<input type="text" id="datepicker" name="date">
+				<input type="text" id="datepicker" name="date" value="{{ date }}" required>
 				<button class="submit btn btn-primary btn-sm"> Filter </button>
 			</form>
 		</div>
@@ -69,11 +69,13 @@ $(function(){
 		            </div>
 		            
 					<div class="text">
-						<span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+						<span>Director: {{ submission.comment }}</span>
 					</div>
 		            		            
 				 </div>
 			</div>
+			{% empty %}
+				<p class="p-2">No Results Found</p>
 			{% endfor %}
 
 		</div>
