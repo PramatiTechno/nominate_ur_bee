@@ -226,7 +226,7 @@
             <div class="row">
                 <div class="col-sm-11" id="award_name_container">
                     {% if selected_status == 'reviewed' %} To be Approved {% endif %}
-                    {% if selected_status == 'approved' %} History {% endif %}
+                    {% if selected_status == 'history' %} History {% endif %}
                 </div>
                 <div class="col-sm-1" id="caret_icon_container">
                     <i class="fa fa-one-half fa-chevron-down" style="vertical-align: top" ></i>
@@ -237,11 +237,11 @@
             {% endif %} {% if status.lower == selected_status %}
             <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:approval' %}?status={{status.lower}}">
                     {% if status == 'reviewed' %} To be Approved {% endif %}
-                    {% if status == 'approved' %} History {% endif %}
+                    {% if status == 'history' %} History {% endif %}
             </a> {% else %}
             <a class="dropdown-item" href="{% url 'nominate_app:approval' %}?status={{status.lower}}" id="dropdown-item{{ forloop.counter }}">
                 {% if status == 'reviewed' %} To be Approved {% endif %}
-                    {% if status == 'approved' %} History {% endif %}
+                    {% if status == 'history' %} History {% endif %}
             </a> {% endif %} {% endfor %}
         </div>
 
@@ -253,6 +253,10 @@
                     <th scope="col">Award Name</th>
                     <th scope="col">Template Name</th>
                     <th scope="col">Email</th>
+                    {% if selected_status == 'history' %}
+                        <th scope="col">Submitted At</th>
+                        <th scope="col">Status</th>
+                    {% endif %}
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
@@ -263,9 +267,15 @@
                     <td scope="row" data-label="Award Name">{{submission.award_name}}</td>
                     <td scope="row" data-label="Template Name">{{submission.template_name}}</td>
                     <td scope="row" data-label="Email">{{submission.email}}</td>
+                    {% if selected_status == 'history' %}
+                        <td scope="row" data-label="Submitted At">{{ submission.director_comment.first.submitted_at.date }}</td>
+                        <td scope="row" data-label="Status">{{ submission|get_status:submission.status }}</td>
+                    {% endif %}
                     <td scope="row" data-label="Action">
                             {% if selected_status.lower == "reviewed" %}
                             <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}'" type="button" class="btn btn-success" value = "Approve">
+                            {% else %}
+                            <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}?page=show'" type="button" class="btn btn-success" value = "View">
                             {% endif %}
                     </td>
                 </tr>
