@@ -13,8 +13,8 @@
       {% endif %}
       <a href="{% url 'nominate_app:nomination_feed' %}" class="nav-link leftsidebar {% if request.path == "/nomination_feed/" %}active{% endif %}">Nominations</a>
       {% if user.userprofile.get_group_name == "directorial board member" %}
-            <a href="{% url 'nominate_app:approval' %}" class="nav-link leftsidebar {% if request.path == " /approvals/ " %}active{% endif %}">Approvals</a> {% endif %}
-      <a href="{% url 'nominate_app:results' %}" class="nav-link leftsidebar {% if request.path == "/results/" %}active{% endif %}">Results</a>
+            <a href="{% url 'nominate_app:approval' %}" class="nav-link leftsidebar {% if  "/approvals/" in request.path %}active{% endif %}">Approvals</a> {% endif %}
+      <a href="#result" class="nav-link leftsidebar" data-toggle="tab">Results</a>
       <a href="{% url 'nominate_app:graphs' %}" class="nav-link leftsidebar {% if request.path == "/graphs/" %}active{% endif %}" >Graph</a>
 
       {% if user.userprofile.get_group_name == "technical jury member" %} 
