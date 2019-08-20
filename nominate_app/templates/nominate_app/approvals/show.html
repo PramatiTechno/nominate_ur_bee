@@ -25,15 +25,15 @@ $(document).ready(function(){
 </div>
 
 <div class = "container" style="padding: 40px;">
-                   {{ selected_nomination.template_name.capitalize }}
+                    <div class="title">
+                            {{ selected_nomination.template_name.capitalize }}
+                    </div>
+                   
                    <div style="display: flex;">
                         <div class="submission-rating  mr-1"  data-rating="{{ avg_rating }}"></div>
                         <span>({{ avg_rating }})</span>
                    </div>
-                    
-          
-    <br>
-        <div class="reviews" style="">
+        <div class="reviews" >
             {% for rating in ratings %}
                 
                 <div class="rating_comment">
@@ -49,32 +49,27 @@ $(document).ready(function(){
         <form method = "POST" action="/approvals/{{ selected_nomination.id }}">
             {% csrf_token %}
             <div class="director-action" style="padding-top:2em">
-                    <div class="form-group" style="padding-left:1em">
-                                <input type="radio" name='selected_option' value="approved" />Approve
-                                <input type="radio" name='selected_option' value="dismissed" />Dismiss
+                    <div class="form-group">
+                            {% if status.lower == 'approved' %}
+                                <input type="radio" name='selected_option' value="approved" checked/>Approve
+                                <input type="radio" name='selected_option' value="dismissed" disabled/>Dismiss
+                                <input type="radio" name='selected_option' value="hold" disabled/>Hold
+                            {% elif status.lower == 'dismissed' %}
+                            <input type="radio" name='selected_option' value="approved" disabled/>Approve
+                                <input type="radio" name='selected_option' value="dismissed" checked/>Dismiss
+                                <input type="radio" name='selected_option' value="hold" disabled/>Hold
+                            {% else %}
+                                <input type="radio" name='selected_option' value="approved" disabled/>Approve
+                                <input type="radio" name='selected_option' value="dismissed" disabled/>Dismiss
                                 <input type="radio" name='selected_option' value="hold" checked/>Hold
-                        </div>
-                            
-                    
-                    
+                            {% endif %}            
+                    </div>
                 </div>
                 <div class="director-action">
-
-                        <textarea class="form-control" rows="5" name='comment' required></textarea>   
-                        
-                        <div class="row" >
-                            <div class="col-md-2 offset-5">
-                                <input id="submit_btn" type="submit" class="btn btn-lg btn-primary" value="Submit"/>
-                            </div>
-                                
-                        </div>
-                            
+                        <textarea class="form-control" rows="5" name='comment' disabled>{{ comment }}</textarea>                 
                 </div>
             </form>    
         </div>
-
-            
-
 <style>
   #submit_btn{
       margin-top:30px;
@@ -87,7 +82,9 @@ $(document).ready(function(){
       margin-left: 0px;
       padding-left: 0px;
   }
-  
+  .title{
+      font-size: 1.5em
+  }
   .rating_comment{
     padding: 10px 10px 10px 0px;
     border-bottom: 1px solid rgba(110,110,110,0.3);

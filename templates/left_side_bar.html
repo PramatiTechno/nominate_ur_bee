@@ -15,6 +15,7 @@
       {% if user.userprofile.get_group_name == "directorial board member" %}
             <a href="{% url 'nominate_app:approval' %}" class="nav-link leftsidebar {% if request.path == " /approvals/ " %}active{% endif %}">Approvals</a> {% endif %}
             
+
       {% if user.userprofile.get_group_name == "technical jury member" %} 
         <a href="{% url 'nominate_app:nomination_review_index' %}" class="nav-link leftsidebar {% if request.path == "/nomination_review/" %}active{% endif %}" >Review</a>
       {% endif %} 
