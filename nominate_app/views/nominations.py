@@ -26,7 +26,7 @@ def change_date(request, nomination_id):
   nomination.save()
   return redirect('nominate_app:nomination_status') 
 
-@group_required(['Directorial Board Member', 'Technical Jury Member', 'Manager'], raise_exception=True)
+@group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def index(request):
   
   current_user = User.objects.get(id=request.user.id)
