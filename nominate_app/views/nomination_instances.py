@@ -155,23 +155,41 @@ def edit(request,nomination_id,nomination_instance_id):
   for key in edit_new_form.keys():
     if key.endswith('answer'):
       new_form.pop(key)
-  answers = {}
+  qanswers = []
   for question in questions:
     try:
-      answer_text = question.nominationanswers_set.get(submitted_by=request.user.id).answer_text
+      answer = question.nominationanswers_set.get(submitted_by=request.user.id)
+      answer_text = answer.answer_text
+      attachment_path = str(answer.attachment_path)
       if question.qtype == "SUBJECTIVE":
-        answers[question.id] = answer_text
+        qanswers.append({
+          'question': question,
+          'answer_text': answer_text,
+          'attachment_path': attachment_path
+        })
       else:
-        answers[question.id] = json.loads(answer_text)
+         qanswers.append({
+          'question': question,
+          'answer_text': json.loads(answer_text),
+          'attachment_path': attachment_path
+        })
     except:
-      answers[question.id] = []
+      qanswers.append({
+        'question': question
+      })
       
 
-  return render(request, 'nominate_app/nomination_instances/edit.html', {'answers_form':answers_form,'nomination':nomination,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'questions':questions, 'answers': answers })
+  return render(request, 'nominate_app/nomination_instances/edit.html', {'answers_form':answers_form,'nomination':nomination,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'qanswers': qanswers })
 
 def submitted_nomination(request, nomination_submitted_id):
   qa = QuestionAnswers.objects.filter(nomination_submitted_id=nomination_submitted_id)
-  return render(request, 'nominate_app/nomination_instances/show.html', {'question_answerset':qa, 'nomination_submitted':NominationSubmitted.objects.get(id=nomination_submitted_id)})
+  qa_set = []
+  for question in qa:
+    qa_set.append({
+      'qa': question,
+      'attachment_path': str(question.attachment_path)
+    })
+  return render(request, 'nominate_app/nomination_instances/show.html', {'question_answerset':qa_set, 'nomination_submitted':NominationSubmitted.objects.get(id=nomination_submitted_id)})
 
 def nomination_instance(request,nomination_id,nomination_instance_id):
   answers_form = NominationAnswersForm(instance=NominationAnswers())

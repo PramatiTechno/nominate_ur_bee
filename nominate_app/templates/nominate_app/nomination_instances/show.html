@@ -19,19 +19,19 @@
   <div class="form-group">
       {% csrf_token %}
       <br>
-      {% for qa in question_answerset %}
+      {% for question in question_answerset %}
       <div class="form">
         <div class = "row award_top_margin ">
           <div class="col-sm-2">
-            <label class="col-form-label" for='{{qa.question}}' >{{qa.question}}</label>
+            <label class="col-form-label" for='{{question.qa.question}}' >{{question.qa.question}}</label>
           </div>
           <div class="col-sm-4">
-            {% if qa.answer %}   
-              <input type="text" name="answer_text" class="form-control" placeholder="" value="{{qa.answer}}" disabled />
+            {% if question.qa.answer %}   
+              <input type="text" name="answer_text" class="form-control" placeholder="" value="{{question.qa.answer}}" disabled />
             {% else %}
             {% endif %}
-            {% if answer.attachment_path %}   
-              <img src="{{answer.attachment_path.url}}" alt="answer option" height="310" width="310" />
+            {% if question.attachment_path %}   
+              <img src="{{ question.attachment_path }}" alt="answer option" height="310" width="310" />
             {% endif %}
           </div>
 
