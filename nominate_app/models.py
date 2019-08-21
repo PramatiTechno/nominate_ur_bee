@@ -179,11 +179,13 @@ class NominationSubmitted(models.Model):
         return status[0]
 
 class QuestionAnswers(models.Model):
+  UPLOAD_TO = 'answers/images'
   class Meta:
     db_table='question_answers'
   nomination_submitted = models.ForeignKey(NominationSubmitted, on_delete=models.CASCADE, related_name='questions')
   question = models.CharField(max_length=100, null=False, blank=False)
   answer = models.CharField(max_length=500, null=True, blank=True)
+  attachment_path = models.FileField(max_length=500, null=True, blank=True, upload_to = UPLOAD_TO)
   def get_status(self, status_code):
     for status in self.statuses:
       if status[1] == status_code:
@@ -220,7 +222,7 @@ class NominationInstance(models.Model):
 
 class NominationAnswers(models.Model):
   UPLOAD_TO = 'answers/images'
-  nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE)
+  nomination_instance = models.ForeignKey(NominationInstance, on_delete=models.CASCADE, related_name='answers')
   award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
   question = models.ForeignKey(Questions, on_delete=models.CASCADE)
   submitted_by = models.ForeignKey(User, on_delete=models.CASCADE)

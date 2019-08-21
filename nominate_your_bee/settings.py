@@ -36,6 +36,10 @@ ALLOWED_HOSTS = ["ldap.dev","localhost","nominate-your-bee.test",
 
 CAS_ROOT_PROXIED_AS = os.environ['SERVER_NAME']
 
+# file storage
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Application definition
 
 INSTALLED_APPS = [
