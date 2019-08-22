@@ -25,6 +25,12 @@
                 <div class="col-md-6" style="text-align:left;padding: 10px 0px;color:#00d0ff;">    		
                     <a href="" class="card-link like-link link-custom" value = "{{submission.id}}">{% if detail.is_liked %}<i class="fa fa-heart link-custom"></i>{% else %}<i class="fa fa-heart-o link-custom"></i>{% endif %} </a>  
                     <a href="" class="comment-link link-custom card-link" value = "{{submission.id}}">Comments({{ detail.comments_count }})</a>
+                    {% if user.userprofile.get_group_name == "technical jury member" %}
+                        <a href="" class="review-link link-custom card-link" value = "{{submission.id}}">Review</a>
+                    {% endif %}
+                    {% if user.userprofile.get_group_name == "directorial board member" %}
+                        <a href="" class="approve-link link-custom card-link" value = "{{submission.id}}">Approve</a>
+                    {% endif %}
                 </div>
 
                 <div class="col-md-6" style="text-align:right;">            
