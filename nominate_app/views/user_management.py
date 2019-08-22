@@ -3,6 +3,10 @@ from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from nominate_app.models import *
 from django.contrib.auth.models import User, Group
 from nominate_app.forms import AddUserForm
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+import os
 from IPython import embed
 
 
@@ -67,10 +71,12 @@ def new(request):
 def create(request):
 	email = request.POST['email']
 	group_id = request.POST['group']
-
 	group = Group.objects.get(id=group_id)
 	invite = UserInvite(email=email, group=group)
 	invite.save()
-
+	message_value_html_template = render_to_string('nominate_app/emails/invitation.html',{'user_group':group.name,'url':os.environ['SERVER_NAME']})
+	plain_message_value = strip_tags(message_value_html_template)
+	send_mail(subject='Welcome To Nominate Your Bee !!!!', from_email='pramati@gmail.com', \
+		recipient_list=[str(email)], message=plain_message_value, fail_silently=False)
 	return redirect('/users?group=0')
 
