@@ -1,14 +1,17 @@
 {% load staticfiles %}  
 
+
+
 <script src="{% static 'js/custom.js' %}"></script>
 
 
 <nav class="navbar navbar-expand-md navbar-dark sticky-top" id="sidebar">
 <div style="width:100%;vertical-align:middle;">
 <div class="pull-left margin-top">
-  <i class="fa fa-bars bars"></i>
-  <img class="navbar-brand logo" src="../static/logo.png">
+  <i class="fa fa-bars bars" id="toptoggle"></i>
+  <a href="/"><img class="navbar-brand logo" src="../static/logo.png"></a>
 </div>
+
 
 <div class="pull-right header-font">
   <div class="pull-left" style="margin-right:40px;">
@@ -30,3 +33,22 @@
   </div>
   </div>
 </nav>
+
+
+<script>
+$(document).ready(function(){
+$("#toptoggle").click(function(){
+  if ($("#bg-sidebar").is(":visible")){
+    $("#bg-sidebar").css("display", "none");
+    $(".content").css("min-width","100%");
+    
+  }else{
+    $("#bg-sidebar").css("display", "block");
+    $(".content").css("min-width","auto");   
+  }
+});
+});
+
+
+
+</script>
