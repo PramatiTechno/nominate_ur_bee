@@ -285,3 +285,17 @@ class NominationRating(models.Model):
 
   class Meta:
     db_table='nomination_rating'
+
+
+class UserInvite(models.Model):
+  first_name = models.CharField(max_length=500, null=True, blank=True)
+  last_name = models.CharField(max_length=500, null=True, blank=True)
+  email = models.CharField(max_length=500, null=True, blank=True)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE)
+  baselocation = models.CharField(max_length=500, null=True, blank=True)
+  designation = models.CharField(max_length=500, null=True, blank=True)
+
+
+  class Meta:
+    db_table='user_invite'
+
