@@ -50,7 +50,7 @@ class AddUserForm(forms.ModelForm):
 
   def __init__(self, *args, **kwargs):
       super(AddUserForm, self).__init__(*args, **kwargs)
-      self.fields['email'].required = False
+      self.fields['email'].required = True
       self.fields['email'].widget.attrs.update({'class': 'form-control'})
       self.fields['group'].choices = [(group.id, group.name) for group in Group.objects.all()]
       self.fields['group'].widget.attrs.update({'class': 'form-control'})
