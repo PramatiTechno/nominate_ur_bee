@@ -1,227 +1,223 @@
-{% extends 'base.html' %}
-{% block content %}
-{% load staticfiles %}
+{% extends 'base.html' %} {% block content %} {% load staticfiles %}
 
 <style>
-.page-content {
-  margin: 0px;
-}
-
-.header {
-  padding: 8px;
-  background-color: #1a3d6e;
-}
-
-.header h1 {
-  text-align: center;
-  color: white;
-}
-
-.instructions {
-  text-align: center;
-}
-
-table {
-  margin: 0 auto;
-  border-spacing: 0;
-  border-collapse: 0;
-  width: 100%
-}
-
-
-.row{
-    margin-right: 0px;
-}
-
-
-table td {
-  padding: 8px 0px 8px 0px;
-  border-top: 1px solid #ddd;
-}
-
-.material-icons.clear {
-  color: red;
-  font-weight: bold;
-}
-.enddate{
-    background-color: transparent;
-    border:none;
-    padding-left: 0px;
-    text-decoration: underline; 
-  }
-.btn-none{
-    background-color: transparent;
-    border:none;
+    .page-content {
+        margin: 0px;
+    }
     
-}
-.material-icons.check {
-  color: green;
-  font-weight: bold;
-}
-
-.material-icons.edit {
-  color: DodgerBlue ;
-  font-weight: bold;
-}
-.user{
-    padding-top:5px;
-    padding-bottom:5px;
-    padding-right:20px;
-    padding-left:20px;
-}
-.user:nth-child(2){
-    background: #f2f5f8;
-
-  }
-  .user:nth-child(1){    
-    background: #D4E4F7;
-  }
-
-
-@media screen and (max-width: 650px) {
-    table thead {
-    border: none;
-    height: 0px;
-    width: 0px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-  }
-  
-  table tr {
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    display: block;
-    margin-bottom: 0.5em;
-  }
-  
-  table tr.selected {
-    background-color: white;
-    border-color: DodgerBlue;
-  }
-  
-  table td {
-    border-top: none;
-    border-bottom: 1px solid #ddd;
-    display: block;
-    text-align: right;
-    clear: both;
-  }
-  
-  table td.row-function {
-    display: inline;
-    border: none;
-    clear: none;
-  }
-  
-  table tr td:last-child {
-    border-bottom: none;
-  }
-  
-  .dropdown-item
-  table tr td.row-function:nth-child(1) {
-    float: left;
-  }
-  
-    table tr td.row-function:nth-child(2) {
-    float: right;
-  }
-  
-  table td.row-function::before {
-    content: none;
-  }
-  
-  table td::before {
-  /*
+    .header {
+        padding: 8px;
+        background-color: #1a3d6e;
+    }
+    
+    .header h1 {
+        text-align: center;
+        color: white;
+    }
+    
+    .instructions {
+        text-align: center;
+    }
+    
+    table {
+        margin: 0 auto;
+        border-spacing: 0;
+        border-collapse: 0;
+        width: 100%
+    }
+    
+    .row {
+        margin-right: 0px;
+    }
+    
+    table td {
+        padding: 8px 0px 8px 0px;
+        border-top: 1px solid #ddd;
+    }
+    
+    .material-icons.clear {
+        color: red;
+        font-weight: bold;
+    }
+    
+    .enddate {
+        background-color: transparent;
+        border: none;
+        padding-left: 0px;
+        text-decoration: underline;
+    }
+    
+    .btn-none {
+        background-color: transparent;
+        border: none;
+    }
+    
+    .material-icons.check {
+        color: green;
+        font-weight: bold;
+    }
+    
+    .material-icons.edit {
+        color: DodgerBlue;
+        font-weight: bold;
+    }
+    
+    .user {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+    
+    .user:nth-child(2) {
+        background: #f2f5f8;
+    }
+    
+    .user:nth-child(1) {
+        background: #D4E4F7;
+    }
+    
+    @media screen and (max-width: 650px) {
+        table thead {
+            border: none;
+            height: 0px;
+            width: 0px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+        }
+        table tr {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            display: block;
+            margin-bottom: 0.5em;
+        }
+        table tr.selected {
+            background-color: white;
+            border-color: DodgerBlue;
+        }
+        table td {
+            border-top: none;
+            border-bottom: 1px solid #ddd;
+            display: block;
+            text-align: right;
+            clear: both;
+        }
+        table td.row-function {
+            display: inline;
+            border: none;
+            clear: none;
+        }
+        table tr td:last-child {
+            border-bottom: none;
+        }
+        .dropdown-item table tr td.row-function:nth-child(1) {
+            float: left;
+        }
+        table tr td.row-function:nth-child(2) {
+            float: right;
+        }
+        table td.row-function::before {
+            content: none;
+        }
+        table td::before {
+            /*
   * aria-label has no advantage, it won't be read inside a table
   content: attr(aria-label);
   */
-  content: attr(data-label);
-  float: left;
-  font-weight: bold;
-  }
-}
-.dropdown-menu-awards{
-    width: 100%;
-    left:5px;
-}
-
-.form_det{
-    font-size: 24px;
-    display: inline;
-    color: #d22b2b;
-}
-#caret_icon_container{
-    text-align: right;
-    font-size: 20px;
-}
-#award_name_container{
-    text-align: left;
-}
-.edit_fa{
-    font-size: 24px !important;
-    display: inline;
-    color: #2c54c5;
-    margin:0px 10px
-}
-.container-fluid{
-    padding-right: 0px;
-}
-
-.add-icon{
-  border-radius: 110px;
-  background: #8a8a8a8f;
-  padding: 5px 8px;
-  font-size: 10px;
-  color: white;
-}
-
-.btn-outline-secondary{
-    text-align: left;
-    border-radius: 0px;
-    box-shadow: 0px 5px 10px #00000036;
-    border: 0px;
-}
-.btn-outline-secondary:focus,.btn-outline-secondary:hover{
-  background: #afbcc7 !important;
-}
-
-.filter-container{
-    margin-top: 1em;
-    margin-bottom: 2em;
-}
-.date-filter-tag{
-    padding-top: 0.5em;
-}
-
-.template_ul li{
-  list-style-type: none;
-  padding: 20px 10px;
-  border-bottom:1px solid #c2c2c2;
-}
-
-.sidenav{
-  border-right: 1px solid #c2c2c2;
-  box-shadow: 5px 1px 5px rgba(110,110,110,0.3);
-}
-
-.template_ul li a{
-  padding: 40px 0px;
-  color: #68686d;
-}
-
-
-.template_ul{
-  padding:20px 0px;
-}
-
-.nom_content{
-  padding: 0px 50px;
-}
+            content: attr(data-label);
+            float: left;
+            font-weight: bold;
+        }
+    }
+    
+    .dropdown-menu-awards {
+        width: 100%;
+        left: 5px;
+    }
+    
+    .form_det {
+        font-size: 24px;
+        display: inline;
+        color: #d22b2b;
+    }
+    
+    #caret_icon_container {
+        text-align: right;
+        font-size: 20px;
+    }
+    
+    #award_name_container {
+        text-align: left;
+    }
+    
+    .edit_fa {
+        font-size: 24px !important;
+        display: inline;
+        color: #2c54c5;
+        margin: 0px 10px
+    }
+    
+    .container-fluid {
+        padding-right: 0px;
+    }
+    
+    .add-icon {
+        border-radius: 110px;
+        background: #8a8a8a8f;
+        padding: 5px 8px;
+        font-size: 10px;
+        color: white;
+    }
+    
+    .btn-outline-secondary {
+        text-align: left;
+        border-radius: 0px;
+        box-shadow: 0px 5px 10px #00000036;
+        border: 0px;
+    }
+    
+    .btn-outline-secondary:focus,
+    .btn-outline-secondary:hover {
+        background: #afbcc7 !important;
+    }
+    
+    .filter-container {
+        margin-top: 1em;
+        margin-bottom: 2em;
+    }
+    
+    .date-filter-tag {
+        padding-top: 0.5em;
+    }
+    
+    .template_ul li {
+        list-style-type: none;
+        padding: 20px 10px;
+        border-bottom: 1px solid #c2c2c2;
+    }
+    
+    .sidenav {
+        border-right: 1px solid #c2c2c2;
+        box-shadow: 5px 1px 5px rgba(110, 110, 110, 0.3);
+    }
+    
+    .template_ul li a {
+        padding: 40px 0px;
+        color: #68686d;
+    }
+    
+    .template_ul {
+        padding: 20px 0px;
+    }
+    
+    .nom_content {
+        padding: 0px 50px;
+    }
 </style>
 
 
-<link href="{% static 'css/bootstrap-editable.css' %}" rel="stylesheet"/>
+<link href="{% static 'css/bootstrap-editable.css' %}" rel="stylesheet" />
 <script src="{% static 'js/bootstrap-editable.js' %}"></script>
 <script src="{% static 'js/nomination_status.js' %}"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
@@ -230,12 +226,11 @@ table td {
 
 <div class="container-fluid" style="padding-left:0px !important;height:100%;">
 
-<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
-  <h5>Nomination Status</h5>
-</div>
-<div class="dropdown">
-        {% for award in award_categories %}
-        {% if forloop.counter == 1 %}
+    <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+        <h5>Nomination Status</h5>
+    </div>
+    <div class="dropdown">
+        {% for award in award_categories %} {% if forloop.counter == 1 %}
         <button class="btn-outline-secondary form-control" type="button" data-toggle="dropdown">
         <div class="row">
             <div class="col-sm-11" id="award_name_container">
@@ -250,170 +245,147 @@ table td {
             </button>
         <div class="dropdown-menu dropdown-menu-awards">
 
-        {% endif %}
-                
-                    {% if award_selected.name == award.name %}
-                        <a class="dropdown-item active" id="dropdown-item0" href="#"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award %}'" value='{{ award.id }}'>{{ award|title }}</a>
-                    {% else %}
-                        <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}" href="#"  onclick="location.href='{% url 'nominate_app:nomination_status_load' award %}'" value='{{ award.id }}'>{{ award|title }}</a>
-                    {% endif %}
-                    {% empty %}
-                        <a class="dropdown-item">No Awards Found</a>
-        {% endfor %}
-            
+            {% endif %} {% if award_selected.name == award.name %}
+            <a class="dropdown-item active" id="dropdown-item0" href="#" onclick="location.href='{% url 'nominate_app:nomination_status_load' award %}'" value='{{ award.id }}'>{{ award|title }}</a> {% else %}
+            <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}" href="#" onclick="location.href='{% url 'nominate_app:nomination_status_load' award %}'" value='{{ award.id }}'>{{ award|title }}</a> {% endif %} {% empty %}
+            <a class="dropdown-item">No Awards Found</a> {% endfor %}
+
         </div>
     </div>
     <div class="page-content" style="height:80vh;">
         <div class="row" style="height:100%;">
             <div class="col-md-2 sidenav">
 
-                        <div style="font-weight: bold;text-align: center;padding-top:20px;">Award Templates</div>
-                        <ul class="template_ul">
-                        {% for award_template in award_templates %}
-                            {% if selected_template == award_template %}
-                <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected award_template %}" style="text-decoration: none; color: #3b3b3e;">{{ award_template.capitalize }}</a></li>
-                            {% else %}
-                <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected award_template %}" style="text-decoration: none;color: #68686d;">{{ award_template.capitalize }}</a></li>
-                            {% endif %}
-                        </ul>
-                        <br>        
-                        {% empty %}
-                        No Award Templates Available.
-                        {% endfor %}
-                
-                        
+                <div style="font-weight: bold;text-align: center;padding-top:20px;">Award Templates</div>
+                <ul class="template_ul">
+                    {% for award_template in award_templates %} {% if selected_template == award_template %}
+                    <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected award_template %}" style="text-decoration: none; color: #3b3b3e;">{{ award_template.capitalize }}</a></li>
+                    {% else %}
+                    <li><a href="{% url 'nominate_app:nomination_status_load_template' award_selected award_template %}" style="text-decoration: none;color: #68686d;">{{ award_template.capitalize }}</a></li>
+                    {% endif %} {%empty%}
+                    <br> No Award Templates Available. {% endfor %}
+                </ul>
             </div>
             <div class="col-md-10 nom_content">
-                    <div class="row filter-container">
-                            <div class="col-sm-12">
-                                
-                                <form method = "GET" action="{% if selected_template %}{% url 'nominate_app:nomination_filter' award_selected selected_template %}{% endif %}">
+                <div class="row filter-container">
+                    <div class="col-sm-12">
+
+                        <form method="GET" action="{% if selected_template %}{% url 'nominate_app:nomination_filter' award_selected selected_template %}{% endif %}">
+                            <div class="row">
+                                <div class="col-sm-5">
                                     <div class="row">
-                                        <div class="col-sm-5">
-                                        <div class="row">
-                                            <div class="col-md-4 date-filter-tag" style="padding-right:0px;">
-                                                Start Date
-                                            </div>
-                                            <div class="col-md-8" style="padding-left:0px;">
-                                                <input type="text" id="start_date" class="form-control datepicker" name="filter"/>
-                                            </div>
+                                        <div class="col-md-4 date-filter-tag" style="padding-right:0px;">
+                                            Start Date
                                         </div>
-                                            
-                                        </div>
-                                        <div class="col-sm-5">
-                                    
-                                            <div class="row">
-                                                <div class="col-md-4 date-filter-tag" style="padding-right:0px;">
-                                                    End Date
-                                                </div>
-                                                <div class="col-md-8" style="padding-left:0px;">
-                                                    <input type="text" id="end_date" class="form-control datepicker" name="filter"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button type="submit" class="btn btn-primary">Filter</button>
+                                        <div class="col-md-8" style="padding-left:0px;">
+                                            <input type="text" id="start_date" class="form-control datepicker" name="filter" />
                                         </div>
                                     </div>
-                                
-                                
-                                </form>
+
+                                </div>
+                                <div class="col-sm-5">
+
+                                    <div class="row">
+                                        <div class="col-md-4 date-filter-tag" style="padding-right:0px;">
+                                            End Date
+                                        </div>
+                                        <div class="col-md-8" style="padding-left:0px;">
+                                            <input type="text" id="end_date" class="form-control datepicker" name="filter" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                </div>
                             </div>
+
+
+                        </form>
                     </div>
+                </div>
                 <div class="row table-container">
-                        <table>
-                                <thead>
-                                    <tr>
-                                    <th scope="col">Start Date</th>
-                                    <th scope="col">End Date</th>
-                                    <th scope="col">Job Title</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for nomination in nominations %}
-                                        <tr>
-                                            <td>
-                                                {{ nomination.start_day }}
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
-                                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.end_day_data }}" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.end_day }}<span class="fa fa-edit" style="margin-left:0.25em"></span></button>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                {{ nomination.group_name }}
-                                            </td>
-                                            <td>
-                                                <button class="btn-none show-nominations">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Start Date</th>
+                                <th scope="col">End Date</th>
+                                <th scope="col">Job Title</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for nomination in nominations %}
+                            <tr>
+                                <td>
+                                    {{ nomination.start_day }}
+                                </td>
+                                <td>
+                                    <div>
+                                        <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+                                        <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.end_day_data }}" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.end_day }}<span class="fa fa-edit" style="margin-left:0.25em"></span></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ nomination.group_name }}
+                                </td>
+                                <td>
+                                    <button class="btn-none show-nominations">
                                                         <i class="fa fa-eye"></i>
                                                 </button>
-                                            </td>
-                                        </tr>
-                                        <tr class="nomination-instances">
-                                                <td colspan="4" style="padding:0px">
-                                                        <div>
-                                                                {% for nomination_instance in nomination.instances %}
-                                                                <div class="user">
-                                                                  <a href="/nomination_feed/{{nomination_instance.id}}" style="cursor: pointer; text-decoration: none">
-                                                                    <div class="row">
-                                                                        <div class="col-sm-6">
-                                                                            Username: {{ nomination_instance.username }}
-                                                                        </div>
-                                                                        <div class="col-sm-6">
-                                                                            Status: {{ nomination_instance.status }}
-                                                                        </div>
-                                                                    </div>
-                                                                    
-                                                                  </a>
-                                                            </div>
-                                                            {% empty %}
-                                                              No Nomination instances found.
-                                                            {% endfor %}
-                                                        </div>
-                                                    {% endfor %}
-                                                </td>
-                                        </tr>
-                                        
-                                        
-                                </tbody>
-                        </table>
-        
+                                </td>
+                            </tr>
+                            <tr class="nomination-instances">
+                                <td colspan="4" style="padding:0px">
+                                    <div>
+                                        {% for nomination_instance in nomination.instances %}
+                                        <div class="user">
+                                            <a href="/nomination_feed/{{nomination_instance.id}}" style="cursor: pointer; text-decoration: none">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        Username: {{ nomination_instance.username }}
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        Status: {{ nomination_instance.status }}
+                                                    </div>
+                                                </div>
+
+                                            </a>
+                                        </div>
+                                        {% empty %} No Nomination instances found. {% endfor %}
+                                    </div>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+
                 </div>
-                        
+
             </div>
 
         </div>
-                <div class="row" style="justify-content: center; font-size: 1.5em">
-                        {% if nominations.has_other_pages %}
-                        <ul class="pagination">
-                          {% if nominations.has_previous %}
-                            <li><a href="?page={{ nominations.previous_page_number }}">&laquo;</a></li>
-                          {% else %}
-                            <li class="disabled"><span>&laquo;</span></li>
-                          {% endif %}
-                          {% for i in nominations.paginator.page_range %}
-                            {% if nominations.number == i %}
-                              <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                            {% else %}
-                              <li><a href="?page={{ i }}">{{ i }}</a></li>
-                            {% endif %}
-                          {% endfor %}
-                          {% if nominations.has_next %}
-                            <li><a href="?page={{ nominations.next_page_number }}">&raquo;</a></li>
-                          {% else %}
-                            <li class="disabled"><span>&raquo;</span></li>
-                          {% endif %}
-                        </ul>
-                      {% endif %}
-                    </div>
+        <div class="row" style="justify-content: center; font-size: 1.5em">
+            {% if nominations.has_other_pages %}
+            <ul class="pagination">
+                {% if nominations.has_previous %}
+                <li><a href="?page={{ nominations.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+                {% endif %} {% for i in nominations.paginator.page_range %} {% if nominations.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span>
+                </li>
+                {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %} {% endfor %} {% if nominations.has_next %}
+                <li><a href="?page={{ nominations.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </div>
 
     </div>
 </div>
 {% endblock %}
-
-
-
-
-
-
