@@ -42,6 +42,21 @@ class NominationFilterForm(forms.Form):
       self.fields['Templates'].choices = [('ALL', 'ALL'), ] + [(template, template) for template in NominationSubmitted.objects.values_list('template_name', flat=True).distinct()]
 
 
+class AddUserForm(forms.ModelForm):
+
+  class Meta:
+    model = UserInvite
+    fields = ['email', 'group']
+
+  def __init__(self, *args, **kwargs):
+      super(AddUserForm, self).__init__(*args, **kwargs)
+      self.fields['email'].required = False
+      self.fields['email'].widget.attrs.update({'class': 'form-control'})
+      self.fields['group'].choices = [(group.id, group.name) for group in Group.objects.all()]
+      self.fields['group'].widget.attrs.update({'class': 'form-control'})
+
+
+
 class CommentForm(forms.ModelForm):
 
     class Meta:
