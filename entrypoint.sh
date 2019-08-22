@@ -12,6 +12,10 @@ python /nominate_ur_bee/manage.py makemigrations
 echo "Apply database migrations"
 python /nominate_ur_bee/manage.py migrate
 
+echo "running celery in daemon"
+celery -A nominate_your_bee beat --detach -l info -f beat.log
+celery -A nominate_your_bee worker --detach -l info -f worker.log
+
 #Apply the default seed to the application
 python /nominate_ur_bee/manage.py assign_groups
 

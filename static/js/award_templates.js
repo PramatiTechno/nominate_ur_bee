@@ -13,6 +13,7 @@ $(".objective-type").on('change', function(event){
     
     $(this).parent().next().show()
     id = $(this).attr('id').split('-')[1]
+    debugger;
     $('input[name="questions_set-'+ id +'-objectives"]').attr('required', true);
 
 
@@ -99,6 +100,9 @@ $(".objective-type").on('change', function(event){
         .attr({ name: name, id: id })
         .val("")
         .prop("checked", false);
+      if($(this).attr("id").endsWith('objectives')){
+        $(this).attr('required', false)
+      }
       if (
         $(this)
           .attr("id")

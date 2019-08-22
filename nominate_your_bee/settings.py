@@ -70,7 +70,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'nominate_your_bee.urls'
-CAS_SERVER_URL = "https://cev3-test.pramati.com/cas/login"
+CAS_SERVER_URL = os.environ['CAS_URL']
 
 TEMPLATES = [
     {

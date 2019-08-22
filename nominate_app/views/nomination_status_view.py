@@ -60,16 +60,13 @@ def get_nomination_data(award_ft_submissions, award_name, award_template_name, p
 
 def nomination_status(request):
   if request.method == 'GET':
-    awards =  NominationSubmitted.objects.all().values_list('award_name', flat=True).distinct()
-    award = awards[0]
+    awards =  NominationSubmitted.objects.all().values_list('award_name', flat=True).distinct() 
     page = request.GET.get('page', 1)
-    if award:
+    if awards:
+      award = awards[0]
       return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award))
     else: 
       return render(request, 'nominate_app/nomination_status.html')
-
-
-      
 
 def nomination_status_load(request, award_name):
   if request.method == 'GET':
