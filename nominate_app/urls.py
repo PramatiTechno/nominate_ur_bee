@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin  
 from django.urls import path  
-from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances, graphs, nomination_review, approvals, results, user_management
+from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances, graphs, nomination_review, approvals, results, user_management, dashboard
 from django.conf import settings 
 from django.conf.urls.static import static
 from django.urls import path, include
@@ -47,6 +47,7 @@ urlpatterns = [
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/edit/",nomination_instances.edit,name="edit_nomination_instance"),
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/",nomination_instances.nomination_instance,name="nomination_instance"),
   path("graphs/",graphs.index,name="graphs"),     
+  path("dashboard/",dashboard.index,name="dashboard"),     
   path("graphs/<award_id>",graphs.load_graph,name="load_graph"), 
   path("approvals/",approvals.index,name="approval"),
   path("approvals/<submission_id>",approvals.approve,name="approve"),    

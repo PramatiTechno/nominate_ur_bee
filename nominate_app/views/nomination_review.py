@@ -7,6 +7,7 @@ from django.db.models import Avg
 from django.views.generic.base import View
 from nominate_app.utils import group_required
 from braces.views import GroupRequiredMixin
+from django.utils import timezone
 from django.contrib import messages
 from IPython import embed
 
@@ -50,6 +51,7 @@ class nomination_rating(GroupRequiredMixin, View):
 			if rating != '0.0' and review != '':
 				nomination_rating = NominationRating(user=request.user, submission=submission, rating=rating, review=review)
 				submission.status = 1                # status code for reviewed
+				submission.updated_at = timezone.now()
 				nomination_rating.save()
 				submission.save()
 				return redirect('nominate_app:nomination_review_rating', nomination_submitted_id=submission.id)
