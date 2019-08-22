@@ -172,6 +172,8 @@ class NominationSubmitted(models.Model):
   worklocation = models.CharField(max_length=30, null=False, blank=False, default="")
   baselocation = models.CharField(max_length=30, null=False, blank=False, default="")
   template_name = models.CharField(max_length=150, null=False, blank=False)
+  created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+  updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
   def get_status(self, status_code):
     for status in self.statuses:
@@ -186,6 +188,9 @@ class QuestionAnswers(models.Model):
   question = models.CharField(max_length=100, null=False, blank=False)
   answer = models.CharField(max_length=500, null=True, blank=True)
   attachment_path = models.FileField(max_length=500, null=True, blank=True, upload_to = UPLOAD_TO)
+  created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+  updated_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+  
   def get_status(self, status_code):
     for status in self.statuses:
       if status[1] == status_code:
@@ -285,3 +290,17 @@ class NominationRating(models.Model):
 
   class Meta:
     db_table='nomination_rating'
+
+
+class UserInvite(models.Model):
+  first_name = models.CharField(max_length=500, null=True, blank=True)
+  last_name = models.CharField(max_length=500, null=True, blank=True)
+  email = models.CharField(max_length=500, null=True, blank=True)
+  group = models.ForeignKey(Group, on_delete=models.CASCADE)
+  baselocation = models.CharField(max_length=500, null=True, blank=True)
+  designation = models.CharField(max_length=500, null=True, blank=True)
+
+
+  class Meta:
+    db_table='user_invite'
+

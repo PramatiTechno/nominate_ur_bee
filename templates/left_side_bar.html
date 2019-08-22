@@ -1,13 +1,15 @@
-<div class="col-sm-2 bg-left-sidebar">
+<div class="col-sm-2 bg-left-sidebar" id="bg-sidebar">
     <nav class="navbar navbar-expand-sm navbar-dark leftsidebar">
         <button class="navbar-toggler" data-toggle="collapse" data-target="#navbar_wex">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="nav navbar-nav navbar-collapse collapse flex-column " id="navbar_wex">
       {% if user.userprofile.get_group_name == "admin" %} 
-        <a href="{% url 'nominate_app:awards' %}" class="nav-link leftsidebar {% if request.path == "/awards/" %}active{% endif %}">Awards</a>
-        <a href="{% url 'nominate_app:award_templates_home' %}" class="nav-link leftsidebar {% if request.path == "/award_templates/" %}active{% endif %}">Award Templates</a>
+        <a href="{% url 'nominate_app:dashboard' %}" class="nav-link leftsidebar {% if request.path == "/dashboard/" %}active{% endif %}">Dashboard</a>
+        <a href="{% url 'nominate_app:awards' %}" class="nav-link leftsidebar {% if "/awards/" in request.path and "/award_templates/" not in request.path %}active{% endif %}">Awards</a>
+        <a href="{% url 'nominate_app:award_templates_home' %}" class="nav-link leftsidebar {% if "/award_templates/" in request.path %}active{% endif %}">Award Templates</a>
         <a href="{% url 'nominate_app:nomination_status' %}" class="nav-link leftsidebar {% if request.path == "/nomination_status/" or "/nomination_status_load/" in request.path %}active{% endif %}">Nomination Status</a>
+        <a href="{% url 'nominate_app:users' %}" class="nav-link leftsidebar {% if request.path == "/users/" %}active{% endif %}">User Management</a>
       {% else%}
         <a href="{% url 'nominate_app:nominations' %}" class="nav-link leftsidebar {% if request.path == "/nominations/" %}active{% endif %}">Nominate</a>
       {% endif %}
@@ -21,9 +23,6 @@
       {% endif %} 
 
       <a href="{% url 'nominate_app:results' %}" class="nav-link leftsidebar {% if request.path == "/results/" %}active{% endif %}">Results</a>
-      <a href="{% url 'nominate_app:graphs' %}" class="nav-link leftsidebar {% if request.path == "/graphs/" %}active{% endif %}" >Graph</a>
-
-
     </div>
   </nav>
 </div>

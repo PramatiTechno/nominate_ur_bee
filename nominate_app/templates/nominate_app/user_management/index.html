@@ -1,0 +1,100 @@
+{% extends 'base.html' %} 
+{% block content %} 
+{% load staticfiles %}
+
+
+<link rel="stylesheet" href="{% static 'css/data_table.css' %}">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+    .dropdown-menu-awards {
+        width: 100%;
+        left: 5px;
+    }
+    
+    .btn-outline-secondary {
+        text-align: left;
+        border-radius: 0px;
+        box-shadow: 0px 5px 10px #00000036;
+        border: 0px;
+    }
+    
+    .btn-outline-secondary:focus,
+    .btn-outline-secondary:hover {
+        background: #afbcc7 !important;
+    }
+    
+    #caret_icon_container {
+        text-align: right;
+        font-size: 20px;
+    }
+</style>
+
+<!-- header -->
+<div class="container" style="padding-left:0px !important;padding-right:0px !important;">
+    <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+        <h5>User Management <a href="{% url 'nominate_app:new_user' %}" class="pull-right"><i class="fa fa-user-plus add-icon"></i></a></h5>
+    </div>
+</div>
+
+
+<div class="dropdown">
+    {% for group in groups %} {% if forloop.counter == 1 %}
+    <button class="btn-outline-secondary form-control" type="button" data-toggle="dropdown">
+        <div class="row" style="margin:0px;">
+            <div class="col-sm-11" id="award_name_container">
+                {{ c_group.name.capitalize }}
+            </div>
+            <div class="col-sm-1" id="caret_icon_container">
+                <i class="fa fa-one-half fa-chevron-down" style="vertical-align: top" ></i>
+            </div>
+        </div>
+      </button>
+
+    <div class="dropdown-menu dropdown-menu-awards">
+
+        {% endif %} {% if group.name == c_group.name %}
+        <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:users' %}?group={{group.id}}" value='{{ group.id }}'>{{ group.name|title }}</a> {% else %}
+        <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}" href="{% url 'nominate_app:users' %}?group={{group.id}}" value='{{ group.id }}'>{{ group.name|title }}</a> {% endif %} {% empty %}
+        <a class="dropdown-item">No Awards Found</a> {% endfor %}
+
+    </div>
+</div>
+
+
+<div class="page-content">
+    <table>
+        <thead>
+            <tr>
+                <th scope='col'></th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Base Location</th>
+                <th scope="col">Designation</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr data-rowId={{user.email}}>
+                
+                <td> </td>
+                <td scope="row" data-label="First Name">{{user.first_name}}</td>
+                <td scope="row" data-label="Last Name">{{user.last_name}}</td>
+                <td scope="row" data-label="Email">{{ user.email }}</td>
+                <td scope="row" data-label="Email">{{ user.baselocation }}</td>
+                <td scope="row" data-label="Email">{{ user.designation }}</td>
+
+                <td scope="row" data-label="Actions"></td>
+
+            </tr>
+            {% empty %}
+            <tr class="d-flex">
+                <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> No users Found </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

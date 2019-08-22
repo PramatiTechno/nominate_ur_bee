@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Avg
+from django.utils import timezone
 from nominate_app.utils import group_required
 from nominate_app.models import Nomination,NominationPeriod, AwardTemplate, NominationInstance, User, Questions, NominationAnswers, NominationSubmitted, NominationRating, DirectorComments
 from django.template.defaulttags import register
@@ -47,6 +48,7 @@ def approve(request, submission_id):
             nomination_submitted.status = 3
         else:
             nomination_submitted.status = 4
+        nomination_submitted.updated_at = timezone.now()
         nomination_submitted.save()
         
         return redirect('nominate_app:approval')
