@@ -9,6 +9,10 @@
 .hidden{
   visibility:hidden;
 }
+.image{
+  width:100%;,
+  height:100%;
+}
 </style>
 <script>
   $(document).ready(function(){
@@ -56,37 +60,37 @@
       {% csrf_token %}
       <input type="hidden" name="nomination_instance" class="form-control" placeholder="" value="{{ nomination_instance.id}}" required />
       <br>
-      {% for question in questions %}
+      {% for qa in qanswers %}
       <div class="form">
         <div class = "row award_top_margin ">
           <div class="col-sm-2">
-            <label class="col-form-label" for='{{question.qname}}' >{{question.qname}}</label>
+            <label class="col-form-label" for='{{qa.question.qname}}' >{{qa.question.qname}}</label>
           </div>
           <div class="col-sm-4">
-            {% if question.qtype == 'SUBJECTIVE'%}   
-              {% if question.nominationanswers_set.count > 0 %}
-              <input type="text" name="{{ question.id }}_answer" class="form-control" placeholder="" value="{{ answers|get_item:question.id }}" required />
+            {% if qa.question.qtype == 'SUBJECTIVE'%}   
+              {% if qa.question.nominationanswers_set.count > 0 %}
+              <input type="text" name="{{ qa.question.id }}_answer" class="form-control" placeholder="" value="{{ qa.answer_text }}" required />
               {% else %}
-              <input type="text" name="{{ question.id }}_answer" class="form-control" placeholder="" value="" required />
+              <input type="text" name="{{ qa.question.id }}_answer" class="form-control" placeholder="" value="" required />
               {% endif %}
             {% endif %}
-            {% if question.qtype == 'OBJECTIVE' %}
-                {% for option in question.options %}
-                  {% if option in answers|get_item:question.id %}
-                    <input type="radio" value="{{ option }}" name="{{question.id}}_answer_option" checked> {{ option }}   
+            {% if qa.question.qtype == 'OBJECTIVE' %}
+                {% for option in qa.question.options %}
+                  {% if option in qa.answer_text %}
+                    <input type="radio" value="{{ option }}" name="{{qa.question.id}}_answer_option" checked> {{ option }}   
                   {% else %}
-                    <input type="radio" value="{{ option }}" name="{{question.id}}_answer_option"> {{ option }}   
+                    <input type="radio" value="{{ option }}" name="{{qa.question.id}}_answer_option"> {{ option }}   
                   {% endif %}
                 {% endfor %}
             {% endif %}
 
-            {% if question.qtype == 'MULTIPLE-CHOICE' %}
+            {% if qa.question.qtype == 'MULTIPLE-CHOICE' %}
               <div class="checkbox-container">
-                {% for option in question.options %}
-                  {% if option in answers|get_item:question.id %}
-                    <input type="checkbox" value="{{ option }}" class="multichoice-option" name="{{question.id}}_answer_option" checked> {{ option }}   
+                {% for option in qa.question.options %}
+                  {% if option in qa.answer_text %}
+                    <input type="checkbox" value="{{ option }}" class="multichoice-option" name="{{ qa.question.id }}_answer_option" checked> {{ option }}   
                   {% else %}
-                    <input type="checkbox" value="{{ option }}" class="multichoice-option" name="{{question.id}}_answer_option" > {{ option }}   
+                    <input type="checkbox" value="{{ option }}" class="multichoice-option" name="{{ qa.question.id }}_answer_option" > {{ option }}   
                   {% endif %}
                 {% endfor %}
                 <div class="alert alert-danger hidden">
@@ -95,13 +99,18 @@
               </div>
             {% endif %}
           </div>
-          {% if question.attachment_need %}
-           <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-2">
-                        <span class="text-danger small"></span>
-                    </div>
-                    <div class="col-sm-2"><input type="file" name="{{ question.id}}_attachment_path" id="{{ question.id}}_attachment_path"></div>
-                </div>
+          {% if qa.question.attachment_need %}
+              <div class="col-sm-2">
+                <img class="image" src="{{ qa.attachment_path }}" alt="Image unavailable">
+              </div>
+
+              <div class="col-sm-1">
+                  <span class="text-danger small"></span>
+              </div>
+
+              <div class="col-sm-2">
+                <input type="file" name="{{ qa.question.id}}_attachment_path" id="{{ qa.question.id}}_attachment_path" value="{{qa.attachment_path}}">
+              </div>
           {% endif %}
         </div> 
 
