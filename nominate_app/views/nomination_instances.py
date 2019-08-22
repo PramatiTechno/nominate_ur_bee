@@ -67,8 +67,13 @@ def index(request,nomination_id):
             na.answer_text = json.dumps(ans['answer_text'])
           else:
             na.answer_text = ans['answer_text'][0]
+
           na.answer_option = ans['option']
-          na.attachment_path = ans['file_url']
+          if ans['file_url']:
+            na.attachment_path = ans['file_url']
+          else:
+            ans['file_url'] = na.attachment_path
+
           na.save()
 
         except Exception as e:
