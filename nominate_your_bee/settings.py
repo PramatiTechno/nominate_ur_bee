@@ -185,3 +185,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Kolkata'
+
+SENDGRID_API_KEY = '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'
+EMAIL_BACKEND = 'sgbackend.SendGridBackend'
+EMAIL_PORT = 465
