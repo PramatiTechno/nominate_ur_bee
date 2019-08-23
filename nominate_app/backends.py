@@ -173,6 +173,7 @@ class NominateCASBackend(ModelBackend):
         user = User.objects.filter(email=user.email)
         user_object = UserInvite.objects.filter(email=user[0].email)
         if user_object:
+            user_object.delete()
             user[0].groups.add(user_object[0].group)    
         
         
