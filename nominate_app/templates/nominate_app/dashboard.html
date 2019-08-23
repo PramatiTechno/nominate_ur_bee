@@ -80,6 +80,10 @@
                                             {{ award.data|get:'directorial board member' }}
                                     </td>
                                 </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4" style="font-size: 15px"> No awards found. Please create a <a href="{% url 'nominate_app:awards' %}">award. </a></td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -99,6 +103,12 @@
                             <div class="notifications">
                                 {{ nomination.email }} has {{ nomination|get_status:nomination.status }} {{nomination.award_name}}.
                             </div>
+                            {% empty %}
+                                <div style="font-size: 15px">
+                                    No new notifications found.
+                                </div>
+                                    
+                                
                             {% endfor %}
                         </div>
                 </div>
@@ -149,7 +159,12 @@
                                             
                                         
                                         </tr>
-
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4" style="font-size: 15px"> No awards and award templates found. Please create a <a href="{% url 'nominate_app:awards' %}">award </a> and
+                                         <a href="{% url 'nominate_app:award_templates_home' %}"> award template.</a>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -214,7 +229,12 @@
                                         </div>
                                         <div class="col-sm-9 dropdown show" style="text-align: right;">
                                                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                {{ award_selected }}
+                                                
+                                                {% if award_selected %}
+                                                    {{ award_selected }}
+                                                {% else %}
+                                                    No Awards 
+                                                {% endif %}
                                                 </a>
                                             
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
