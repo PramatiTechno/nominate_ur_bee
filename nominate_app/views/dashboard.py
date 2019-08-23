@@ -19,10 +19,7 @@ def index(request):
     awards_list = Awards.objects.all().order_by('created_at').reverse()[:4]
     
     awards = {'data': [], 'show': False}
-    for award in awards_list:
-        awards['data'].append(award_status(award.id)['submitted'])    
-    if Awards.objects.count() > 5:
-        awards['show'] = True 
+    
     recent_nominations = get_recent_nominations()
     notifications = get_notifications()
     summary = {'awards': Awards.objects.count()}
@@ -31,6 +28,10 @@ def index(request):
     summary['hold'] = NominationSubmitted.objects.filter(status=4).count()
     results = {'awards': awards, 'recent_nominations': recent_nominations, 'notifications': notifications, 'summary': summary}
     results.update(graph_data)
+    for award in awards_list:
+        awards['data'].append(results['award_stats']['submitted'])    
+    if Awards.objects.count() > 3:
+        awards['show'] = True 
     return render(request, 'nominate_app/dashboard.html', results)
 
 def get_notifications():
@@ -40,42 +41,6 @@ def get_notifications():
 def get_recent_nominations():
     nominations = Nomination.objects.all().order_by('end_day')[:3]
     return nominations
-def award_status(award_id):
-    award = Awards.objects.get(id=award_id)
-    awards = Awards.objects.all()
-    groups = Group.objects.all()
-    group_names = [group.name.lower() for group in groups]
-    
-    result = {
-        "submitted": {
-            "award_name": award.name,
-            "status": "submitted",
-            "data": {
-            }
-        },
-        "saved": {
-            "award_name": award.name,
-            "status": "saved",
-            "data": {
-            }
-        }
-    }
-    for group_name in group_names:
-        result['submitted']['data'].update({ group_name: 0 })
-        result['saved']['data'].update({ group_name: 0 })
-    for award_template in award.awardtemplate_set.all():
-        for nomination in award_template.nomination_set.all():
-            for nomination_instance in nomination.nominationinstance_set.all():
-                if nomination_instance.get_status(nomination_instance.status).lower() == "submitted":
-                    
-                    group_name = nomination_instance.user.groups.first().name.lower()
-                    result['submitted']['data'][group_name] += 1
-                elif nomination_instance.get_status(nomination_instance.status).lower() == "saved":
-                    group_name = nomination_instance.user.groups.first().name.lower()
-                    result['saved']['data'][group_name] += 1
-    result['submitted']['data'].pop("admin")
-    result['saved']['data'].pop("admin")
-    return result
 
 
 def load_graph(award_id):
