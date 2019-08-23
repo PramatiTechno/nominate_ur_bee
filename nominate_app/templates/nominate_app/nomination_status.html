@@ -181,7 +181,10 @@
     .btn-outline-secondary:hover {
         background: #afbcc7 !important;
     }
+    .fa-envelope:before {
     
+    padding-right: .2em;
+    }
     .filter-container {
         margin-top: 1em;
         margin-bottom: 2em;
@@ -338,13 +341,20 @@
                                     <div>
                                         {% for nomination_instance in nomination.instances %}
                                         <div class="user">
+                                            {% if nomination_instance.id %}
                                             <a href="/nomination_feed/{{nomination_instance.id}}" style="cursor: pointer; text-decoration: none">
+                                            {% else %}
+                                                <a href="#" style="cursor: pointer; text-decoration: none"></a>
+                                            {% endif %}   
                                                 <div class="row">
-                                                    <div class="col-sm-6">
-                                                        Username: {{ nomination_instance.username }}
+                                                    <div class="col-sm-5">
+                                                        {{ nomination_instance.username }}
                                                     </div>
-                                                    <div class="col-sm-6">
-                                                        Status: {{ nomination_instance.status }}
+                                                    <div class="col-sm-5">
+                                                        {{ nomination_instance.status }}
+                                                    </div>
+                                                    <div class="col-sm-2" style="text-align: right">
+                                                        <i class="fa fa-envelope"> </i>
                                                     </div>
                                                 </div>
 
