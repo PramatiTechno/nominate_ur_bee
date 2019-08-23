@@ -81,8 +81,8 @@
       <td scope="row" data-label="Submitted At">{{submission.submitted_at}}</td>
       <td scope="row" data-label="Award">{{submission.award_name}}</td>
       <td scope="row" data-label="Template">{{submission.template_name}}</td>
-      {% if c_status == 'Submitted' %}
-      	<td scope="row" data-label="Action"><a href="{% url 'nominate_app:nomination_review_rating' nomination_submitted_id=submission.id%}">review</a></td>
+      {% if c_status == 'To be Reviewed' %}
+      	  <td scope="row" data-label="Action"><a href="{% url 'nominate_app:nomination_review_rating' nomination_submitted_id=submission.id%}">review</a></td>
       {% else %}
       	<td scope="row" data-label="Action"><a href="{% url 'nominate_app:nomination_review_rating' nomination_submitted_id=submission.id%}">view</a></td>
       {% endif %}
