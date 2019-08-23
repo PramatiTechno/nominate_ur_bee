@@ -14,7 +14,7 @@ from django.contrib.auth.models import Group
 from django_cas_ng.middleware import HttpResponseRedirect
 from django_cas_ng.signals import cas_user_authenticated
 from django.contrib.auth.models import AnonymousUser
-from nominate_app.models import UserProfile
+from nominate_app.models import UserProfile, UserInvite, User
 from IPython import embed
 
 from .utils import get_cas_client
@@ -145,7 +145,7 @@ class NominateCASBackend(ModelBackend):
                         userprofile["user"] = user
                     obj, created = UserProfile.objects.get_or_create(**userprofile)
                     # send the obj to create user role relationship.
-                    # self.create_user_role(obj)
+                    self.create_user_role(obj)
 
             # send the `cas_user_authenticated` signal
             cas_user_authenticated.send(
@@ -170,11 +170,11 @@ class NominateCASBackend(ModelBackend):
 
 
     def create_user_role(self, user):
-        group, created = Group.objects.get_or_create(name = self.title_role_map[user.jobtitle])
-        UserModel = get_user_model()
-        a_user = UserModel.objects.filter(id=user.user_id)[0]
-        a_user.groups.add(group)
-
+        user = User.objects.filter(email=user.email)
+        user_object = UserInvite.objects.filter(email=user[0].email)
+        if user_object:
+            user[0].groups.add(user_object[0].group)    
+        
         
 
     def get_user_id(self, attributes):
