@@ -32,6 +32,12 @@ $(function(){
     padding:30px 10px;
     margin:30px 0px;
 }
+
+.image{
+ width: 100%;
+ height: 100%;
+}
+
 </style>
 
 <div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
@@ -58,17 +64,21 @@ $(function(){
 			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">      
 				<div class="box-part">
 					<div class="row">
-						<div class="col-md-4">
-		            		<i class="fa fa-star fa-5x" style="color:gold; display: inline-block;" aria-hidden="true"></i>
+						<div class="col-md-5">
+							{% if submission.image_avail %}
+								<img class="image" src="{{ submission.image_path }}" alt="Image Unavailable">
+							{% else %}
+		            			<i class="fa fa-star fa-5x" style="color:gold; display: inline-block;" aria-hidden="true"></i>
+							{% endif %}
 		            	</div>
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<h6>{{ submission.object.award_name }}</h6>
 							<h6>{{ submission.object.template_name }} </h6>
 							<p class="text-muted text-sm"> {{ submission.nomination.start_day }} - {{ submission.nomination.end_day }}
 						</div>
 		            </div>
 		            
-					<div class="text">
+					<div class="text p-1">
 						<span>Director: {{ submission.comment }}</span>
 					</div>
 		            		            

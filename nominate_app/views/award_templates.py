@@ -62,14 +62,13 @@ def index(request,award_id):
         for i in range(int(content['questions_set-TOTAL_FORMS'])):
           qtype = content['questions_set-{0}-qtype'.format(i)]
           if qtype == "SUBJECTIVE":
-
             question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
-            attachment_need=False, created_at=timezone.now(), award_template_id = created_award.id, \
+            attachment_need=bool(content['questions_set-0-attachment_need']), created_at=timezone.now(), award_template_id = created_award.id, \
             group_id=content['questions_set-{0}-group'.format(i)])
             question.save()
           else:
             question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
-            attachment_need=False, created_at=timezone.now(), award_template_id = created_award.id, \
+            attachment_need=bool(content['questions_set-0-attachment_need']), created_at=timezone.now(), award_template_id = created_award.id, \
             group_id=content['questions_set-{0}-group'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)))
             question.save()
           messages.success(request, 'Award Template created successfully.')
@@ -135,6 +134,7 @@ def award_template(request,award_id,award_template_id):
           question = Questions.objects.get(id=qid)
           question.qname = content['questions_set-{0}-qname'.format(i)]
           question.group_id = int(content['questions_set-{0}-group'.format(i)])
+          question.attachment_need = bool(content['questions_set-{0}-attachment_need'.format(i)])
           question.updated_at = timezone.now()
           if qtype == "SUBJECTIVE":
             question.qtype = "SUBJECTIVE"

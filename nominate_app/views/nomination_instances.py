@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.db.models import Q
 from django.template.defaulttags import register
+from django.core.files.storage import FileSystemStorage
 import json
 from django.utils import timezone
 import os
@@ -39,7 +40,6 @@ def index(request,nomination_id):
         new_form.pop(key)
 
     if request.method == 'POST':
-      
       ans_obj_List = []
       for qid,answer in ques_answers_dict.items():
         ans_form1 = new_form.copy()
@@ -49,33 +49,33 @@ def index(request,nomination_id):
         ans_form1['submitted_by'] = 1
         ans_obj_List.append(ans_form1)
 
-      for ans_obj in ans_obj_List:
-        qid = ans_obj['question']
-        files = request.FILES.getlist(qid+'_attachment_path')
-      if answers_form.is_valid():
-        created_answer = answers_form.save()
-
-        if files:
-          nn = request.FILES.copy()
-          attachment_path = nn[qid+'_attachment_path']
-          request.FILES.pop(qid+'_attachment_path')
-          request.FILES['attachment_path'] = attachment_path
-          
-          answers_form = NominationAnswersForm(ans_obj, request.FILES)
-        else:
-          answers_form = NominationAnswersForm(ans_obj)
       nomination_answers = NominationAnswers.objects.filter(nomination_instance_id=nomination_instance.id)
       for ans in ans_obj_List:
         try:
           condition1 = Q(nomination_instance_id=nomination_instance.id)
           condition2 = Q(question_id=ans['question'])
+          file = request.FILES.getlist(ans['question']+'_attachment_path')
+          ans['file_url'] = None
+          if file:
+            file = file[0]
+            fs = FileSystemStorage()
+            filename = fs.save(file.name, file)
+            ans['file_url'] = fs.url(filename)
+
           na = NominationAnswers.objects.get(condition1 & condition2)
           if ans['option']:
             na.answer_text = json.dumps(ans['answer_text'])
           else:
             na.answer_text = ans['answer_text'][0]
+
           na.answer_option = ans['option']
+          if ans['file_url']:
+            na.attachment_path = ans['file_url']
+          else:
+            ans['file_url'] = na.attachment_path
+
           na.save()
+
         except Exception as e:
           print(e)
           if ans['option']:
@@ -83,7 +83,15 @@ def index(request,nomination_id):
           else:
             answer_text = ans['answer_text'][0]
 
-          na = NominationAnswers(answer_option=ans['option'], answer_text=answer_text,nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=ans['award_template'],question_id=ans['question'], submitted_by=request.user)
+          file = request.FILES.getlist(ans['question']+'_attachment_path')
+          ans['file_url'] = None
+          if file:
+            file = file[0]
+            fs = FileSystemStorage()
+            filename = fs.save(file.name, file)
+            ans['file_url'] = fs.url(filename)
+
+          na = NominationAnswers(answer_option=ans['option'], answer_text=answer_text, attachment_path=ans['file_url'], nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=ans['award_template'],question_id=ans['question'], submitted_by=request.user)
           na.save()
 
       # This code to be refactored. Multiple answer records submit
@@ -103,7 +111,7 @@ def index(request,nomination_id):
           if ans_obj['action'] == 'submit':
             answer_text = ", ".join(ans_obj['answer_text'])
             qa = QuestionAnswers(nomination_submitted_id=nomination_submitted.id, \
-              question=Questions.objects.get(id=ans_obj['question']).qname, answer=answer_text)
+              question=Questions.objects.get(id=ans_obj['question']).qname, answer=answer_text, attachment_path=ans_obj['file_url'])
             qa.save()
         nomination_instance.status = 2
         nomination_instance.submitted_at = timezone.now()
@@ -152,23 +160,41 @@ def edit(request,nomination_id,nomination_instance_id):
   for key in edit_new_form.keys():
     if key.endswith('answer'):
       new_form.pop(key)
-  answers = {}
+  qanswers = []
   for question in questions:
     try:
-      answer_text = question.nominationanswers_set.get(submitted_by=request.user.id).answer_text
+      answer = question.nominationanswers_set.get(submitted_by=request.user.id)
+      answer_text = answer.answer_text
+      attachment_path = str(answer.attachment_path)
       if question.qtype == "SUBJECTIVE":
-        answers[question.id] = answer_text
+        qanswers.append({
+          'question': question,
+          'answer_text': answer_text,
+          'attachment_path': attachment_path
+        })
       else:
-        answers[question.id] = json.loads(answer_text)
+         qanswers.append({
+          'question': question,
+          'answer_text': json.loads(answer_text),
+          'attachment_path': attachment_path
+        })
     except:
-      answers[question.id] = []
+      qanswers.append({
+        'question': question
+      })
       
 
-  return render(request, 'nominate_app/nomination_instances/edit.html', {'answers_form':answers_form,'nomination':nomination,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'questions':questions, 'answers': answers })
+  return render(request, 'nominate_app/nomination_instances/edit.html', {'answers_form':answers_form,'nomination':nomination,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'qanswers': qanswers })
 
 def submitted_nomination(request, nomination_submitted_id):
   qa = QuestionAnswers.objects.filter(nomination_submitted_id=nomination_submitted_id)
-  return render(request, 'nominate_app/nomination_instances/show.html', {'question_answerset':qa, 'nomination_submitted':NominationSubmitted.objects.get(id=nomination_submitted_id)})
+  qa_set = []
+  for question in qa:
+    qa_set.append({
+      'qa': question,
+      'attachment_path': str(question.attachment_path)
+    })
+  return render(request, 'nominate_app/nomination_instances/show.html', {'question_answerset':qa_set, 'nomination_submitted':NominationSubmitted.objects.get(id=nomination_submitted_id)})
 
 def nomination_instance(request,nomination_id,nomination_instance_id):
   answers_form = NominationAnswersForm(instance=NominationAnswers())

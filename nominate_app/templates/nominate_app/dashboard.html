@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<script src="{% static 'js/graphs.js' %}"></script>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script>
+    $(document).ready(function(){
+
+        Highcharts.chart('graph-container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '{{ award_selected.name.capitalize }} Statistics'
+            },
+            xAxis: {
+                categories: [{% for k,v in award_stats.submitted.data.items %}'{{ k.capitalize }}'{% if not forloop.last %}, {% endif %}{% endfor %}]
+
+            },
+            series: [{
+                name: 'Submitted',
+                data: [{% for k,v in award_stats.submitted.data.items %}{{ v }}{% if not forloop.last %}, {% endif %}{% endfor %}]
+            },{
+                name: 'Saved',
+                data: [{% for k,v in award_stats.saved.data.items %}{{ v }}{% if not forloop.last %}, {% endif %}{% endfor %}]
+            }           
+        ]
+        });
+    });
+        
+</script>
+<div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
+  <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+        <h5>Dashboard</h5>
+  </div>
+</div>
+
+    
+
+	<div class="container" style="padding: 40px;">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Awards
+                    </div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                    <tr class="tr_body table_head">
+                                        <td class="td_body table_head">
+                                            Award Name
+                                        </td>
+                                        <td class="td_body table_head">
+                                            Manager
+                                        </td>
+                                        <td class="td_body table_head">
+                                            Tech Jury
+                                        </td>
+                                        <td class="td_body table_head">
+                                            Director
+                                        </td>
+                                    </tr>
+                                </thead>
+                            <tbody>
+                                
+                                {% for award in awards.data %}
+                                <tr data-rowId={{forloop.counter}} class="tr_body">
+                                    <td scope="row" data-label="Award Name" class="td_body">
+                                        {{ award.award_name }}
+                                    </td>
+                                    <td scope="row" data-label="Manager" class="td_body">
+                                            {{ award.data|get:'manager' }}
+                                    </td>
+                                    <td scope="row" data-label="Tech Jury" class="td_body">
+                                            {{ award.data|get:'technical jury member' }}
+                                    </td>
+                                    <td scope="row" data-label="Director" class="td_body">
+                                            {{ award.data|get:'directorial board member' }}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4" style="font-size: 15px"> No awards found. Please create a <a href="{% url 'nominate_app:awards' %}">award. </a></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if awards.show %}
+                            <a href="{% url 'nominate_app:awards' %}" class="card-link">More</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                        <div class="card-header">
+                            Notifications
+                        </div>
+                        <div class="card-body">
+                            {% for nomination in notifications %}
+                            <div class="notifications">
+                                {{ nomination.email }} has {{ nomination|get_status:nomination.status }} {{nomination.award_name}}.
+                            </div>
+                            {% empty %}
+                                <div style="font-size: 15px">
+                                    No new notifications found.
+                                </div>
+                                    
+                                
+                            {% endfor %}
+                        </div>
+                </div>
+        </div>
+        </div>
+        <div class="row row-pad">
+            <div class="col-md-6">
+            <div class="card">
+                    <div class="card-header">
+                        Recent Nominations
+                    </div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr class="tr_body table_head">
+                                    <td class="td_body table_head">
+                                        Award 
+                                    </td>
+                                    <td class="td_body table_head">
+                                        Template 
+                                    </td>
+                                    <td class="td_body table_head">
+                                            End Date
+                                    </td>
+                                    <td class="td_body table_head">
+                                        Group
+                                    </td>
+                                    
+                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for nomination in recent_nominations %}
+                                        <tr class="link tr_body" onclick='location.href="{% url 'nominate_app:nomination_status_load_template' nomination.award_template.award.name nomination.award_template.template_name %}"'>
+                                            
+                                            <td class="td_body">
+                                                {{ nomination.award_template.award.name }}
+                                            </td>
+                                            <td class="td_body">
+                                                {{ nomination.award_template.template_name }}
+                                            </td>
+                                            <td class="td_body">
+                                                    {{ nomination.end_day }}
+                                            </td>
+                                            <td class="td_body">
+                                                {{ nomination.group.name }}
+                                            </td>
+                                            
+                                        
+                                        </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4" style="font-size: 15px"> No awards and award templates found. Please create a <a href="{% url 'nominate_app:awards' %}">award </a> and
+                                         <a href="{% url 'nominate_app:award_templates_home' %}"> award template.</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                        <div class="card-header">
+                            Summary
+                        </div>
+                        <div class="card-body">
+                            <table>
+                                <tbody>
+                                    <tr class="tr_body">
+                                        <td class="td_body table_head">
+                                            Awards
+                                        </td>
+                                        <td class="td_body">
+                                            {{ summary.awards }}
+                                        </td>
+                                    </tr>
+                                    <tr class="tr_body">
+                                        <td class="td_body table_head">
+                                            Approved
+                                        </td>
+                                        <td class="td_body">
+                                            {{ summary.approved }}
+                                        </td>
+                                    </tr>
+                                    <tr class="tr_body">
+                                        <td class="td_body table_head">
+                                            Declined
+                                        </td>
+                                        <td class="td_body">
+                                            {{ summary.declined }}
+                                        </td>
+                                    </tr>
+                                    <tr class="tr_body">
+                                        <td class="td_body table_head">
+                                            On Hold
+                                        </td>
+                                        <td class="td_body">
+                                            {{ summary.hold }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="row row-pad">
+            <div class="col-sm-12">
+                    <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                        <div class="col-sm-3" style="padding:5px 5px 5px 15px">
+                                                Statistics    
+                                        </div>
+                                        <div class="col-sm-9 dropdown show" style="text-align: right;">
+                                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                
+                                                {% if award_selected %}
+                                                    {{ award_selected }}
+                                                {% else %}
+                                                    No Awards 
+                                                {% endif %}
+                                                </a>
+                                            
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                {% for award in award_categories %}
+                                                {% if award_selected.name == award.name %}
+                                                    <a class="dropdown-item active" id="dropdown-item"  onclick="location.href='{% url 'nominate_app:dashboard' %}?award={{ award.id }}'" value='{{ award.id }}'>{{ award.name|title }}</a>
+                                                {% else %}
+                                                    <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}"  onclick="location.href='{% url 'nominate_app:dashboard'%}?award={{ award.id }}'" value='{{ award.id }}'>{{ award.name|title }}</a>
+                                                {% endif %}
+                                                {% empty %}
+                                                    <a class="dropdown-item" id="dropdown-item">No Awards Found</a>
+                                                {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                                
+
+                            <div class="graph-box">
+                                <div id="graph-container">
+
+                                </div>
+                            </div>
+                          </div>
+            </div>
+        </div>
+	</div>
+
+    <style>
+        .dropdown-item{
+            cursor: pointer;
+        }
+        #graph-container{
+            height: 30em;
+        }
+        .row-pad{
+            padding-top:30px;
+        }
+        .graph-box{
+            height:35em;
+        }
+        .card-body{
+            height: 15em;
+        }
+        table{
+            width: 100%;
+        }
+        .link {
+            color: blue;
+            cursor: pointer;
+        }
+        .card-header{   
+            padding: .75rem 1.25rem;
+            color: white;
+            margin-bottom: 0;
+            background-image: linear-gradient(to right, #33929c , #3ce1f3);
+            background-color: rgba(0,0,0,.03);
+            border-bottom: 1px solid rgba(0,0,0,.125);
+            font-weight: 700;
+            border-radius: 15px 15px 0px 0px !important;
+        }
+        .card{
+            box-shadow: 2px 2px 8px rgba(110,110,110,.5);
+            border-radius:15px;
+        }
+
+        tr,td{
+            padding:10px;
+
+        }
+        .tr_body{ font-size:12px;}
+        .td_body{ font-size:12px;}
+        .table_head{ font-weight: bold;}
+        .notifications{
+            padding:10px;
+            border-bottom:1px solid rgba(232, 232, 232, 0.48)        
+            }
+    </style>
+
+{% endblock %}
