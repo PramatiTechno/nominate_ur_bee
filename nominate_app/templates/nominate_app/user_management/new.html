@@ -32,6 +32,7 @@
 <!-- header -->
 <div class="container" style="padding-left:0px !important;padding-right:0px !important;">
     <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+    	<a href="{% url 'nominate_app:users' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
         <h5>Invite a User</h5>
     </div>
 </div>
@@ -58,7 +59,7 @@
 
 		<div class="row mt-2">
 			<div class="col-md-1 p-1 offset-4">
-				<button class="btn btn-outline-primary">cancel</button>
+				<a class="btn btn-outline-primary" href="{% url 'nominate_app:users' %}">cancel</a>
 			</div>
 			<div class="col=md-1 p-1">
 				<button class="btn btn-outline-danger">submit</button>

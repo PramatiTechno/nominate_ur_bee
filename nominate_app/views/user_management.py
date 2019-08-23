@@ -4,12 +4,14 @@ from nominate_app.models import *
 from django.contrib.auth.models import User, Group
 from nominate_app.forms import AddUserForm
 from django.core.mail import send_mail
+from nominate_app.utils import group_required
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import os
 from IPython import embed
 
 
+@group_required('Admin', raise_exception=True)
 def index(request):
 	groups = Group.objects.all()
 	group = groups[0]
@@ -64,10 +66,13 @@ def index(request):
 	return render(request, 'nominate_app/user_management/index.html', {'users': user_list, 'groups':group_list, 'c_group': selected_group})
 
 
+@group_required('Admin', raise_exception=True)
 def new(request):
 	invite_form = AddUserForm()
 	return render(request, 'nominate_app/user_management/new.html', {'invite_form': invite_form})
 
+
+@group_required('Admin', raise_exception=True)
 def create(request):
 	email = request.POST['email']
 	group_id = request.POST['group']
