@@ -5,6 +5,6 @@ from IPython import embed
 @register.filter
 def not_expired(end_date):
 	today = datetime.today().date()
-	if today < end_date:
+	if today <= end_date:
 		return True
 	return False

@@ -17,7 +17,7 @@ def index(request):
 	status = request.GET['status'] if 'status' in request.GET else statuses[0]
 	today = datetime.today().date()
 	if status == 'To be Reviewed':
-		submissions = NominationSubmitted.objects.filter(status=0, nomination__end_day__lte=today) # status for submitted
+		submissions = NominationSubmitted.objects.filter(status=0, nomination__end_day__gte=today) # status for submitted
 	else:
 		submissions = NominationSubmitted.objects.filter(ratings__user=request.user)
 
