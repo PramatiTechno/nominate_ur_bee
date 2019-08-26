@@ -88,3 +88,8 @@
 .mySelect {
   width: 100%;
 }
+
+.alert {
+  position: absolute;
+  width: 100%;
+}
