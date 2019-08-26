@@ -4,12 +4,18 @@ from nominate_app.models import *
 from django.contrib.auth.models import User, Group
 from nominate_app.forms import AddUserForm
 from django.core.mail import send_mail
+from nominate_app.utils import group_required
 from django.template.loader import render_to_string
+from django.contrib import messages
 from django.utils.html import strip_tags
+import re
 import os
 from IPython import embed
 
 
+EMAIL_REGEX = r"[a-zA-Z][a-zA-Z0-9_.]{2,}@(?:imaginea|pramati).com"
+
+@group_required('Admin', raise_exception=True)
 def index(request):
 	groups = Group.objects.all()
 	group = groups[0]
@@ -64,13 +70,29 @@ def index(request):
 	return render(request, 'nominate_app/user_management/index.html', {'users': user_list, 'groups':group_list, 'c_group': selected_group})
 
 
+@group_required('Admin', raise_exception=True)
 def new(request):
 	invite_form = AddUserForm()
 	return render(request, 'nominate_app/user_management/new.html', {'invite_form': invite_form})
 
+
+@group_required('Admin', raise_exception=True)
 def create(request):
 	email = request.POST['email']
 	group_id = request.POST['group']
+	# email validation
+	if not re.match(EMAIL_REGEX, email):
+		messages.error(request, "Email not valid")
+		return redirect('nominate_app:new_user')
+
+	# user exist validation 
+	user_exist = User.objects.filter(email=email).exists()
+	invite_exist = UserInvite.objects.filter(email=email).exists()
+	if user_exist or invite_exist:
+		messages.error(request, "user already invited or exist")
+		return redirect('nominate_app:new_user')		
+
+
 	group = Group.objects.get(id=group_id)
 	invite = UserInvite(email=email, group=group)
 	invite.save()

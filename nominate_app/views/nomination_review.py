@@ -13,11 +13,11 @@ from IPython import embed
 
 
 def index(request):
-	statuses = ('To be Submitted', 'Reviewed')
+	statuses = ('To be Reviewed', 'Reviewed')
 	status = request.GET['status'] if 'status' in request.GET else statuses[0]
-
-	if status == 'To be Submitted':
-		submissions = NominationSubmitted.objects.filter(status=0) # status for submitted
+	today = datetime.today().date()
+	if status == 'To be Reviewed':
+		submissions = NominationSubmitted.objects.filter(status=0, nomination__end_day__lte=today) # status for submitted
 	else:
 		submissions = NominationSubmitted.objects.filter(ratings__user=request.user)
 
