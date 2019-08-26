@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Avg
 from django.utils import timezone
 from nominate_app.utils import group_required
-from nominate_app.models import Nomination,NominationPeriod, AwardTemplate, NominationInstance, User, Questions, NominationAnswers, NominationSubmitted, NominationRating, DirectorComments
+from nominate_app.models import *
 from django.template.defaulttags import register
 
 @register.filter
@@ -20,9 +20,10 @@ def index(request):
     selected_status = request.GET.get('status', default='reviewed')
     current_user = User.objects.get(id=request.user.id)
     page = request.GET.get('page', 1)
+    today = datetime.today().date()
     statuses = ['reviewed', 'history']
     if selected_status == 'reviewed':
-        nomination_data = NominationSubmitted.objects.filter(status=1)
+        nomination_data = NominationSubmitted.objects.filter(status=1, nomination__end_day__gte=today)
     elif selected_status == 'history':
         nomination_data = NominationSubmitted.objects.filter(status__in=[2, 3, 4])
     paginator = Paginator(nomination_data, 9)

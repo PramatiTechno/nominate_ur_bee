@@ -8,8 +8,8 @@
 <nav class="navbar navbar-expand-md navbar-dark sticky-top" id="sidebar">
 <div style="width:100%;vertical-align:middle;">
 <div class="pull-left margin-top">
-  <i class="fa fa-bars bars"></i>
-  <img class="navbar-brand logo" src="{% static "logo.png" %}">
+  <i class="fa fa-bars bars" id="toptoggle"></i>
+  <a href="/"><img class="navbar-brand logo" src="{% static 'logo.png' %}"></a>
 </div>
 
 
@@ -50,5 +50,8 @@ $("#toptoggle").click(function(){
 });
 
 
-
 </script>
+
+
+
+

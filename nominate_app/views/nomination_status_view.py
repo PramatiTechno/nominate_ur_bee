@@ -34,7 +34,6 @@ def get_nomination_data(award_ft_submissions, award_name, award_template_name, p
     nominations = paginator.page(1)
   except EmptyPage:
     nominations = paginator.page(paginator.num_pages)
-
   for nomination in nominations:
     nd = {
       'start_day': nomination.start_day.strftime('%d %B'),
@@ -45,14 +44,37 @@ def get_nomination_data(award_ft_submissions, award_name, award_template_name, p
       'nomination_id': nomination.id,
       'instances': []
     }
-    for submission in nomination.submissions.all().order_by('id'):      
-      nd['instances'].append({
-        'username': submission.email,
-        'status': submission.get_status(submission.status),
-        'id': submission.id,
-      })
-    
-    nomination_data.append(nd)
+    users = User.objects.filter(groups__id=nomination.group_id)
+    for user in users:
+      nomination_submitted = NominationSubmitted.objects.filter(template_name=nomination.award_template.template_name, email=user.email)
+      nomination_instance = NominationInstance.objects.filter(nomination__award_template_id=nomination.award_template_id, user=user)
+      if nomination_submitted:
+        if nomination_instance:
+          nd['instances'].append({
+              'username': user.email,
+              'status': nomination_submitted[0].get_status(nomination_submitted[0].status),
+              'id': nomination_instance[0].id
+          })
+        else:
+          nd['instances'].append({
+              'username': user.email,
+              'status': nomination_submitted[0].get_status(nomination_submitted[0].status),
+              'id': None
+          })          
+
+      elif nomination_instance:
+          nd['instances'].append({
+              'username': user.email,
+              'status': nomination_instance[0].get_status(nomination_instance[0].status),
+              'id': nomination_instance[0].id
+          })
+      else:
+          nd['instances'].append({
+              'username': user.email,
+              'status': "New",
+              'id': None
+          })
+      nomination_data.append(nd)
 
   nominations.object_list = nomination_data
   return nominations
@@ -91,7 +113,12 @@ def get_nomination_details(page, award_name=None, template_name=None, start_day=
     award = awards[0]
 
   award_ft_submissions = submissions.filter(award_name=award)
+  ats =[ award_template.template_name for award_template in  AwardTemplate.objects.all()]
+
   award_templates = award_ft_submissions.values_list('template_name', flat=True).distinct()
+  ats.extend(award_templates)
+  award_templates = list(set(ats))
+  award_templates.sort()
   nomination_data = None
 
   if award_templates:
