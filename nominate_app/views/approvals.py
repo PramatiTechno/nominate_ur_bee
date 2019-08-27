@@ -23,7 +23,7 @@ def index(request):
     today = datetime.today().date()
     statuses = ['reviewed', 'history']
     if selected_status == 'reviewed':
-        nomination_data = NominationSubmitted.objects.filter(status=1, nomination__end_day__lte=today)
+        nomination_data = NominationSubmitted.objects.filter(status=1, nomination__end_day__gte=today)
     elif selected_status == 'history':
         nomination_data = NominationSubmitted.objects.filter(status__in=[2, 3, 4])
     paginator = Paginator(nomination_data, 9)
