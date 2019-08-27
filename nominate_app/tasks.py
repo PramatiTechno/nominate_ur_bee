@@ -77,7 +77,7 @@ def populate_monthly_frequency():
                            new_instance = Nomination.objects.get_or_create(award_template_id=template.id,start_day=next_nomination_starts_at,end_day=next_nomination_ends_at,group=period.group)
 
 
-@periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
+# @periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
 def email_task():
 	# subjects
     manager_start_date = "its time to nominate your bee"

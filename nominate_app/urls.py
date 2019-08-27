@@ -37,6 +37,8 @@ urlpatterns = [
   path("users/", user_management.index,name="users"),
   path("users/new", user_management.new,name="new_user"),
   path("users/create", user_management.create,name="create_user"),
+  path("users/<user_id>/edit", user_management.edit,name="edit_user"),
+  path("users/<user_id>/", user_management.user,name="user"),
 
   path("nominations/",nominations.index,name="nominations"),
   path('nominations/<status_value>', nominations.status_index, name="nomination_status_index"),

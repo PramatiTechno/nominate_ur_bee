@@ -59,14 +59,16 @@ def index(request):
 	users = User.objects.filter(groups=selected_group['id'])
 	for user in users:
 		if user.groups.order_by('-group')[0] == group:  # to get the users if the group is his/her highest
+			# embed()
 			user_list.append({
+				'group_name': user.groups.first().name,
+				'id': user.id,
 				'first_name': user.first_name,
 				'last_name': user.last_name,
 				'email': user.email,
 				'baselocation': user.userprofile.baselocation,
 				'designation': user.userprofile.designation,
 			})
-
 	return render(request, 'nominate_app/user_management/index.html', {'users': user_list, 'groups':group_list, 'c_group': selected_group})
 
 
@@ -75,7 +77,26 @@ def new(request):
 	invite_form = AddUserForm()
 	return render(request, 'nominate_app/user_management/new.html', {'invite_form': invite_form})
 
+@group_required('Admin', raise_exception=True)
+def edit(request,user_id):
+	# embed()
+	user = User.objects.get(id=user_id)
+	return render(request, 'nominate_app/user_management/edit.html', {'c_user': user})
 
+@group_required('Admin', raise_exception=True)
+def user(request,user_id):
+	# embed()
+	if request.method == 'POST':
+		embed()
+		user=User.objects.get(id=user_id)
+		# email = request.POST['email']
+	  
+		user.email=request.POST['email'] 
+		user.group=request.POST['group'] 
+		user.save() 
+		messages.success(request, 'User is updated successfully.')
+		return redirect('/users')
+  	 
 @group_required('Admin', raise_exception=True)
 def create(request):
 	email = request.POST['email']
