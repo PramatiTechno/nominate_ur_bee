@@ -53,6 +53,7 @@ def index(request):
   except EmptyPage:
     nominations = paginator.page(paginator.num_pages)
   return render(request, 'nominate_app/nominations/index.html', {'data': nominations, 'statuses': statuses, 'selected_status': "new" })
+  
 @group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def status_index(request, status_value):
   current_user = User.objects.get(id=request.user.id)

@@ -3,8 +3,16 @@
 {% block content %}
 {% load staticfiles %}
 <script src="{% static 'js/award_templates.js' %}"></script>
+<script src="{% static 'js/select2.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
 
 
+
+<style>
+.multi-select{
+  z-index:1000 !important;
+}
+</style>
 
 <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
   <h5>
@@ -104,8 +112,8 @@
           </div>
 
           <div class="col-md-8">
-            <div class="form-group">
-              {{ form.group|attr:"class:form-control" }}
+            <div class="form-group group-dropdown">
+              {{ form.group|attr:"class:form-control multi-select" }}
             </div>
           </div>
         </div>
