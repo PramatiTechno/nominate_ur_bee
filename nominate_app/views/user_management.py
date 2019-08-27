@@ -87,15 +87,24 @@ def edit(request,user_id):
 def user(request,user_id):
 	# embed()
 	if request.method == 'POST':
-		embed()
-		user=User.objects.get(id=user_id)
-		# email = request.POST['email']
+		# embed()
+		# user=User.objects.get(id=user_id)
+		email = request.POST['email']
+		group = request.POST['group']
+		invite_exist = UserInvite.objects.filter(id=user_id).exists()
+		if invite_exist:
+			user_invite = UserInvite.objects.get(id=user_id)
+			user_invite.email = request.POST['email']
+			user_invite.group = request.POST['group']
+			user_invite.save()
+		
+
+
 	  
-		user.email=request.POST['email'] 
-		user.group=request.POST['group'] 
-		user.save() 
+		# user.email=request.POST['email'] 
+		# user.save() 
 		messages.success(request, 'User is updated successfully.')
-		return redirect('/users')
+		return redirect('/users/')
   	 
 @group_required('Admin', raise_exception=True)
 def create(request):
