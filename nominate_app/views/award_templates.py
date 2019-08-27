@@ -61,14 +61,15 @@ def index(request,award_id):
         created_award = award_form.save()
         for i in range(int(content['questions_set-TOTAL_FORMS'])):
           qtype = content['questions_set-{0}-qtype'.format(i)]
+          attachment_needed = bool(content['questions_set-{0}-attachment_need'.format(i)]) if 'questions_set-{0}-attachment_need'.format(i) in content else False
           if qtype == "SUBJECTIVE":
             question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
-            attachment_need=bool(content['questions_set-0-attachment_need']), created_at=timezone.now(), award_template_id = created_award.id, \
+            attachment_need=attachment_needed, created_at=timezone.now(), award_template_id = created_award.id, \
             group_id=content['questions_set-{0}-group'.format(i)])
             question.save()
           else:
             question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
-            attachment_need=bool(content['questions_set-0-attachment_need']), created_at=timezone.now(), award_template_id = created_award.id, \
+            attachment_need=attachment_needed, created_at=timezone.now(), award_template_id = created_award.id, \
             group_id=content['questions_set-{0}-group'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)))
             question.save()
           messages.success(request, 'Award Template created successfully.')
