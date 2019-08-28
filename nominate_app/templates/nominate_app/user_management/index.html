@@ -83,8 +83,11 @@
                 <td scope="row" data-label="Email">{{ user.designation }}</td>
 
                 <td scope="row" data-label="Actions">
+                    {% if user.is_exist %}
                     <a href="{% url 'nominate_app:edit_user' user.id %}"><i class="fa fa-edit edit_fa"></i></a>
-                    <a href=""><i class="fa fa-trash fa-2x form_det"></i></a>
+                    <a href=""><i class="fa fa-trash fa-2x form_det"></i></a> {% else %}
+                    <a href="{% url 'nominate_app:edit_invited_user' user.id %}"><i class="fa fa-edit edit_fa"></i></a>
+                    <a href=""><i class="fa fa-trash fa-2x form_det"></i></a> {% endif %}
                 </td>
 
             </tr>

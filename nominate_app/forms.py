@@ -55,7 +55,16 @@ class AddUserForm(forms.ModelForm):
       self.fields['group'].choices = [(group.id, group.name) for group in Group.objects.all()]
       self.fields['group'].widget.attrs.update({'class': 'form-control'})
 
+class AddGroupForm(forms.ModelForm):
 
+  class Meta:
+    model = UserInvite
+    fields = ['group']
+
+  def __init__(self, *args, **kwargs):
+    super(AddGroupForm, self).__init__(*args, **kwargs)
+    self.fields['group'].choices = [(group.id, group.name) for group in Group.objects.all()]
+    self.fields['group'].widget.attrs.update({'class': 'form-control'})
 
 class CommentForm(forms.ModelForm):
 

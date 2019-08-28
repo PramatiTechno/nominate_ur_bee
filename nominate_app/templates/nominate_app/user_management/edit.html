@@ -14,33 +14,39 @@
 
 <div class="container">
     <div class="form-group">
+        {% if is_exist %}
         <form action="/users/{{c_user.id}}/" method="post">
-            <input type="hidden" name="_method" value="put"> {% csrf_token %}
+            {% else %}
+            <form action="/invited_users/{{c_user.id}}/" method="post">
+                {% endif %}
+                <input type="hidden" name="_method" value="put"> {% csrf_token %}
 
-            <div class="row award_top_margin">
-                <div class="col-md-2">
-                    <label class="col-form-label" for="email">Email</label>
+                <div class="row award_top_margin">
+                    <div class="col-md-2">
+                        <label class="col-form-label" for="email">Email</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" name="email" class="form-control" value="{{  c_user.email }}" />
+                    </div>
                 </div>
-                <div class="col-md-8">
-                    <input type="text" name="email" class="form-control" value="{{  c_user.email }}" />
-                </div>
-            </div>
-            <div class="row award_top_margin">
-                <div class="col-md-2">
-                    <label class="col-form-label" for="group">Group</label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" name="group" class="form-control" value="{{  c_user.groups.first.name   }}" />
-                </div>
-            </div>
+                <div class="row award_top_margin">
+                    <div class="col-md-2">
+                        <label class="col-form-label" for="group">Group</label>
+                    </div>
+                    <div class="col-md-8">
+                        {{ group_form.group }}
 
-            <div class="row award_top_margin justify-content-md-center">
-                <div class="col-sm-4">
-                    <a type="button" class="btn btn-danger" href="{% url 'nominate_app:users' %}">Cancel</a>
-                    <button type="submit" class="btn btn-success">Update</button>
+                        <!-- <input type="text" name="group" class="form-control" value="{{  c_user.groups.first.name   }}" /> -->
+                    </div>
                 </div>
-            </div>
-        </form>
+
+                <div class="row award_top_margin justify-content-md-center">
+                    <div class="col-sm-4">
+                        <a type="button" class="btn btn-danger" href="{% url 'nominate_app:users' %}">Cancel</a>
+                        <button type="submit" class="btn btn-success">Update</button>
+                    </div>
+                </div>
+            </form>
     </div>
 </div>
 
