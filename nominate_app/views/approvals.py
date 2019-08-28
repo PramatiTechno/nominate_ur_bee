@@ -76,12 +76,15 @@ def approve(request, submission_id):
             send_mail(subject=subject_completion, from_email='no-reply@pramati.com', \
                 recipient_list=[str(admin.email)], message=plain_message_value, fail_silently=False)
         return redirect('nominate_app:approval')
+
     nomination_submitted = NominationSubmitted.objects.get(id=submission_id)
     ratings = NominationRating.objects.filter(submission_id=nomination_submitted.id)
     avg_rating = NominationRating.objects.filter(submission_id=submission_id).aggregate(Avg('rating'))['rating__avg']
-    if request.GET.get('page', default=None) == 'show':
-        
+
+    created = DirectorComments.objects.filter(nomination_submitted=nomination_submitted, user=request.user).exists()
+    if created:
         comment = nomination_submitted.director_comment.first().comment
         status = nomination_submitted.get_status(nomination_submitted.status)
         return render(request, 'nominate_app/approvals/show.html', {'selected_nomination': nomination_submitted, 'avg_rating': avg_rating, 'ratings': ratings, 'status': status, 'comment': comment})    
+        
     return render(request, 'nominate_app/approvals/new.html', {'selected_nomination': nomination_submitted, 'avg_rating': avg_rating, 'ratings': ratings})

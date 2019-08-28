@@ -37,6 +37,12 @@ urlpatterns = [
   path("users/", user_management.index,name="users"),
   path("users/new", user_management.new,name="new_user"),
   path("users/create", user_management.create,name="create_user"),
+  path("users/<user_id>/edit", user_management.edit_user,name="edit_user"),
+  path("invited_users/<user_invite_id>/edit", user_management.edit_invite,name="edit_invited_user"),
+
+  path("users/<user_id>/", user_management.user,name="user"),
+  path("invited_users/<invited_user_id>/", user_management.invited_user,name="invited_user"),
+
 
   path("nominations/",nominations.index,name="nominations"),
   path('nominations/<status_value>', nominations.status_index, name="nomination_status_index"),

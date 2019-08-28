@@ -27,7 +27,7 @@ def index(request,nomination_id):
     nomination = Nomination.objects.get(id=nomination_id)
     nomination_instance = NominationInstance.objects.get_or_create(nomination=nomination,user=request.user)[0]
     nomination_template = nomination.award_template
-    questions = Questions.objects.filter(award_template = nomination_template,group=nomination.group).order_by('id')
+    questions = Questions.objects.filter(award_template = nomination_template,groups=nomination.group).order_by('id')
     new_form = request.POST.copy()
     dict_new_form = dict(new_form)
     ques_answers_dict = {}
@@ -145,7 +145,7 @@ def new(request,nomination_id):
   nomination_instance = NominationInstance(nomination=nomination)
   
   nomination_template = nomination.award_template
-  questions = Questions.objects.filter(award_template = nomination_template,group=nomination.group).order_by('id')
+  questions = Questions.objects.filter(award_template = nomination_template,groups=nomination.group).order_by('id')
   new_form = request.POST.copy()
   dict_new_form = dict(new_form)
   ques_answers_dict = {}
@@ -166,7 +166,7 @@ def edit(request,nomination_id,nomination_instance_id):
   nomination = Nomination.objects.get(id=nomination_id)
   nomination_instance = NominationInstance.objects.get(id=nomination_instance_id)
   nomination_template = nomination.award_template
-  questions = Questions.objects.filter(award_template = nomination_template,group=nomination.group).order_by('id')
+  questions = Questions.objects.filter(award_template = nomination_template,groups=nomination.group).order_by('id')
   new_form = request.POST.copy()
   dict_new_form = dict(new_form)
   ques_answers_dict = {}
