@@ -43,6 +43,8 @@ urlpatterns = [
   path("users/<user_id>/", user_management.user,name="user"),
   path("invited_users/<invited_user_id>/", user_management.invited_user,name="invited_user"),
 
+  path("users/<user_id>/delete", user_management.delete_user,name="delete_user"),
+  path("invited_users/<user_invite_id>/delete", user_management.delete_invite,name="delete_invited_user"),
 
   path("nominations/",nominations.index,name="nominations"),
   path('nominations/<status_value>', nominations.status_index, name="nomination_status_index"),
