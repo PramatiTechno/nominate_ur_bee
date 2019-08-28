@@ -226,6 +226,19 @@
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
+<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}"></script>
+
+<script>
+$(document).ready(function(){
+	$('.submission-rating').starRating({
+   		starSize: 15,
+		readOnly: true,
+    	callback: function(currentRating, $el){
+    	}
+	})
+})
+</script>
 
 <div class="container-fluid" style="padding-left:0px !important;height:100%;">
 
@@ -341,24 +354,30 @@
                                     <div>
                                         {% for nomination_instance in nomination.instances %}
                                         <div class="user">
-                                            {% if nomination_instance.id %}
-                                            <a href="/nomination_feed/{{nomination_instance.id}}" style="cursor: pointer; text-decoration: none">
-                                            {% else %}
-                                                <a href="#" style="cursor: pointer; text-decoration: none"></a>
-                                            {% endif %}   
                                                 <div class="row">
-                                                    <div class="col-sm-5">
-                                                        {{ nomination_instance.username }}
+                                                    <div class="col-sm-4">
+                                                        {% if nomination_instance.id %}
+                                                            <a href="/nomination_feed/{{nomination_instance.id}}" style="cursor: pointer; text-decoration: none">
+                                                                {{ nomination_instance.username }}
+                                                            </a>
+                                                        {% else %}
+                                                            <a href="#" style="cursor: pointer; text-decoration: none"></a>
+                                                        {% endif %}
                                                     </div>
-                                                    <div class="col-sm-5">
+                                                    <div class="col-sm-2">
                                                         {{ nomination_instance.status }}
                                                     </div>
-                                                    <div class="col-sm-2" style="text-align: right">
-                                                        <i class="fa fa-envelope"> </i>
+                                                    <div class="col-sm-2">
+                                                        <div class="row">
+                                                            {{ nomination_instance.avg_rating }}<div class="submission-rating ml-1 mr-1" data-rating="{{ nomination_instance.avg_rating }}"></div> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4" style="text-align: right">
+                                                        <a href="/reemail/{{ nomination_instance.username }}/{{ nomination.nomination_id }}/">
+                                                            <button type="submit" class="btn btn-success"><i class="fa fa-envelope"></i> Reminder</button>
+                                                        </a>
                                                     </div>
                                                 </div>
-
-                                            </a>
                                         </div>
                                         {% empty %} No Nomination instances found. {% endfor %}
                                     </div>

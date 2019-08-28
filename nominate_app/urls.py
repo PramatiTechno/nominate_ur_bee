@@ -13,10 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin  
-from django.urls import path  
+from django.contrib import admin
+from django.urls import path
 from nominate_app.views import awards,award_templates, nomination_status_view,nomination_index,nominations,nomination_instances, nomination_review, approvals, results, user_management, dashboard
-from django.conf import settings 
+from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 
@@ -72,6 +72,7 @@ urlpatterns = [
   path('nomination_review/<int:nomination_submitted_id>', nomination_review.nomination_rating.as_view(), name='nomination_review_rating'),
 
   path('results/', results.index, name='results'),
+  path('reemail/<nomination>/<int:nomination_id>/', nomination_status_view.email, name='reemail')
 ]
 
 if settings.DEBUG:
