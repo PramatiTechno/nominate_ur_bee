@@ -83,7 +83,7 @@ def populate_monthly_frequency():
                                 pass
 
 
-@periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
+# @periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
 def email_task():
 	# subjects
     manager_start_date = "its time to nominate your bee"
