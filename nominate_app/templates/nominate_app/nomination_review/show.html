@@ -35,7 +35,7 @@ $(document).ready(function(){
 					<strong> {{submission.award_name}} / {{ submission.template_name }} </strong>
 				</div>
 				<div class="col-md-6">
-					<p class="pull-right text-muted">{{ submission.email}}</p>
+					<p class="pull-right text-muted">{{ submission.email}}<a class="" href="{% url 'nominate_app:nomination_instance_post' nomination_submittion_id=submission.id %}">  Go to feed </a></p>
 				</div>
 			</div>
 		</div>

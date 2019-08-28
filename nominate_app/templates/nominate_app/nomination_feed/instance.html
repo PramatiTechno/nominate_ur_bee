@@ -4,7 +4,12 @@
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script src="{% static 'js/nomination_feed.js' %}"></script>
 
-	{% include 'nominate_app/nomination_detail.html' with submission=instance.submission qa_list=instance.qa detail=instance.detail comment_form=comment_form  %}
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+    <a href="javascript:history.back()" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+      <h5>Nomination Feed</h5>
+</div>
+
+	{% include 'nominate_app/nomination_feed/detail.html' with submission=instance.submission qa_list=instance.qa detail=instance.detail comment_form=comment_form  %}
 
 <!-- Modal -->
 <div id="like_modal" class="modal fade" role="dialog">

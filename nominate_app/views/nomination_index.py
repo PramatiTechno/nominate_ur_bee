@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 
 # home view for posts. Posts are displayed in a list
 class NominationIndexView(View):
-	template_name='nominate_app/nomination_index.html'
+	template_name='nominate_app/nomination_feed/index.html'
 	context_object_name = 'nomination_list'
 	def get(self, request):
 		comment_form = CommentForm()
@@ -91,7 +91,7 @@ def nomination_instance_post(request, nomination_submittion_id):
 	submission = NominationSubmitted.objects.get(id=nomination_submittion_id)
 	instance = nomination_instance_detail(submission, request.user)
 	comment_form = CommentForm()
-	return render(request, 'nominate_app/nomination_instance.html', {'instance': instance, 'comment_form':comment_form})
+	return render(request, 'nominate_app/nomination_feed/instance.html', {'instance': instance, 'comment_form':comment_form})
 
 # For Like and unlike in nomination instances
 def nomination_like(request, nomination_submittion_id):
@@ -133,7 +133,7 @@ class CommentList(View):
 
 		comments.object_list = comments.object_list[::-1]
 
-		return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'user': request.user, 'form': form, 'instance': nomination_submission, 'comments': comments}))
+		return HttpResponse(render_to_string('nominate_app/nomination_feed/comments.html', {'user': request.user, 'form': form, 'instance': nomination_submission, 'comments': comments}))
 
 
 	def post(self, request, nomination_submittion_id):
@@ -151,7 +151,7 @@ class CommentList(View):
 		comments = []
 		comments.append(comment)
 
-		return HttpResponse(render_to_string('nominate_app/nomination_comments.html', {'user': request.user, 'form': form, 'instance': nomination_submission, 'comments': comments}))
+		return HttpResponse(render_to_string('nominate_app/nomination_feed/comments.html', {'user': request.user, 'form': form, 'instance': nomination_submission, 'comments': comments}))
 
 
 def comment_remove(request, nomination_submittion_id, comment_id):
