@@ -275,7 +275,7 @@
                             {% if selected_status.lower == "reviewed" %}
                             <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}'" type="button" class="btn btn-success" value = "Approve">
                             {% else %}
-                            <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}?page=show'" type="button" class="btn btn-success" value = "View">
+                            <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}'" type="button" class="btn btn-success" value = "View">
                             {% endif %}
                     </td>
                 </tr>
