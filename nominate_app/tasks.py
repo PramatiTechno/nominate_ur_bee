@@ -3,7 +3,7 @@ from celery.decorators import periodic_task
 from celery.utils.log import get_task_logger
 from django.core.mail import send_mail
 from nominate_app.models import User, UserProfile, \
-Nomination,Awards, AwardTemplate,NominationInstance,Group, NominationPeriod
+Nomination,Awards, AwardTemplate,NominationInstance,Group, NominationPeriod, Questions
 from dateutil.relativedelta import *
 from datetime import datetime,timedelta
 import calendar
@@ -66,7 +66,10 @@ def populate_monthly_frequency():
                 if  group_nominations.count() == 0:
                     print("Group count is zero");
                     if period.start_day == (datetime.now() + timedelta(hours=24)).date():
-                        new_instance = Nomination.objects.get_or_create(award_template_id= template.id,start_day=period.start_day,end_day=period.end_day,group=period.group)
+                        if Questions.objects.filter(groups=period.group, award_template=template).exists():
+                                new_instance = Nomination.objects.get_or_create(award_template_id= template.id,start_day=period.start_day,end_day=period.end_day,group=period.group)
+                        else:
+                            pass
                 else:
                     for nom in group_nominations:
                         print("Iterating the noms");
@@ -74,7 +77,10 @@ def populate_monthly_frequency():
                         next_nomination_starts_at = add_months(last_nomination.start_day,frequencies[frequency]) 
                         next_nomination_ends_at = add_months(last_nomination.end_day,frequencies[frequency])
                         if next_nomination_starts_at == (datetime.now() + timedelta(hours=24)).date():
-                           new_instance = Nomination.objects.get_or_create(award_template_id=template.id,start_day=next_nomination_starts_at,end_day=next_nomination_ends_at,group=period.group)
+                            if Questions.objects.filter(groups=period.group, award_template=template).exists():
+                                new_instance = Nomination.objects.get_or_create(award_template_id=template.id,start_day=next_nomination_starts_at,end_day=next_nomination_ends_at,group=period.group)
+                            else:
+                                pass
 
 
 @periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
