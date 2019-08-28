@@ -127,6 +127,20 @@ def invited_user(request,invited_user_id):
 
 		messages.success(request, 'User is updated successfully.')
 		return redirect('/users/')
+
+@group_required('Admin', raise_exception=True)
+def delete_user(request, user_id):
+	# user = User.objects.get(id=user_id)
+	# user.delete()
+	messages.success(request, 'User is deleted successfully.')
+	return redirect('/users/')
+
+@group_required('Admin', raise_exception=True)
+def delete_invite(request, user_invite_id):
+	user = UserInvite.objects.get(id=user_invite_id)
+	user.delete()
+	messages.success(request, 'User is deleted successfully.')
+	return redirect('/users/')
   	 
 @group_required('Admin', raise_exception=True)
 def create(request):
