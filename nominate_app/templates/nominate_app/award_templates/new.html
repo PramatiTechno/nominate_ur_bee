@@ -3,6 +3,8 @@
 {% block content %}
 {% load staticfiles %}
 <script src="{% static 'js/award_templates.js' %}"></script>
+<script src="{% static 'js/select2.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
 
 
 
@@ -104,8 +106,8 @@
           </div>
 
           <div class="col-md-8">
-            <div class="form-group">
-              {{ form.group|attr:"class:form-control" }}
+            <div class="form-group group-dropdown">
+              {{ form.group|attr:"class:form-control multi-select" }}
             </div>
           </div>
         </div>
