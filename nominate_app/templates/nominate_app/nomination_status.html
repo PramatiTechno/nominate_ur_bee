@@ -361,7 +361,7 @@ $(document).ready(function(){
                                                                 {{ nomination_instance.username }}
                                                             </a>
                                                         {% else %}
-                                                            <a href="#" style="cursor: pointer; text-decoration: none"></a>
+                                                            <a href="#" style="cursor: pointer; text-decoration: none">{{ nomination_instance.username }}</a>
                                                         {% endif %}
                                                     </div>
                                                     <div class="col-sm-2">
@@ -373,9 +373,13 @@ $(document).ready(function(){
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4" style="text-align: right">
-                                                        <a href="/reemail/{{ nomination_instance.username }}/{{ nomination.nomination_id }}/">
+                                                        {% if nomination_instance.is_active %}
+                                                            <a href="/reemail/{{ nomination_instance.username }}/{{ nomination.nomination_id }}/">
                                                             <button type="submit" class="btn btn-success"><i class="fa fa-envelope"></i> Reminder</button>
-                                                        </a>
+                                                            </a>
+                                                        {% else %}
+                                                            <a class="text-muted"> Out dated </a>
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                         </div>
