@@ -374,9 +374,15 @@ $(document).ready(function(){
                                                     </div>
                                                     <div class="col-sm-4" style="text-align: right">
                                                         {% if nomination_instance.is_active %}
-                                                            <a href="/reemail/{{ nomination_instance.username }}/{{ nomination.nomination_id }}/">
-                                                            <button type="submit" class="btn btn-success"><i class="fa fa-envelope"></i> Reminder</button>
-                                                            </a>
+                                                            {% if nomination_instance.status in 'New,Saved' %}
+                                                                <a href="/reemail/{{ nomination_instance.username }}/{{ nomination.nomination_id }}/">
+                                                                <button type="submit" class="btn btn-success"><i class="fa fa-envelope"></i> Reminder</button>
+                                                                </a>
+                                                            {% else %}
+                                                                <a >
+                                                                <button type="submit" class="btn btn-success" disabled><i class="fa fa-envelope"></i> Reminder</button>
+                                                                </a>
+                                                            {% endif %}
                                                         {% else %}
                                                             <a class="text-muted"> Out dated </a>
                                                         {% endif %}
