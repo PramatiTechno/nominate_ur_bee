@@ -132,7 +132,7 @@ class Questions(SafeDeleteModel):
     
 
 class Nomination(models.Model):
-  award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
+  award_template = models.ForeignKey(AwardTemplate, null=True, on_delete=models.SET_NULL)
   group = models.ForeignKey(Group ,on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
