@@ -17,6 +17,7 @@ EMAIL_REGEX = r"[a-zA-Z][a-zA-Z0-9_.]{2,}@(?:imaginea|pramati).com"
 
 @group_required('Admin', raise_exception=True)
 def index(request):
+	# embed()
 	groups = Group.objects.all()
 	group = groups[0]
 	group_list = []
@@ -58,7 +59,7 @@ def index(request):
 				'name': group.name
 			}
 
-	users = User.objects.filter(groups=selected_group['id'])
+	users = User.objects.filter(groups=selected_group['id'], is_active=True)
 	for user in users:
 		if user.groups.order_by('-group')[0] == group:  # to get the users if the group is his/her highest
 			# embed()
@@ -127,6 +128,21 @@ def invited_user(request,invited_user_id):
 
 		messages.success(request, 'User is updated successfully.')
 		return redirect('/users/')
+
+@group_required('Admin', raise_exception=True)
+def delete_user(request, user_id):
+	user = User.objects.get(id=user_id)
+	user.is_active = False
+	user.save()
+	messages.success(request, 'User is deleted successfully.')
+	return render(request, 'nominate_app/user_management/index.html')
+
+@group_required('Admin', raise_exception=True)
+def delete_invite(request, user_invite_id):
+	user = UserInvite.objects.get(id=user_invite_id)
+	user.delete()
+	messages.success(request, 'User is deleted successfully.')
+	return redirect('/users/')
   	 
 @group_required('Admin', raise_exception=True)
 def create(request):
