@@ -66,22 +66,22 @@ color:#067084d6;
 
 #arrow {
   float: right;
-  text-align: right;
+  padding-top: 5px;
   font-size: 20px;
     }
 </style>
 
-<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;overflow: hidden;width: auto;">
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;width: auto;">
   <h5>Feed <i class="fa fa-one-half fa-chevron-down" id="arrow" style="vertical-align: top"></i> </h5>
 </div>
 
-<div class="container panel">
-	<div class="nomination_filters" id="filter-block">
-		<form action="/nomination_feed/" method="GET" class="nomination_form">{% csrf_token %}
+<div>
+  <div class="nomination_filters" id="filter-block" align="left">
+    <form action="/nomination_feed/" method="GET" class="nomination_form">{% csrf_token %}
         <div class="row">
           <div class="col-md-4">
             <div>Awards</div>
-	           <div>{{ filter_form.Awards}}</div> 
+             <div>{{ filter_form.Awards}}</div> 
           </div>
 
           <div class="col-md-4">
@@ -93,7 +93,8 @@ color:#067084d6;
             <div>{{ filter_form.Sort }}</div>
           </div>
         </div>
-        <div class="row" style="padding-top:10px;">
+        <br>
+        <div class="row">
           <div class="col-sm-6">
             <div> From </div>
             {{filter_form.from_}} 
@@ -104,12 +105,13 @@ color:#067084d6;
           </div>
         </div>
         <div class="" style="text-align:right;padding-top:10px;width:100%;display:block;">
-	        <input class="btn btn-success" type="submit" id="submit" name="submit" value="Filter"/></li>
+          <input class="btn btn-success" type="submit" id="submit" name="submit" value="Filter"/></li>
         </div>
       </form>
-	</div>
+  </div>
+</div>
 
-
+<div class="container panel">
 	<div class="row nomination-feed infinite-container" style="padding:0px 20px;">
 		{% for instance in instances %}
 		<div class="infinite-item">
@@ -173,8 +175,6 @@ $(document).ready(function(){
   $("#filter-block").css("position", "absolute");
   $("#filter-block").css("z-index", "999");
   $("#filter-block").css("background", "white");
-  $("#filter-block").css("width", "95%");
-  $("#filter-block").css("margin", "auto");
 
 $("#arrow").click(function(){
    if ($("#filter-block").is(":visible")){ 
@@ -186,6 +186,7 @@ $("#arrow").click(function(){
    }
    else{
     $("#arrow").css("transform", "rotate(180deg)");
+    $("#arrow").css("padding-bottom", "5px");
      $("#filter-block").css("display", "block");
    }
 });

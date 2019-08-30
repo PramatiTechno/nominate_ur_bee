@@ -344,9 +344,16 @@ $(document).ready(function(){
                                     {{ nomination.group_name }}
                                 </td>
                                 <td>
-                                    <button class="btn-none show-nominations">
-                                                        <i class="fa fa-eye"></i>
+                                    <button class="btn-none show-nominations" id="show-nominations">
+                                                        <i class="fa fa-plus"></i>
                                                 </button>
+<script>
+    $(document).ready(function(){
+    $("#show-nominations i").click(function(){
+       $(this).toggleClass('fa-plus fa-minus');
+    });
+});
+</script>
                                 </td>
                             </tr>
                             <tr class="nomination-instances">
@@ -421,4 +428,6 @@ $(document).ready(function(){
 
     </div>
 </div>
+
+
 {% endblock %}
