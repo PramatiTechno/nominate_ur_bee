@@ -20,16 +20,33 @@ def get_status(submission, status_code):
 
 @group_required('Directorial Board Member', raise_exception=True)
 def index(request):
-    
     selected_status = request.GET.get('status', default='reviewed')
     current_user = User.objects.get(id=request.user.id)
     page = request.GET.get('page', 1)
     today = datetime.today().date()
     statuses = ['reviewed', 'history']
+    nomination_data = []
     if selected_status == 'reviewed':
-        nomination_data = NominationSubmitted.objects.filter(status=1, nomination__end_day__gte=today)
+        submissions = NominationSubmitted.objects.filter(status=1, nomination__end_day__gte=today)
+        for submission in submissions:
+            nomination_data.append({
+                'id': submission.id,
+                'award_name': submission.award_name,
+                'template_name': submission.template_name,
+                'email': submission.email,
+                'avg_rating': NominationRating.objects.filter(submission_id=submission.id).aggregate(Avg('rating'))['rating__avg']
+            })
     elif selected_status == 'history':
-        nomination_data = NominationSubmitted.objects.filter(status__in=[2, 3, 4])
+        submissions = NominationSubmitted.objects.filter(status__in=[2, 3, 4])
+        for submission in submissions:
+            nomination_data.append({
+                'id': submission.id,
+                'award_name': submission.award_name,
+                'template_name': submission.template_name,
+                'email': submission.email,
+                'status': submission.get_status(submission.status), 
+                'submitted_at': submission.director_comment.first().submitted_at.date(),
+            })
     paginator = Paginator(nomination_data, 9)
     try:
         nominations = paginator.page(page)
