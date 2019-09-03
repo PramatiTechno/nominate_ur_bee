@@ -1,4 +1,9 @@
 $(document).ready(function(){
+
+  $('.multi-select').select2({
+    placeholder: "Select a group",
+  });
+
   $('.objective-type').each(function(i, element){
     if(element.value == "SUBJECTIVE")
       $(this).parent().next().hide()
@@ -74,12 +79,16 @@ $(document).ready(function(){
   });
 
   function cloneMore(selector, type) {
+    group_select = $(selector).find('.multi-select')
+    group_select.select2('destroy')
     var newElement = $(selector).clone(true);
     var total = $("#id_" + type + "-TOTAL_FORMS").val();
     newElement.find(":input").each(function() {
+
       var name = $(this)
         .attr("name")
         .replace("-" + (total - 1) + "-", "-" + total + "-");
+
       var id = "id_" + name;
       $(this)
         .attr({ name: name, id: id })
@@ -147,8 +156,16 @@ $(document).ready(function(){
     total++;
     $("#id_" + type + "-TOTAL_FORMS").val(total);
     $(selector).after(newElement);
-    $("#id_questions_set-"+ (total-1) +"-objective-container").hide()
+    
+    $("#id_questions_set-"+ (total-1) +"-objective-container").hide();
+
     $('input[name="questions_set-'+ (total-1) +'-objectives"]').removeAttr('required');
+    $('.multi-select').select2({
+      placeholder: "Select a group",
+    });
+    group_select.select2({
+      placeholder: "Select a group",
+    })
     }
 
   function re_calc_init() {

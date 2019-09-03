@@ -2,6 +2,8 @@
 
 
 
+<script src="{% static 'js/select2.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
 <script src="{% static 'js/edit_award_template.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/award_templates.css' %}">
 
@@ -71,7 +73,7 @@
                             {{ form.qtype|attr:"class:form-control objective-type" }}
                         </div>
                         {% if questions %}
-                        <div class="objective-type-container" id="id_questions_set-{{ forloop.counter0 }}-objective-container">
+                        <div class="objective-type-container select2" id="id_questions_set-{{ forloop.counter0 }}-objective-container">
 
                             {% for question in questions %} {% if question.qname == form.qname.value %} {% if question.qtype == "SUBJECTIVE" %}
                             <div class='input-group row p-1'>
@@ -124,7 +126,7 @@
                     </div>
 
                     <div class="col-md-8">
-                        {{ form.group|attr:"class:form-control" }}
+                        {{ form.group|attr:"class:form-control multi-select" }}
                     </div>
                 </div>
 

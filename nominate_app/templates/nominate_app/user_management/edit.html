@@ -1,0 +1,60 @@
+{% extends 'base.html' %} {% load widget_tweaks %} {% block content %} {% load staticfiles %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- header -->
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+    <h5>
+        <a href="{% url 'nominate_app:users' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a> Editing User {{c_user.first_name}}
+        <div class="custom-control custom-switch pull-right">
+            {{ user_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1" }}
+            <label class="custom-control-label" for="customSwitch1"></label>
+        </div>
+    </h5>
+</div>
+
+<div class="container">
+    <div class="form-group">
+        {% if is_exist %}
+        <form action="/users/{{c_user.id}}/" method="post">
+            {% else %}
+            <form action="/invited_users/{{c_user.id}}/" method="post">
+                {% endif %}
+                <input type="hidden" name="_method" value="put"> {% csrf_token %}
+
+                <div class="row award_top_margin">
+                    <div class="col-md-2">
+                        <label class="col-form-label" for="email">Email</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" name="email" class="form-control" value="{{  c_user.email }}" />
+                    </div>
+                </div>
+                <div class="row award_top_margin">
+                    <div class="col-md-2">
+                        <label class="col-form-label" for="group">Group</label>
+                    </div>
+                    <div class="col-md-8">
+                        {{ group_form.group }}
+
+                        <!-- <input type="text" name="group" class="form-control" value="{{  c_user.groups.first.name   }}" /> -->
+                    </div>
+                </div>
+
+                <div class="row award_top_margin justify-content-md-center">
+                    <div class="col-sm-4">
+                        <a type="button" class="btn btn-danger" href="{% url 'nominate_app:users' %}">Cancel</a>
+                        <button type="submit" class="btn btn-success">Update</button>
+                    </div>
+                </div>
+            </form>
+    </div>
+</div>
+
+<style>
+    .was-validated .form-control:valid {
+        background-image: none;
+        border-color: #ced4da;
+    }
+</style>
+
+{% endblock %}

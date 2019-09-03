@@ -19,18 +19,26 @@ $(document).ready(function(){
 <!-- header -->
 <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
   <h5>
-    <a href="{% url 'nominate_app:approval' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    <a href="javascript:history.back()" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
     {{ selected_nomination.award_name.capitalize }}
   </h5>
 </div>
 
 <div class = "container" style="padding: 40px;">
-                   {{ selected_nomination.template_name.capitalize }}
-                   <div style="display: flex;">
-                        <div class="submission-rating  mr-1"  data-rating="{{ avg_rating }}"></div>
-                        <span>({{ avg_rating }})</span>
-                   </div>
-                    
+  <div class="row">
+    <div class="col-md-6">
+     {{ selected_nomination.template_name.capitalize }}
+     <div style="display: flex;">
+          <div class="submission-rating  mr-1"  data-rating="{{ avg_rating }}"></div>
+          <span>({{ avg_rating }})</span>
+     </div>
+    </div>
+
+    <div class="col-md-6">
+      <a class="pull-right" href="{% url 'nominate_app:nomination_instance_post' nomination_submittion_id=selected_nomination.id %}">  Go to feed </a>
+    </div>
+  </div>
+                  
           
     <br>
         <div class="reviews" style="">
