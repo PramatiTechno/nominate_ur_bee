@@ -2,21 +2,9 @@
   margin: 8px;
 }
 
-.header {
-  padding: 8px;
-  background-color: #1a3d6e;
-  background-image: linear-gradient(to right, #5e7479 , #70e4af5e);
-  color:white;
-  padding:10px 20px;
-  font-size:14px !important;
-}
 
 #row {
   margin:0px;
-}
-
-#left-arrow {
-  color: white;
 }
 
 #downarrow {
@@ -67,11 +55,3 @@
     text-decoration: inline;
 }
 
-.add-icon{
-  border-radius: 110px;
-  background: #8a8a8a8f;
-  padding: 5px 8px;
-  font-size: 10px;
-  color: white;
-}
-}
