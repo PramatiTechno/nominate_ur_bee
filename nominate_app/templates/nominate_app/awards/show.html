@@ -3,11 +3,12 @@
 {% block content %}
 {% load staticfiles %}
 <script src="{% static 'js/edit_award.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/awards.css' %}">
 
 <!-- header -->
-<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+<div class="header">
   <h5>
-    <a href="{% url 'nominate_app:awards' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    <a href="{% url 'nominate_app:awards' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" id="left-arrow"></i></a>
     Award - {{ award.name }}
     <div class="custom-control custom-switch pull-right">
       {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
@@ -50,11 +51,5 @@
    </div>
 </div>
 
-<style>
-  .was-validated .form-control:valid{
-    background-image: none;
-    border-color: #ced4da;
-  }
-</style>
 {% endblock %}
 
