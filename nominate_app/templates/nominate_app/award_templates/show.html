@@ -6,10 +6,12 @@
 
 {% load staticfiles %}
 <script src="{% static 'js/edit_award_template.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/award_templates.css' %}">
 
-<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+
+<div class="header">
   <h5>
-    <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" id="left-arrow"></i></a>
     Award Template - {{ template.template_name }}
     <div class="custom-control custom-switch pull-right">
       <!-- switch -->
@@ -70,7 +72,7 @@
         </div>
         <div class="col-md-3"> 
           <div class="form-group">
-            <p class="text-muted">{{ question.group }}</p>
+            <p class="text-muted">{{ question.groups.first.name }}</p>
           </div>
         </div>
       </div>
