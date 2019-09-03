@@ -2,8 +2,8 @@
 {% load staticfiles %}
 {% block content %}
 
-
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
+<link rel="stylesheet" href="{% static 'css/awards.css' %}">
 
 <script>
 var rows = document.querySelectorAll("[data-rowid]");
@@ -71,8 +71,8 @@ function checkboxClick(event) {
 </script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
-  <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+<div class="container-fluid" id="container">
+  <div class="header">
         <h5>Award <a href="{% url 'nominate_app:new_award'%}" class="pull-right"><i class="fa fa-plus add-icon"></i></a></h5>
   </div>
 </div>
@@ -108,7 +108,7 @@ function checkboxClick(event) {
       </tr>
       {% empty %}
         <tr class="d-flex">
-          <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> No Awards Found </td>
+          <td class="col-10" id="column" > No Awards Found </td>
         </tr>
       {% endfor %}
   </tbody>
