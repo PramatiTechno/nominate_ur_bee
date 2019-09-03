@@ -61,8 +61,14 @@ def get_activities(user_obj):
     for sub_nom in submitted_nominations:
         submitted_date[sub_nom.nomination.award_template.template_name]=sub_nom.nomination.updated_at\
              if sub_nom.nomination.updated_at else sub_nom.nomination.submitted_at
+    my_like_list = get_likes(user_obj)
+    my_comments_list = get_comments(user_obj)    
+    return {'likes_list':my_like_list, 'comment_list':my_comments_list, \
+        'template_date':template_date, 'submitted_date':submitted_date}
+
+def get_likes(user):
     my_like_list = [] 
-    for instance in user_obj.nominationinstance_set.all():
+    for instance in user.nominationinstance_set.all():
         for submissions in instance.nomination.submissions.\
             filter(Q(created_at__gte=(datetime.now()- timedelta(weeks=1)).date()) |\
                  Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date())):
@@ -70,8 +76,11 @@ def get_activities(user_obj):
                 z = dict()
                 z[instance.nomination.award_template.template_name]=like.voter 
                 my_like_list.append(z) 
+    return my_like_list
+
+def get_comments(user):
     my_comments_list = []
-    for instance in user_obj.nominationinstance_set.all():
+    for instance in user.nominationinstance_set.all():
         for submissions in instance.nomination.submissions.\
             filter(Q(created_at__gte=(datetime.now()- timedelta(weeks=1)).date()) |\
                  Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date())):
@@ -79,9 +88,7 @@ def get_activities(user_obj):
                 z = dict()
                 z[instance.nomination.award_template.template_name]=comment.author
                 my_comments_list.append(z)
-    
-    return {'likes_list':my_like_list, 'comment_list':my_comments_list, \
-        'template_date':template_date, 'submitted_date':submitted_date}
+    return my_comments_list
 
 def load_graph(award_id):
     if award_id:
