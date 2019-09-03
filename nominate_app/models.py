@@ -173,6 +173,7 @@ class NominationSubmitted(models.Model):
   template_name = models.CharField(max_length=150, null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  is_published = models.BooleanField(default=False)
 
   def get_status(self, status_code):
     for status in self.statuses:
