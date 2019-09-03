@@ -88,6 +88,14 @@ class NominateCASBackend(ModelBackend):
                     pass
 
             if not self.user_can_authenticate(user):
+                invite = UserInvite.objects.filter(email=user.email)
+                if invite:
+                    user.is_active = True
+                    user.groups.clear()
+                    user.groups.add(invite[0].group)
+                    user.save()
+                    invite.delete()
+                    return user
                 return None
 
             if pgtiou and settings.CAS_PROXY_CALLBACK and request:
@@ -170,11 +178,11 @@ class NominateCASBackend(ModelBackend):
 
 
     def create_user_role(self, user):
-        user = User.objects.filter(email=user.email)
-        user_object = UserInvite.objects.filter(email=user[0].email)
+        user_object = UserInvite.objects.filter(email=user.email)
         if user_object:
-            user_object.delete()
-            user[0].groups.add(user_object[0].group)    
+            user_object[0].delete()
+            user.groups.clear()
+            user.groups.add(user_object[0].group)    
         
         
 

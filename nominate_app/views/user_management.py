@@ -154,7 +154,7 @@ def create(request):
 		return redirect('nominate_app:new_user')
 
 	# user exist validation 
-	user_exist = User.objects.filter(email=email).exists()
+	user_exist = User.objects.filter(email=email, is_active=True).exists()
 	invite_exist = UserInvite.objects.filter(email=email).exists()
 	if user_exist or invite_exist:
 		messages.error(request, "user already invited or exist")
