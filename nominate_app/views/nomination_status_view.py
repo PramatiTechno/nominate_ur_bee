@@ -23,6 +23,7 @@ def get_nomination_data(award_name, award_template_name, page, start_day=None, e
   award = None
   award_template = None
   award_exist = Awards.objects.filter(name=award_name).exists()
+  award_template_exist = None
 
   if award_exist:
     award = Awards.objects.get(name=award_name)

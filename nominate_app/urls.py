@@ -57,7 +57,7 @@ urlpatterns = [
   path("dashboard/",dashboard.index,name="dashboard"),      
   path("approvals/",approvals.index,name="approval"),
   path("approvals/<submission_id>",approvals.approve,name="approve"),    
-
+  
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
   path('nomination_status_load/<award_name>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
   path('nomination_status_load/awards/<award_name>/templates/<template_name>', nomination_status_view.nomination_status_load_template, name='nomination_status_load_template'),

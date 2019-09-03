@@ -1,0 +1,50 @@
+<div class="card">
+    <div class="card-header">
+        Awards
+    </div>
+    <div class="card-body">
+        <table>
+            <thead>
+                    <tr class="tr_body table_head">
+                        <td class="td_body table_head">
+                            Award Name
+                        </td>
+                        <td class="td_body table_head">
+                            Manager
+                        </td>
+                        <td class="td_body table_head">
+                            Tech Jury
+                        </td>
+                        <td class="td_body table_head">
+                            Director
+                        </td>
+                    </tr>
+                </thead>
+            <tbody>
+                {% for award in awards.data %}
+                <tr data-rowId={{forloop.counter}} class="tr_body">
+                    <td scope="row" data-label="Award Name" class="td_body">
+                        {{ award.award_name }}
+                    </td>
+                    <td scope="row" data-label="Manager" class="td_body">
+                            {{ award.data|get:'manager' }}
+                    </td>
+                    <td scope="row" data-label="Tech Jury" class="td_body">
+                            {{ award.data|get:'technical jury member' }}
+                    </td>
+                    <td scope="row" data-label="Director" class="td_body">
+                            {{ award.data|get:'directorial board member' }}
+                    </td>
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" style="font-size: 15px"> No awards found. Please create a <a href="{% url 'nominate_app:awards' %}">award. </a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if awards.show %}
+            <a href="{% url 'nominate_app:awards' %}" class="card-link">More</a>
+        {% endif %}
+    </div>
+</div>

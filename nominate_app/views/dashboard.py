@@ -2,6 +2,9 @@ from nominate_app.models import Nomination,Awards, NominationPeriod, AwardTempla
 from django.shortcuts import render, redirect
 from nominate_app.utils import group_required
 from django.template.defaulttags import register
+from datetime import datetime,timedelta
+from django.db.models import Q
+from IPython import embed
 
 
 @register.filter
@@ -22,6 +25,7 @@ def index(request):
     
     recent_nominations = get_recent_nominations()
     notifications = get_notifications()
+    activities = get_activities(request.user)
     summary = {'awards': Awards.objects.count()}
     summary['approved'] = NominationSubmitted.objects.filter(status=2).count()
     summary['declined'] = NominationSubmitted.objects.filter(status=3).count()
@@ -31,7 +35,9 @@ def index(request):
     for award in awards_list:
         awards['data'].append(results['award_stats']['submitted'])    
     if Awards.objects.count() > 3:
-        awards['show'] = True 
+        awards['show'] = True
+    results.update(activities)
+    # embed()
     return render(request, 'nominate_app/dashboard.html', results)
 
 def get_notifications():
@@ -42,6 +48,40 @@ def get_recent_nominations():
     nominations = Nomination.objects.all().order_by('end_day')[:3]
     return nominations
 
+def get_activities(user_obj):
+    group_name = user_obj.groups.first()
+    assigned_nominations = group_name.nomination_set.filter(end_day__gte=datetime.now().date())
+    template_date = dict()
+    submitted_date = dict()
+    for nom in assigned_nominations:
+        template_date[nom.award_template.template_name] = nom.end_day
+    submitted_nominations = user_obj.nominationinstance_set.\
+        filter(Q(submitted_at__gte=(datetime.now()- timedelta(weeks=1)).date()) | \
+            Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date()))
+    for sub_nom in submitted_nominations:
+        submitted_date[sub_nom.nomination.award_template.template_name]=sub_nom.nomination.updated_at\
+             if sub_nom.nomination.updated_at else sub_nom.nomination.submitted_at
+    my_like_list = [] 
+    for instance in user_obj.nominationinstance_set.all():
+        for submissions in instance.nomination.submissions.\
+            filter(Q(created_at__gte=(datetime.now()- timedelta(weeks=1)).date()) |\
+                 Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date())):
+            for like in submissions.likes.all():
+                z = dict()
+                z[instance.nomination.award_template.template_name]=like.voter 
+                my_like_list.append(z) 
+    my_comments_list = []
+    for instance in user_obj.nominationinstance_set.all():
+        for submissions in instance.nomination.submissions.\
+            filter(Q(created_at__gte=(datetime.now()- timedelta(weeks=1)).date()) |\
+                 Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date())):
+            for comment in submissions.comments.all():
+                z = dict()
+                z[instance.nomination.award_template.template_name]=comment.author
+                my_comments_list.append(z)
+    
+    return {'likes_list':my_like_list, 'comment_list':my_comments_list, \
+        'template_date':template_date, 'submitted_date':submitted_date}
 
 def load_graph(award_id):
     if award_id:
