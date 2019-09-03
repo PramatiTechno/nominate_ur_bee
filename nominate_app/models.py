@@ -33,7 +33,7 @@ class UserProfile(models.Model):
   worklocation = models.CharField(max_length=70)
   user = models.OneToOneField(User,on_delete=models.PROTECT)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
 
   class Meta:
       db_table='user_profiles'
