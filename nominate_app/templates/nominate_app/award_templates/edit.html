@@ -3,10 +3,11 @@
 
 
 <script src="{% static 'js/edit_award_template.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/award_templates.css' %}">
 
-<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+<div class="header">
     <h5>
-        <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a> Editing Award Template {{ template.template_name }}
+        <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" id="left-arrow"></i></a> Editing Award Template {{ template.template_name }}
         <div class="custom-control custom-switch pull-right">
             {{ template_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1" }}
             <label class="custom-control-label" for="customSwitch1"></label>
@@ -52,7 +53,7 @@
 
                     <div class="col-md-2">
                         <span class="fa del_btn_formset remove_nomination">
-                <label><span class="fa fa-trash-o fa-lg" style="color: #bf1a1a">
+                <label><span class="fa fa-trash-o fa-lg" id="trash">
                   {{ form.DELETE|attr:"class:award-checkbox" }}
                 </span>
                         </label>
@@ -78,7 +79,7 @@
                                     <input type="text" class='form-control' id='id_questions_set-{{ forloop.counter0 }}-objectives' value="{{ option }}" name='questions_set-{{ question.id }}-objectives' />
                                 </div>
                                 <div class='col-md-2'>
-                                    <i class="fa fa-trash-o objective-cancel" style="color: #bf1a1a" name='objective-cancel' aria-hidden="true"></i>
+                                    <i class="fa fa-trash-o objective-cancel" id="trash" name='objective-cancel' aria-hidden="true"></i>
                                 </div>
                             </div>
 
@@ -88,7 +89,7 @@
                                     <input type="text" class='form-control' id='id_questions_set-{{ forloop.counter }}-objectives' value="{{ option }}" name='questions_set-{{ question.id }}-objectives' required/>
                                 </div>
                                 <div class='col-md-2'>
-                                    <i class="fa fa-trash-o objective-cancel" style="color: #bf1a1a" name='objective-cancel' aria-hidden="true"></i>
+                                    <i class="fa fa-trash-o objective-cancel" id="trash" name='objective-cancel' aria-hidden="true"></i>
                                 </div>
                             </div>
                             {% endfor %} {% endif %} {% endif %} {% endfor %}
