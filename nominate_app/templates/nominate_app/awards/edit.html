@@ -5,15 +5,10 @@
 <script src="{% static 'js/edit_award.js' %}"></script>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<!-- header -->
 <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
   <h5>
     <a href="{% url 'nominate_app:awards' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
     Editing Award {{award.name}}
-    <div class="custom-control custom-switch pull-right">
-      {{ award_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
-      <label class="custom-control-label" for="customSwitch1" ></label>
-    </div>
   </h5>
 </div>
 
@@ -21,19 +16,11 @@
    <div class="form-group">
       <form action="/awards/{{award.id}}/" method="post">
          <input type="hidden" name="_method" value="put">
-         <!-- {% if award_form.errors or formset.errors %}
-         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <ul>
-               {{ award_form.errors }}
-               {{ formset.errors }}
-            </ul>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-         </div>
-         {% endif %} -->
          {% csrf_token %}
-         
+         <div class="custom-control custom-switch pull-right">
+            {{ award_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
+            <label class="custom-control-label" for="customSwitch1" ></label>
+         </div>
          <div class = "row award_top_margin">
             <div class="col-md-2">
                <label class="col-form-label" for="name">Award Name</label>
@@ -136,6 +123,9 @@
   .was-validated .form-control:valid{
     background-image: none;
     border-color: #ced4da;
+  }
+  .custom-control-label{
+     bottom: 43px;
   }
 </style>
 {% endblock %}
