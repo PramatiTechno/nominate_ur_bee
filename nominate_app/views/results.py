@@ -14,7 +14,7 @@ def index(request):
 
 	date_field = format(date, '%B %Y')	
 	director_comments = DirectorComments.objects.filter(submitted_at__year = date.year, submitted_at__month = date.month)
-	approved_submissions = NominationSubmitted.objects.filter(director_comment__in=director_comments, status=2)
+	approved_submissions = NominationSubmitted.objects.filter(director_comment__in=director_comments, is_published=True, status=2)
 
 
 	submissions = []

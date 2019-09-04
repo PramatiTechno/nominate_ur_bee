@@ -3,13 +3,13 @@
 {% block content %}
 {% load staticfiles %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
-<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}">
-</script>
+<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}"></script>
+
 <script>
 $(document).ready(function(){
 	$('.submission-rating').starRating({
    		starSize: 18,
-		readOnly: true,
+		  readOnly: true,
     	callback: function(currentRating, $el){
         // make a server call here
     	}
@@ -26,21 +26,23 @@ $(document).ready(function(){
 <div class = "container" style="padding: 40px;">
   <div class="row">
     <div class="col-md-6">
-     {{ selected_nomination.template_name.capitalize }}
-     <div style="display: flex;">
+      <div class="title">
+              {{ selected_nomination.template_name.capitalize }}
+      </div>
+     
+      <div style="display: flex;">
           <div class="submission-rating  mr-1"  data-rating="{{ avg_rating }}"></div>
           <span>({{ avg_rating }})</span>
-     </div>
+      </div>
     </div>
 
     <div class="col-md-6">
       <a class="pull-right" href="{% url 'nominate_app:nomination_instance_post' nomination_submittion_id=selected_nomination.id %}">  Go to feed </a>
     </div>
-  </div>
-                  
-          
-    <br>
-        <div class="reviews" style="">
+</div>
+
+
+        <div class="reviews" >
             {% for rating in ratings %}
                 
                 <div class="rating_comment">
@@ -53,36 +55,39 @@ $(document).ready(function(){
                 </div>
             {% endfor %}
         </div>
-        <form method = "POST" action="/approvals/{{ selected_nomination.id }}">
+        <form method="post" action="/approvals/{{ selected_nomination.id }}">
+            <input type="hidden" name="_method" value="put">
             {% csrf_token %}
             <div class="director-action" style="padding-top:2em">
-                    <div class="form-group" style="padding-left:1em">
-                                <input type="radio" name='selected_option' value="approved" />Approve
-                                <input type="radio" name='selected_option' value="dismissed" />Dismiss
+                    <div class="form-group">
+                            {% if status.lower == 'approved' %}
+                                <input type="radio" name='selected_option' value="approved" checked/>Approve
+                                <input type="radio" name='selected_option' value="dismissed"/>Dismiss
+                                <input type="radio" name='selected_option' value="hold"/>Hold
+                            {% elif status.lower == 'dismissed' %}
+                                <input type="radio" name='selected_option' value="approved"/>Approve
+                                <input type="radio" name='selected_option' value="dismissed" checked/>Dismiss
+                                <input type="radio" name='selected_option' value="hold"/>Hold
+                            {% else %}
+                                <input type="radio" name='selected_option' value="approved"/>Approve
+                                <input type="radio" name='selected_option' value="dismissed"/>Dismiss
                                 <input type="radio" name='selected_option' value="hold" checked/>Hold
-                        </div>
-                            
-                    
-                    
+                            {% endif %}            
+                    </div>
                 </div>
                 <div class="director-action">
-
-                        <textarea class="form-control" rows="5" name='comment' required></textarea>   
-                        
-                        <div class="row" >
+                        <textarea class="form-control" rows="5" name='comment' required>{{ comment }}</textarea>     
+                         <div class="row" >
                             <div class="col-md-2 offset-5">
                                 <input id="submit_btn" type="submit" class="btn btn-lg btn-primary" value="Submit"/>
                             </div>
                                 
-                        </div>
-                            
+                        </div>            
                 </div>
             </form>    
         </div>
-
-            
-
 <style>
+
   #submit_btn{
       margin-top:30px;
   }
@@ -94,7 +99,9 @@ $(document).ready(function(){
       margin-left: 0px;
       padding-left: 0px;
   }
-  
+  .title{
+      font-size: 1.5em
+  }
   .rating_comment{
     padding: 10px 10px 10px 0px;
     border-bottom: 1px solid rgba(110,110,110,0.3);
