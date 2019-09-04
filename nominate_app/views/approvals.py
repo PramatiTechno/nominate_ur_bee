@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import send_mail
 from itertools import chain
-
+from IPython import embed
 @register.filter
 def get_user(value, arg):
     return User.objects.get(id=arg)
@@ -46,6 +46,7 @@ def index(request):
                 'email': submission.email,
                 'status': submission.get_status(submission.status), 
                 'submitted_at': submission.director_comment.first().submitted_at.date(),
+                'editable': False if submission.is_published else True
             })
     paginator = Paginator(nomination_data, 9)
     try:
@@ -59,6 +60,24 @@ def index(request):
 
 @group_required('Directorial Board Member', raise_exception=True)
 def approve(request, submission_id):
+    method = request.POST.get('_method', '').lower()
+    if method == 'put':
+        dc = DirectorComments.objects.get(nomination_submitted_id=submission_id, user=request.user)
+        dc.comment = request.POST['comment']
+        dc.save()
+        status = request.POST['selected_option']
+        nomination_submitted = NominationSubmitted.objects.get(id=submission_id)
+        if status.lower() == 'approved':
+            nomination_submitted.status = 2
+        elif status.lower() == 'dismissed':
+            nomination_submitted.status = 3
+        else:
+            nomination_submitted.status = 4
+        nomination_submitted.updated_at = timezone.now()
+        nomination_submitted.save()
+
+        return redirect('nominate_app:approve', submission_id=nomination_submitted.id)
+
     if request.method == "POST":
         dc = DirectorComments(nomination_submitted_id=submission_id, user=request.user, comment=request.POST['comment'])
         dc.save()
@@ -94,6 +113,8 @@ def approve(request, submission_id):
                 recipient_list=[str(admin.email)], message=plain_message_value, fail_silently=False)
         return redirect('nominate_app:approval')
 
+
+
     nomination_submitted = NominationSubmitted.objects.get(id=submission_id)
     ratings = NominationRating.objects.filter(submission_id=nomination_submitted.id)
     avg_rating = NominationRating.objects.filter(submission_id=submission_id).aggregate(Avg('rating'))['rating__avg']
@@ -102,6 +123,18 @@ def approve(request, submission_id):
     if created:
         comment = nomination_submitted.director_comment.first().comment
         status = nomination_submitted.get_status(nomination_submitted.status)
-        return render(request, 'nominate_app/approvals/show.html', {'selected_nomination': nomination_submitted, 'avg_rating': avg_rating, 'ratings': ratings, 'status': status, 'comment': comment})    
+        if nomination_submitted.is_published:
+            return render(request, 'nominate_app/approvals/show.html', {'selected_nomination': nomination_submitted, 'avg_rating': avg_rating, 'ratings': ratings, 'status': status, 'comment': comment})    
+        return render(request, 'nominate_app/approvals/edit.html', {'selected_nomination': nomination_submitted, 'avg_rating': avg_rating, 'ratings': ratings, 'status': status, 'comment': comment})    
         
     return render(request, 'nominate_app/approvals/new.html', {'selected_nomination': nomination_submitted, 'avg_rating': avg_rating, 'ratings': ratings})
+
+
+def edit(request, submission_id):
+    nomination_submitted = NominationSubmitted.objects.get(id=submission_id)
+    ratings = NominationRating.objects.filter(submission_id=nomination_submitted.id)
+    avg_rating = NominationRating.objects.filter(submission_id=submission_id).aggregate(Avg('rating'))['rating__avg']
+    comment = nomination_submitted.director_comment.first().comment
+    status = nomination_submitted.get_status(nomination_submitted.status)
+    return render(request, 'nominate_app/approvals/edit.html', {'selected_nomination': nomination_submitted, 'avg_rating': avg_rating, 'ratings': ratings, 'status': status, 'comment': comment})    
+    

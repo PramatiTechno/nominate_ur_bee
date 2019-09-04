@@ -55,8 +55,10 @@ urlpatterns = [
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/edit/",nomination_instances.edit,name="edit_nomination_instance"),
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/",nomination_instances.nomination_instance,name="nomination_instance"),   
   path("dashboard/",dashboard.index,name="dashboard"),      
+
   path("approvals/",approvals.index,name="approval"),
   path("approvals/<submission_id>",approvals.approve,name="approve"),    
+  path("approvals/<submission_id>/edit",approvals.edit,name="approval_edit"),    
   
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
   path('nomination_status_load/<award_name>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
