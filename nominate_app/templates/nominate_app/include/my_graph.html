@@ -1,0 +1,38 @@
+{% load staticfiles %}
+<script src="{% static 'js/graphs.js' %}"></script>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script>
+    $(document).ready(function(){
+        Highcharts.chart('nominations-graph', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Activities Statistics'
+            },
+            xAxis: {
+                categories: ['Nominations']
+            },
+            series: [{% for mydict in graph_data %}{ name:'{{ mydict.status }}', data:[{{ mydict.scount }}] }{% if not forloop.last %}, {% endif %}{% endfor %}]
+        });
+    });    
+</script>
+
+<div class="card">
+        <div class="card-header">
+            <div class="row">
+                    <div class="col-sm-3" style="padding:5px 5px 5px 15px">
+                            Statistics    
+                    </div>
+            </div>
+        </div>   
+
+        <div class="graph-box">
+            <div id="nominations-graph"></div>
+        </div>
+</div>
+<style>
+    .graph-box {
+        height: 27em !important;
+    }
+</style>

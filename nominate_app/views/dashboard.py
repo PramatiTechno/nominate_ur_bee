@@ -4,6 +4,7 @@ from nominate_app.utils import group_required
 from django.template.defaulttags import register
 from datetime import datetime,timedelta
 from django.db.models import Q
+from django.db.models import Count
 from IPython import embed
 
 
@@ -37,7 +38,6 @@ def index(request):
     if Awards.objects.count() > 3:
         awards['show'] = True
     results.update(activities)
-    # embed()
     return render(request, 'nominate_app/dashboard.html', results)
 
 def get_notifications():
@@ -62,9 +62,10 @@ def get_activities(user_obj):
         submitted_date[sub_nom.nomination.award_template.template_name]=sub_nom.nomination.updated_at\
              if sub_nom.nomination.updated_at else sub_nom.nomination.submitted_at
     my_like_list = get_likes(user_obj)
-    my_comments_list = get_comments(user_obj)    
+    my_comments_list = get_comments(user_obj)
+    my_graph = get_mygraph(user_obj)
     return {'likes_list':my_like_list, 'comment_list':my_comments_list, \
-        'template_date':template_date, 'submitted_date':submitted_date}
+        'template_date':template_date, 'submitted_date':submitted_date, 'graph_data':my_graph}
 
 def get_likes(user):
     my_like_list = [] 
@@ -89,6 +90,17 @@ def get_comments(user):
                 z[instance.nomination.award_template.template_name]=comment.author
                 my_comments_list.append(z)
     return my_comments_list
+
+def get_mygraph(user):
+    submissions = list(NominationSubmitted.objects.filter(email=user.email).\
+        values('status').annotate(scount=Count('status')).order_by('status'))
+    all_status = {0:'Submitted', 1:'Reviewed', 2:'Approved', 3:'Dismissed', 4:'On hold'}
+    status_list = [*all_status.values()]
+    for sub in submissions:
+        sub['status'] = all_status[sub['status']]
+        status_list.remove(sub['status'])
+    for val in status_list:submissions.append({'status':str(val), 'scount':0})
+    return  submissions
 
 def load_graph(award_id):
     if award_id:
