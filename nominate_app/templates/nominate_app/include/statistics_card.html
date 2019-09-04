@@ -1,3 +1,33 @@
+{% load staticfiles %}
+<script src="{% static 'js/graphs.js' %}"></script>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script>
+    $(document).ready(function(){
+
+        Highcharts.chart('graph-container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '{{ award_selected.name.capitalize }} Statistics'
+            },
+            xAxis: {
+                categories: [{% for k,v in award_stats.submitted.data.items %}'{{ k.capitalize }}'{% if not forloop.last %}, {% endif %}{% endfor %}]
+
+            },
+            series: [{
+                name: 'Submitted',
+                data: [{% for k,v in award_stats.submitted.data.items %}{{ v }}{% if not forloop.last %}, {% endif %}{% endfor %}]
+            },{
+                name: 'Saved',
+                data: [{% for k,v in award_stats.saved.data.items %}{{ v }}{% if not forloop.last %}, {% endif %}{% endfor %}]
+            }           
+        ]
+        });
+    });
+    
+</script>
+
 <div class="card">
     <div class="card-header">
         <div class="row">
@@ -25,14 +55,11 @@
                             <a class="dropdown-item" id="dropdown-item">No Awards Found</a>
                         {% endfor %}
                         </div>
-                    </div>
                 </div>
-        </div>
+            </div>
+    </div>
         
-
     <div class="graph-box">
-        <div id="graph-container">
-
-        </div>
+        <div id="graph-container"></div>
     </div>
 </div>

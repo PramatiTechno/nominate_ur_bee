@@ -1,35 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block content %}
-
-<script src="{% static 'js/graphs.js' %}"></script>
-<script src="https://code.highcharts.com/highcharts.src.js"></script>
-<script>
-    $(document).ready(function(){
-
-        Highcharts.chart('graph-container', {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: '{{ award_selected.name.capitalize }} Statistics'
-            },
-            xAxis: {
-                categories: [{% for k,v in award_stats.submitted.data.items %}'{{ k.capitalize }}'{% if not forloop.last %}, {% endif %}{% endfor %}]
-
-            },
-            series: [{
-                name: 'Submitted',
-                data: [{% for k,v in award_stats.submitted.data.items %}{{ v }}{% if not forloop.last %}, {% endif %}{% endfor %}]
-            },{
-                name: 'Saved',
-                data: [{% for k,v in award_stats.saved.data.items %}{{ v }}{% if not forloop.last %}, {% endif %}{% endfor %}]
-            }           
-        ]
-        });
-    });
-    
-</script>
 <div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
   <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
         <h5>Dashboard</h5>
@@ -59,13 +30,19 @@
                     {% include "nominate_app/include/statistics_card.html" %}
                 </div>
             </div>
-        {% endif %}
-        <div class="row row-pad">
-            <div class="col-sm-12">
-                {% include "nominate_app/include/my_activities.html" %}
+        {% else %}
+            <div class="row row-pad">
+                <div class="col-sm-12">
+                    {% include "nominate_app/include/my_activities.html" %}
+                </div>
             </div>
-        </div>
-	</div>
+            <div class="row row-pad">
+                <div class="col-sm-12">
+                    {% include "nominate_app/include/my_graph.html" %}
+                </div>
+            </div>            
+        {% endif %}
+    </div>
 
     <style>
         .dropdown-item{

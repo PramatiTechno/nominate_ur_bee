@@ -58,7 +58,7 @@ class Awards(models.Model):
   frequency = models.CharField(max_length=10, choices=choice_type, null=False, blank=False)
   description = models.CharField(max_length=200, null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
 
   class Meta:
     db_table='awards'
@@ -82,7 +82,7 @@ class NominationPeriod(models.Model):
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
 
   class Meta:
     db_table='nomination_periods'
@@ -92,7 +92,7 @@ class AwardTemplate(models.Model):
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
   is_active = models.BooleanField(default = False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
   class Meta:
     db_table='award_templates'
 
@@ -116,7 +116,7 @@ class Questions(SafeDeleteModel):
   groups = models.ManyToManyField(Group)
   attachment_need = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
   options = ArrayField(models.CharField(max_length=90, blank=True), size=20,blank=True,null=True)
   deleted = models.DateTimeField(editable=False,null=True)
 
@@ -136,7 +136,7 @@ class Nomination(models.Model):
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
 
   class Meta:
     db_table='nominations'  
@@ -172,7 +172,7 @@ class NominationSubmitted(models.Model):
   baselocation = models.CharField(max_length=30, null=False, blank=False, default="")
   template_name = models.CharField(max_length=150, null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
   is_published = models.BooleanField(default=False)
 
   def get_status(self, status_code):
@@ -189,7 +189,7 @@ class QuestionAnswers(models.Model):
   answer = models.CharField(max_length=500, null=True, blank=True)
   attachment_path = models.FileField(max_length=500, null=True, blank=True, upload_to = UPLOAD_TO)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
   
   def get_status(self, status_code):
     for status in self.statuses:
@@ -214,7 +214,7 @@ class NominationInstance(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   submitted_at = models.DateTimeField(auto_now_add=True, null=False, blank=False) 
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
   class Meta:
     db_table='nomination_instances'
   def get_status(self, status_code):
@@ -237,7 +237,7 @@ class NominationAnswers(models.Model):
   attachment_path = models.FileField(max_length=500, null=True, blank=True, upload_to = UPLOAD_TO)
   uploaded_at = models.DateTimeField(null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-  updated_at = models.DateTimeField(auto_now=True, editable=False, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
 
   class Meta:
     db_table='nomination_answers'
