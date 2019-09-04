@@ -58,10 +58,10 @@ director_end_sent = False
 def populate_monthly_frequency():
     print("Starting the script from the console")
     frequencies = {'YEARLY': 12,'MONTHLY': 1,'QUATERLY': 3}
-    awards = Awards.objects.all()
+    awards = Awards.objects.filter(is_active=True)
     for award in awards: 
         print("Checking awards");
-        award_templates = award.awardtemplate_set.all()
+        award_templates = award.awardtemplate_set.filter(is_active=True)
         periods = award.nominationperiod_set.all()
         frequency = award.frequency
         for period in periods:
