@@ -33,20 +33,24 @@ def create_award(name, frequency, manager_offsets=(0, 0), tech_offsets=(0, 0), d
     return award1
 
 def create_question(name, qtype, award_template_id, group_id, options=[], attachment_need=False):
+    group = Group.objects.get(id=group_id)
     if attachment_need:
         if qtype == 'subjective':
             question, created = Questions.objects.get_or_create(qname=name, qtype=qtype, award_template_id=award_template_id, \
-                        group_id=group_id, attachment_need=attachment_need)
+                attachment_need=attachment_need)
+            question.groups.add(group)
         else:
             question, created = Questions.objects.get_or_create(qname=name, qtype=qtype, award_template_id=award_template_id, \
-                        group_id=group_id, options=options, attachment_need=attachment_need)
+                options=options, attachment_need=attachment_need)
+            question.groups.add(group)
     else:
         if qtype == 'subjective':
-            question, created = Questions.objects.get_or_create(qname=name, qtype=qtype, award_template_id=award_template_id, \
-                        group_id=group_id)
+            question, created = Questions.objects.get_or_create(qname=name, qtype=qtype, award_template_id=award_template_id)
+            question.groups.add(group)
         else:
             question, created = Questions.objects.get_or_create(qname=name, qtype=qtype, award_template_id=award_template_id, \
-                        group_id=group_id, options=options)
+                options=options)
+            question.groups.add(group)
         
     question.save()
     return question
@@ -149,7 +153,7 @@ class Command(BaseCommand):
             nomination_instance, created = NominationInstance.objects.get_or_create(nomination=nomination, user=user)
             nomination_instance.status = 1
             nomination_instance.save()
-            questions = Questions.objects.filter(award_template = nomination.award_template, group=groups[1]).order_by('id')
+            questions = Questions.objects.filter(award_template = nomination.award_template, groups=groups[1]).order_by('id')
             answer1, created = NominationAnswers.objects.get_or_create(answer_option=False, answer_text="TestUser",nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[0].id, submitted_by=user)
             answer2, created = NominationAnswers.objects.get_or_create(answer_option=True, answer_text=json.dumps(['Option1']),nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[1].id, submitted_by=user)
             answer3, created = NominationAnswers.objects.get_or_create(answer_option=True, answer_text=json.dumps(["Choice1", "Choice2"]),nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[2].id, submitted_by=user)
@@ -170,7 +174,7 @@ class Command(BaseCommand):
             nomination_instance, created = NominationInstance.objects.get_or_create(nomination=nomination, user=user)
             nomination_instance.status = 2
             nomination_instance.save()
-            questions = Questions.objects.filter(award_template = nomination.award_template, group=user.groups.first()).order_by('id')
+            questions = Questions.objects.filter(award_template = nomination.award_template, groups=user.groups.first()).order_by('id')
             answer1, created = NominationAnswers.objects.get_or_create(answer_option=False, answer_text="TestUser",nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[0].id, submitted_by=user)
             answer2, created = NominationAnswers.objects.get_or_create(answer_option=True, answer_text=json.dumps(['Option1']),nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[1].id, submitted_by=user)
             answer3, created = NominationAnswers.objects.get_or_create(answer_option=True, answer_text=json.dumps(["Choice1", "Choice2"]),nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[2].id, submitted_by=user)
