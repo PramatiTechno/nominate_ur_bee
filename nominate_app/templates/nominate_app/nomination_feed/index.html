@@ -1,200 +1,192 @@
-{% extends 'base.html' %}
-{% load staticfiles%}
-{% block content %}
-<link href="{% static 'css/bootstrap-editable.css' %}" rel="stylesheet"/>
+{% extends 'base.html' %} {% load staticfiles%} {% block content %} {% block title %}NOMINATIONS{% endblock %}
+
+<link href="{% static 'css/bootstrap-editable.css' %}" rel="stylesheet" />
 <script src="{% static 'js/bootstrap-editable.js' %}"></script>
 <script src="{% static 'js/nomination_feed.js' %}"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 
 <style>
-.infinite-item{
-  width:100%;
-}
-.nomination_filters{
-  width:100%;
-  padding: 10px 40px;
-  box-shadow: 2px 2px 8px rgba(110,110,110,0.2);
-}
-
-
-.panel{
-  padding:0px 15px !important;
-}
-
-.card{
-  border: 0px;
-  border-radius: 10px;
-  box-shadow: 2px 2px 8px rgba(110,110,110,0.2);
-}
-
-.qa{
-  border-bottom: 1px solid #f1f1f1;
-  padding: 10px;
-  margin: 10px;
-}
-
-.card-link.like-count{
-  padding: 10px 0px;
-  display: block;
-} 
-
-.link-custom{
-color:#0897b1d6;
-}
-
-.link-custom:hover{
-color:#067084d6;
-}
-
-.post-form{
-  margin:10px 0px;
-}
-
-.nomination_form{
-  width:100%;
-}
-
-.mySelect {
-  width: 100%;
-}
-
-.header {
+    .infinite-item {
+        width: 100%;
+    }
+    
+    .nomination_filters {
+        width: 100%;
+        padding: 10px 40px;
+        box-shadow: 2px 2px 8px rgba(110, 110, 110, 0.2);
+    }
+    
+    .panel {
+        padding: 0px 15px !important;
+    }
+    
+    .card {
+        border: 0px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 8px rgba(110, 110, 110, 0.2);
+    }
+    
+    .qa {
+        border-bottom: 1px solid #f1f1f1;
+        padding: 10px;
+        margin: 10px;
+    }
+    
+    .card-link.like-count {
+        padding: 10px 0px;
+        display: block;
+    }
+    
+    .link-custom {
+        color: #0897b1d6;
+    }
+    
+    .link-custom:hover {
+        color: #067084d6;
+    }
+    
+    .post-form {
+        margin: 10px 0px;
+    }
+    
+    .nomination_form {
+        width: 100%;
+    }
+    
+    .mySelect {
+        width: 100%;
+    }
+    
+    .header {
         padding: 8px;
         background-color: #1a3d6e;
     }
-
-#arrow {
-  float: right;
-  padding-top: 5px;
-  font-size: 20px;
+    
+    #arrow {
+        float: right;
+        padding-top: 5px;
+        font-size: 20px;
     }
 </style>
 
 <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;width: auto;">
-  <h5>Feed <i class="fa fa-one-half fa-chevron-down" id="arrow" style="vertical-align: top"></i> </h5>
+    <h5>Feed <i class="fa fa-one-half fa-chevron-down" id="arrow" style="vertical-align: top"></i> </h5>
 </div>
 
 <div>
-  <div class="nomination_filters" id="filter-block" align="left">
-    <form action="/nomination_feed/" method="GET" class="nomination_form">{% csrf_token %}
-        <div class="row">
-          <div class="col-md-4">
-            <div>Awards</div>
-             <div>{{ filter_form.Awards}}</div> 
-          </div>
+    <div class="nomination_filters" id="filter-block" align="left">
+        <form action="/nomination_feed/" method="GET" class="nomination_form">{% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                    <div>Awards</div>
+                    <div>{{ filter_form.Awards}}</div>
+                </div>
 
-          <div class="col-md-4">
-            <div>Template</div>
-            <div>{{filter_form.Templates}}</div> 
-          </div>
-          <div class="col-md-4">
-            <div>Sort </div>
-            <div>{{ filter_form.Sort }}</div>
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col-sm-6">
-            <div> From </div>
-            {{filter_form.from_}} 
-          </div>
-          <div class="col-sm-6">
-            <div> To </div>
-            {{filter_form.to}}
-          </div>
-        </div>
-        <div class="" style="text-align:right;padding-top:10px;width:100%;display:block;">
-          <input class="btn btn-success" type="submit" id="submit" name="submit" value="Filter"/></li>
-        </div>
-      </form>
-  </div>
+                <div class="col-md-4">
+                    <div>Template</div>
+                    <div>{{filter_form.Templates}}</div>
+                </div>
+                <div class="col-md-4">
+                    <div>Sort </div>
+                    <div>{{ filter_form.Sort }}</div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div> From </div>
+                    {{filter_form.from_}}
+                </div>
+                <div class="col-sm-6">
+                    <div> To </div>
+                    {{filter_form.to}}
+                </div>
+            </div>
+            <div class="" style="text-align:right;padding-top:10px;width:100%;display:block;">
+                <input class="btn btn-success" type="submit" id="submit" name="submit" value="Filter" /></li>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class="container panel">
-	<div class="row nomination-feed infinite-container" style="padding:0px 20px;">
-		{% for instance in instances %}
-		<div class="infinite-item">
-			{% include 'nominate_app/nomination_feed/detail.html' with submission=instance.submission qa_list=instance.qa detail=instance.detail comment_form=comment_form  %}
-		</div>
-		{% endfor %}
-	</div>
+    <div class="row nomination-feed infinite-container" style="padding:0px 20px;">
+        {% for instance in instances %}
+        <div class="infinite-item">
+            {% include 'nominate_app/nomination_feed/detail.html' with submission=instance.submission qa_list=instance.qa detail=instance.detail comment_form=comment_form %}
+        </div>
+        {% endfor %}
+    </div>
 
-	{% if instances.has_next %}
-    	<a class="infinite-more-link" href="?page={{ instances.next_page_number }}">More</a>
-  	{% endif %}
+    {% if instances.has_next %}
+    <a class="infinite-more-link" href="?page={{ instances.next_page_number }}">More</a> {% endif %}
 
-  	<div class="loading" style="display: none;">
-    	Loading...
-  	</div>
+    <div class="loading" style="display: none;">
+        Loading...
+    </div>
 </div>
 
 <!-- Trigger the modal with a button -->
 
 <!-- Modal -->
 <div id="like_modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+    <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Liked by</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-      
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Liked by</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
     </div>
-
-  </div>
 </div>
 
 <script>
-
     var infinite = new Waypoint.Infinite({
-      element: $('.infinite-container')[0],
-      onBeforePageLoad: function () {
-        $('.loading').show();
-        query_strings = window.location.search
-        if (query_strings !== ""){
-        	$('.infinite-more-link').attr('href', $('.infinite-more-link').attr('href') + "&" + query_strings)
-    	}
-      },
-      onAfterPageLoad: function ($items) {
-        $('.loading').hide();
-      }
+        element: $('.infinite-container')[0],
+        onBeforePageLoad: function() {
+            $('.loading').show();
+            query_strings = window.location.search
+            if (query_strings !== "") {
+                $('.infinite-more-link').attr('href', $('.infinite-more-link').attr('href') + "&" + query_strings)
+            }
+        },
+        onAfterPageLoad: function($items) {
+            $('.loading').hide();
+        }
     });
-  </script>
+</script>
 
-  <script>
-$(document).ready(function(){ 
-  $("#filter-block").css("display", "none");
-  $("#filter-block").css("position", "absolute");
-  $("#filter-block").css("z-index", "999");
-  $("#filter-block").css("background", "white");
+<script>
+    $(document).ready(function() {
+        $("#filter-block").css("display", "none");
+        $("#filter-block").css("position", "absolute");
+        $("#filter-block").css("z-index", "999");
+        $("#filter-block").css("background", "white");
 
-$("#arrow").click(function(){
-   if ($("#filter-block").is(":visible")){ 
-    $("#arrow").css("transform", "rotate(360deg)");
-     $("#filter-block").css("display", "none");
-     $("#filter-block").css("position", "absolute");
-     $("#filter-block").css("z-index", "999");
-     $("#filter-block").css("background", "white");
-   }
-   else{
-    $("#arrow").css("transform", "rotate(180deg)");
-    $("#arrow").css("padding-bottom", "5px");
-     $("#filter-block").css("display", "block");
-   }
-});
-});
+        $("#arrow").click(function() {
+            if ($("#filter-block").is(":visible")) {
+                $("#arrow").css("transform", "rotate(360deg)");
+                $("#filter-block").css("display", "none");
+                $("#filter-block").css("position", "absolute");
+                $("#filter-block").css("z-index", "999");
+                $("#filter-block").css("background", "white");
+            } else {
+                $("#arrow").css("transform", "rotate(180deg)");
+                $("#arrow").css("padding-bottom", "5px");
+                $("#filter-block").css("display", "block");
+            }
+        });
+    });
 </script>
 
 {% endblock %}
-
-
-
-   
