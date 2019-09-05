@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %} {% load staticfiles %}
+{% extends 'base.html' %} {% block content %} {% load staticfiles %} {% block title %}USER MANAGEMENT{% endblock %}
 
 
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
@@ -29,9 +29,9 @@
 
 <!-- header -->
 
-    <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
-        <h5>User Management <a href="{% url 'nominate_app:new_user' %}" class="pull-right"><i class="fa fa-user-plus add-icon"></i></a></h5>
-    </div>
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+    <h5>User Management <a href="{% url 'nominate_app:new_user' %}" class="pull-right"><i class="fa fa-user-plus add-icon"></i></a></h5>
+</div>
 
 
 <div class="dropdown">
