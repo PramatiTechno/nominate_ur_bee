@@ -9,10 +9,6 @@
   <h5>
     <a href="{% url 'nominate_app:awards' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
     Create a New Award
-    <div class="custom-control custom-switch pull-right">
-      {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
-      <label class="custom-control-label" for="customSwitch1" ></label>
-    </div>
   </h5>
 </div>
 
@@ -20,7 +16,10 @@
    <div class="form-group">
       <form method = "post" action="/awards/" id="needs-validation">
         {% csrf_token %}
-          
+        <div class="custom-control custom-switch pull-right">
+          {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
+          <label class="custom-control-label" for="customSwitch1" ></label>
+        </div>
         <div class = "row award_top_margin">
           <div class="col-md-2">
             <label class="col-form-label" for="name">Award Name</label>
@@ -135,6 +134,10 @@
   .was-validated .form-control:valid{
     background-image: none;
     border-color: #ced4da;
+  }
+  .custom-control-label{
+    position: relative;
+    bottom: 43px
   }
 </style>
 {% endblock %}

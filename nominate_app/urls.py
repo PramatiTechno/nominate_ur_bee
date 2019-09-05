@@ -76,6 +76,7 @@ urlpatterns = [
   path('nomination_review/<int:nomination_submitted_id>', nomination_review.nomination_rating.as_view(), name='nomination_review_rating'),
 
   path('results/', results.index, name='results'),
+  path('publish/<int:sub_id>/', results.publish, name='publish'),
   path('reemail/<nomination>/<int:nomination_id>/', nomination_status_view.email, name='reemail')
 ]
 

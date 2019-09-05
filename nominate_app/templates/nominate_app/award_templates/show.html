@@ -11,10 +11,17 @@
   <h5>
     <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
     Award Template - {{ template.template_name }}
+    {% if template.is_active %}
     <div class="custom-control custom-switch pull-right">
-      <!-- switch -->
-      <label class="custom-control-label" for="customSwitch1" ></label>
-    </div>
+       <input type="checkbox" class="custom-control-input" id="customSwitches" checked disabled>
+       <label class="custom-control-label" for="customSwitch1"></label>
+    </div>   
+    {% else %}
+       <div class="custom-control custom-switch pull-right">
+          <input type="checkbox" class="custom-control-input" id="customSwitches" disabled>
+          <label class="custom-control-label" for="customSwitches"></label>
+       </div>
+    {% endif %} 
   </h5>
 </div>
       
