@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% block content %} {% load staticfiles %}
+{% extends 'base.html' %} {% block content %} {% load staticfiles %} {% block title %}AWARD TEMPLATES{% endblock %}
+
 <script src="{% static 'js/award_index.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -27,13 +28,13 @@
 </style>
 
 <!-- header -->
-    <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
-        {% if award.id %}
-        <h5>Award Templates <a href="{% url 'nominate_app:new_template' award.id %}" class="pull-right"><i class="fa fa-plus add-icon"></i></a></h5>
-        {% else %}
-        <h5>Award Templates <a class="pull-right"><i class="fa fa-plus add-icon"></i></a></h5>
-        {% endif %}
-    </div>
+<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+    {% if award.id %}
+    <h5>Award Templates <a href="{% url 'nominate_app:new_template' award.id %}" class="pull-right"><i class="fa fa-plus add-icon"></i></a></h5>
+    {% else %}
+    <h5>Award Templates <a class="pull-right"><i class="fa fa-plus add-icon"></i></a></h5>
+    {% endif %}
+</div>
 
 
 <div class="dropdown">
