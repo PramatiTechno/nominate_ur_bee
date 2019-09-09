@@ -9,19 +9,27 @@ from nominate_app.utils import group_required
 from braces.views import GroupRequiredMixin
 from django.utils import timezone
 from django.contrib import messages
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.core.mail import send_mail
 from IPython import embed
 
 
+@group_required('Technical Jury Member', raise_exception=True)
 def index(request):
 	statuses = ('To be Reviewed', 'Reviewed')
 	status = request.GET['status'] if 'status' in request.GET else statuses[0]
+	submission_list = []
 	today = datetime.today().date()
 	if status == 'To be Reviewed':
-		submissions = NominationSubmitted.objects.filter(status=0, nomination__end_day__gte=today) # status for submitted
+		submissions = NominationSubmitted.objects.filter(status__in=[0, 1], nomination__end_day__gte=today) # status for submitted
+		for submission in submissions:
+			if not submission.ratings.filter(user=request.user).exists():
+				submission_list.append(submission)
 	else:
-		submissions = NominationSubmitted.objects.filter(ratings__user=request.user)
+		submission_list = NominationSubmitted.objects.filter(ratings__user=request.user)
 
-	return render(request, 'nominate_app/nomination_review/index.html', {'statuses': statuses, 'c_status':status, 'submissions': submissions}) 
+	return render(request, 'nominate_app/nomination_review/index.html', {'statuses': statuses, 'c_status':status, 'submissions': submission_list}) 
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -54,8 +62,27 @@ class nomination_rating(GroupRequiredMixin, View):
 				submission.updated_at = timezone.now()
 				nomination_rating.save()
 				submission.save()
+				# mail to directors
+				to_directors = User.objects.filter(groups__name='Directorial Board Member')
+				subject = "Nominations submitted by " + str(request.user.first_name) + " " + \
+					str(request.user.last_name)
+				for director in to_directors:
+					message_value_html_template = render_to_string('nominate_app/emails/declaration_tech_jury.html', \
+						{'tech_jury_name':request.user.first_name, \
+							'name':director.username, 'submission_status':'Reviewed'})
+					plain_message_value = strip_tags(message_value_html_template)          
+					send_mail(subject=subject, from_email='no-reply@pramati.com', \
+						recipient_list=[str(director.email)], message=plain_message_value, fail_silently=False)
+				# mail to managers
+				to_managers = User.objects.filter(groups__name='Manager')
+				for manager in to_managers:
+					message_value_html_template = render_to_string('nominate_app/emails/declaration_tech_jury.html', \
+						{'tech_jury_name':request.user.first_name, \
+							'name':manager.username, 'submission_status':'Reviewed'})
+					plain_message_value = strip_tags(message_value_html_template)          
+					send_mail(subject=subject, from_email='no-reply@pramati.com', \
+						recipient_list=[str(manager.email)], message=plain_message_value, fail_silently=False)
 				return redirect('nominate_app:nomination_review_rating', nomination_submitted_id=submission.id)
-
 			else:
 				messages.error(request, "ratings and reviews can't be blank")
 				total_rating = submission.ratings.count()

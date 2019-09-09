@@ -67,7 +67,6 @@ def edit(request,award_id):
   formset = NominationFormset(instance=award)
   return render(request, 'nominate_app/awards/edit.html', {'formset':formset, 'award':award, 'award_form':award_form, 'frequencies': Awards.edit_frequencies.items() })
 
- 
 @group_required('Admin', raise_exception=True)
 def award(request,award_id):
     method = request.POST.get('_method', '').lower()

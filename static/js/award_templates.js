@@ -1,5 +1,10 @@
 $(document).ready(function(){
 
+  
+  $('.multi-select').select2({
+    placeholder: "select a group"
+  });
+
   $('.objective-type').each(function(i, element){
     if(element.value == "SUBJECTIVE")
       $(this).parent().next().hide()
@@ -89,6 +94,9 @@ $(".objective-type").on('change', function(event){
     // need ajax func for edit questions template form
   });
   function cloneMore(selector, type) {
+    group_select = $(selector).find('.multi-select')
+    group_select.select2('destroy')
+
     var newElement = $(selector).clone(true);
     var total = $("#id_" + type + "-TOTAL_FORMS").val();
     newElement.find(":input").each(function() {
@@ -166,6 +174,12 @@ $(".objective-type").on('change', function(event){
     $("#id_" + type + "-TOTAL_FORMS").val(total);
     $(selector).after(newElement);
     $("#id_questions_set-" + (total - 1) + "-objective-container").hide();
+    $('.multi-select').select2({
+      placeholder: "Select a group",
+    });
+    group_select.select2({
+      placeholder: "Select a group",
+    })
   }
 
   function re_calc_total() {

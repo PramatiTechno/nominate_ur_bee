@@ -4,30 +4,11 @@
 
 
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/nomination_review.css' %}">
 
-<style>
-  .dropdown-menu-awards{
-    width: 100%;
-    left:5px;
-}
-.btn-outline-secondary{
-    text-align: left;
-    border-radius: 0px;
-}
-.btn-outline-secondary:focus{
-    box-shadow: none;
-}
-#caret_icon_container{
-    text-align: right;
-    font-size: 1.5em;
-}
-
-
-</style>
-
-
-<div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
-  <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+<div class="container-fluid top-nav" >
+  <div class="header" >
         <h5>Nomination Review</h5>
   </div>
 </div>
@@ -42,7 +23,7 @@
                 {{ c_status }}
             </div>
             <div class="col-sm-1" id="caret_icon_container">
-                <i class="fa fa-one-half fa-chevron-down" style="vertical-align: top" ></i>
+                <i class="fa fa-one-half fa-chevron-down down-arrow" ></i>
             </div>
         </div>
       </button>

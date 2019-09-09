@@ -1,5 +1,6 @@
 from django import forms  
 from nominate_app.models import *
+from django.contrib.auth.models import Group
 from django.forms import inlineformset_factory
 from IPython import embed
 
@@ -55,7 +56,16 @@ class AddUserForm(forms.ModelForm):
       self.fields['group'].choices = [(group.id, group.name) for group in Group.objects.all()]
       self.fields['group'].widget.attrs.update({'class': 'form-control'})
 
+class AddGroupForm(forms.ModelForm):
 
+  class Meta:
+    model = UserInvite
+    fields = ['group']
+
+  def __init__(self, *args, **kwargs):
+    super(AddGroupForm, self).__init__(*args, **kwargs)
+    self.fields['group'].choices = [(group.id, group.name) for group in Group.objects.all()]
+    self.fields['group'].widget.attrs.update({'class': 'form-control'})
 
 class CommentForm(forms.ModelForm):
 
@@ -107,9 +117,10 @@ class TemplateForm(forms.ModelForm):
 
 
 class AwardQuestionForm(forms.ModelForm):
+  group = forms.ModelMultipleChoiceField(queryset=Group.objects.all())
   class Meta:
     model = Questions
-    fields = ('qname', 'qtype', 'group', 'attachment_need')
+    fields = ('qname', 'qtype', 'attachment_need')
 
   def __init__(self, *args, **kwargs):
     if "award_id" in kwargs:
@@ -120,25 +131,25 @@ class AwardQuestionForm(forms.ModelForm):
 
     self.fields['group'].empty_label = None
     group_ids = [np.group_id for np in NominationPeriod.objects.filter(award_id=award_id)] 
-    choices =[ choice for choice in self.fields['group'].choices ]
-    temp_choices = dict(choices)
-    updated_choices = []
+    group_choices = []
     for group_id in group_ids:
-      updated_choices.append((group_id, temp_choices[group_id]))
-    self.fields['group'].choices = updated_choices
-    if self.instance.group_id:
-      self.initial['group'] = self.instance.group_id  
-    else:
-      self.initial['group'] = Group.objects.get(name="Manager").id
-    self.fields['qname'].widget.attrs.update({'class': 'form-control', 'placeholder': "Enter Question"})
+      group = Group.objects.get(id=group_id)
+      group_choices.append((group_id, group.name))
+
+    self.fields['group'].choices = group_choices
+    if self.instance.id:
+      self.initial['group'] = [group.id for group in self.instance.groups.all()]
+   
+
+    self.fields['qname'].widget.attrs.update({'class': 'form-control', 'placeholder': "Enter Question", 'required':True})
     if self.instance.qtype == "OBJECTIVE":
       self.initial['qtype'] = "OBJECTIVE"
     elif self.instance.qtype == "MULTIPLE-CHOICE":
       self.initial['qtype'] = "MULTIPLE-CHOICE"
     else:
       self.initial['qtype'] = "SUBJECTIVE"
-    self.fields['qtype'].widget.attrs.update({'class': 'form-control objective-type'})
-    self.fields['group'].widget.attrs.update({'class': 'form-control'})
+    self.fields['qtype'].widget.attrs.update({'class': 'form-control objective-type', 'required':True})
+    self.fields['group'].widget.attrs.update({'class': 'form-control', 'multiple': True, 'required':True})
     self.fields['attachment_need'].widget.attrs.update({'class': 'form-control'})
 
 class NominationAnswersForm(forms.ModelForm):

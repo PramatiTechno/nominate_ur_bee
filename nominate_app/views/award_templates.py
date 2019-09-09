@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.forms import modelformset_factory, inlineformset_factory
 from nominate_app.forms import TemplateForm, AwardQuestionForm
 from nominate_app.models import Questions, AwardTemplate, Awards
+from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from django.contrib import messages
 from nominate_app.utils import group_required
@@ -64,14 +65,19 @@ def index(request,award_id):
           attachment_needed = bool(content['questions_set-{0}-attachment_need'.format(i)]) if 'questions_set-{0}-attachment_need'.format(i) in content else False
           if qtype == "SUBJECTIVE":
             question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
-            attachment_need=attachment_needed, created_at=timezone.now(), award_template_id = created_award.id, \
-            group_id=content['questions_set-{0}-group'.format(i)])
-            question.save()
+            attachment_need=attachment_needed, created_at=timezone.now(), award_template_id = created_award.id)
           else:
             question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=qtype, \
-            attachment_need=attachment_needed, created_at=timezone.now(), award_template_id = created_award.id, \
-            group_id=content['questions_set-{0}-group'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)))
-            question.save()
+            attachment_need=attachment_needed, created_at=timezone.now(), award_template_id = created_award.id, options=content.getlist('questions_set-{0}-objectives'.format(i)))
+            
+          question.save()
+          groups = content.getlist('questions_set-0-group')
+          for group_id in groups:
+            group = Group.objects.get(id=group_id)
+            question.groups.add(group)
+
+          question.save()
+
           messages.success(request, 'Award Template created successfully.')
         return redirect('nominate_app:award_templates_index', award_id=award.id)
 
@@ -129,13 +135,14 @@ def award_template(request,award_id,award_template_id):
       for i in range(int(content['questions_set-TOTAL_FORMS'])):
         qtype = content['questions_set-{0}-qtype'.format(i)]
         qid = content.get('questions_set-{0}-id'.format(i), None)
+        groups = content.getlist('questions_set-{0}-group'.format(i))
+        attachment_needed = bool(content['questions_set-{0}-attachment_need'.format(i)]) if 'questions_set-{0}-attachment_need'.format(i) in content else False
         if qid:
           qid = int(qid)
           prev_qids.remove(qid)
           question = Questions.objects.get(id=qid)
           question.qname = content['questions_set-{0}-qname'.format(i)]
-          question.group_id = int(content['questions_set-{0}-group'.format(i)])
-          question.attachment_need = bool(content['questions_set-{0}-attachment_need'.format(i)])
+          question.attachment_need = attachment_needed
           question.updated_at = timezone.now()
           if qtype == "SUBJECTIVE":
             question.qtype = "SUBJECTIVE"
@@ -143,12 +150,24 @@ def award_template(request,award_id,award_template_id):
           else:
             question.qtype = qtype
             question.options = content.getlist('questions_set-{0}-objectives'.format(qid))
+          question.groups.clear()
           question.save()
+
+          for group_id in groups:
+            group = Group.objects.get(id=group_id)
+            question.groups.add(group)
+
+          question.save()
+
         else:
-          question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=content['questions_set-{0}-qtype'.format(i)], options=content.getlist('questions_set-{0}-objectives'.format(i)), \
-            group_id=content['questions_set-{0}-group'.format(i)], created_at=timezone.now(),award_template_id=award_template_id, updated_at=timezone.now())
+          question = Questions(qname=content['questions_set-{0}-qname'.format(i)], qtype=content['questions_set-{0}-qtype'.format(i)], attachment_need=attachment_needed, options=content.getlist('questions_set-{0}-objectives'.format(i)), created_at=timezone.now(),award_template_id=award_template_id, updated_at=timezone.now())
           question.save()
-          pass
+          for group_id in groups:
+            group = Group.objects.get(id=group_id)
+            question.groups.add(group)
+
+          question.save()
+
       for pqid in prev_qids:
         deleted_question = Questions.objects.get(id=pqid)
         deleted_question.delete()

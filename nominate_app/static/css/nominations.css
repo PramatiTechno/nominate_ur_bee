@@ -170,3 +170,8 @@ table td {
     justify-content: center;
      font-size: 1.5em;
 }
+
+#top-nav {
+    padding-left:0px !important;
+    padding-right:0px !important;
+}

@@ -1,0 +1,37 @@
+<style>
+    div.card-body{
+        overflow: scroll;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header">
+        My Activities
+    </div>
+    <div class="card-body">
+        {% for mydict in likes_list %}
+            {% for mykey,myvalue in mydict.items %}
+                <div class="likes text-muted">
+                    {{ myvalue }} liked your nomination for {{ mykey }}
+                </div>
+            {% endfor %}         
+        {% endfor %}
+        {% for mydict in comment_list %}
+            {% for mykey,myvalue in mydict.items %}
+            <div class="comments text-muted">
+                {{ myvalue }} commented your nomination for {{ mykey }}
+            </div>
+            {% endfor %}         
+        {% endfor %}
+        {% for mykey,myvalue in template_date.items %}
+        <div class="submission text-muted">
+            The last date to submit your nominations for {{ mykey }} is on {{ myvalue }}.
+        </div>
+        {% endfor %}
+        {% for mykey,myvalue in submitted_date.items %}
+        <div class="submitted text-muted">
+            you submitted your nominations for {{ mykey }} is on {{ myvalue }}.
+        </div>
+        {% endfor %}         
+    </div>
+</div>

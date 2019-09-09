@@ -1,72 +1,49 @@
-{% extends 'base.html' %} 
-{% block content %} 
-{% load staticfiles %}
+{% extends 'base.html' %} {% block content %} {% load staticfiles %}
 
 
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
+<link rel="stylesheet" href="{% static 'css/user_management.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<style>
-    .dropdown-menu-awards {
-        width: 100%;
-        left: 5px;
-    }
-    
-    .btn-outline-secondary {
-        text-align: left;
-        border-radius: 0px;
-        box-shadow: 0px 5px 10px #00000036;
-        border: 0px;
-    }
-    
-    .btn-outline-secondary:focus,
-    .btn-outline-secondary:hover {
-        background: #afbcc7 !important;
-    }
-    
-    #caret_icon_container {
-        text-align: right;
-        font-size: 20px;
-    }
-</style>
 
 <!-- header -->
-<div class="container" style="padding-left:0px !important;padding-right:0px !important;">
-    <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
-    	<a href="{% url 'nominate_app:users' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+<div class="container top" >
+    <div class="header">
+        <a href="{% url 'nominate_app:users' %}" class="pull-left mr-4"><i class="fa fa-chevron-left left-arrow" ></i></a>
         <h5>Invite a User</h5>
     </div>
 </div>
 
 <div class="container">
-	<form method="POST" action="/users/create">{% csrf_token %}
-		<div class="row mt-2">
-			<div class="col-md-2">
-				<label for="">Email</label>
-			</div>
-			<div class="col-md-6">
-				{{invite_form.email}}
-			</div>
-		</div>
+    <form method="POST" action="/users/create">{% csrf_token %}
+        <div class="row mt-2">
+            <div class="col-md-2">
+                <label for="">Email</label>
+            </div>
+            <div class="col-md-6">
+                {{invite_form.email}}
+            </div>
+        </div>
 
-		<div class="row mt-2">
-			<div class="col-md-2">
-				<label for="">Group</label>
-			</div>
-			<div class="col-md-6">
-				{{ invite_form.group }}
-			</div>
-		</div>
+        <div class="row mt-2">
+            <div class="col-md-2">
+                <label for="">Group</label>
+            </div>
+            <div class="col-md-6">
+                {{ invite_form.group }}
+            </div>
+        </div>
 
-		<div class="row mt-2">
-			<div class="col-md-1 p-1 offset-4">
-				<a class="btn btn-outline-primary" href="{% url 'nominate_app:users' %}">cancel</a>
-			</div>
-			<div class="col=md-1 p-1">
-				<button class="btn btn-outline-danger">submit</button>
-			</div>
-		</div>
+        <div class="row mt-2">
+            <div class="col-md-1 p-1 offset-4">
+                <a class="btn btn-outline-primary" href="{% url 'nominate_app:users' %}">cancel</a>
+            </div>
+            <div class="col=md-1 p-1">
+                <button class="btn btn-outline-danger">submit</button>
+            </div>
+        </div>
 
-	</form>
+    </form>
 </div>
 
 {% endblock %}

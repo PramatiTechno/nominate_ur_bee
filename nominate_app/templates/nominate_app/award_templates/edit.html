@@ -2,6 +2,8 @@
 
 
 
+<script src="{% static 'js/select2.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
 <script src="{% static 'js/edit_award_template.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/award_templates.css' %}">
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
@@ -9,11 +11,7 @@
 
 <div class="header">
     <h5>
-        <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" id="left-arrow"></i></a> Editing Award Template {{ template.template_name }}
-        <div class="custom-control custom-switch pull-right">
-            {{ template_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1" }}
-            <label class="custom-control-label" for="customSwitch1"></label>
-        </div>
+        <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" ></i></a> Editing Award Template {{ template.template_name }}
     </h5>
 </div>
 
@@ -32,7 +30,10 @@
           </button>
             </div>
             {% endif %} {% csrf_token %}
-
+            <div class="custom-control custom-switch pull-right">
+                {{ template_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1" }}
+                <label class="custom-control-label" for="customSwitch1"></label>
+            </div>            
             <div class="row award_top_margin">
                 <div class="col-md-2">
                     <label class="col-form-label" for='{{template_form.template_name}}'>Template Name</label>
@@ -73,7 +74,7 @@
                             {{ form.qtype|attr:"class:form-control objective-type" }}
                         </div>
                         {% if questions %}
-                        <div class="objective-type-container" id="id_questions_set-{{ forloop.counter0 }}-objective-container">
+                        <div class="objective-type-container select2" id="id_questions_set-{{ forloop.counter0 }}-objective-container">
 
                             {% for question in questions %} {% if question.qname == form.qname.value %} {% if question.qtype == "SUBJECTIVE" %}
                             <div class='input-group row p-1'>
@@ -126,7 +127,7 @@
                     </div>
 
                     <div class="col-md-8">
-                        {{ form.group|attr:"class:form-control" }}
+                        {{ form.group|attr:"class:form-control multi-select" }}
                     </div>
                 </div>
 
@@ -161,4 +162,9 @@
         </form>
     </div>
 </div>
+<style>
+    .custom-control-label{
+        bottom: 43px;
+    }
+</style>
 {% endblock %}
