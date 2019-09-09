@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from nominate_app.models import *
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.core.mail import send_mail
 from dateutil.relativedelta import relativedelta 
 from IPython import embed
 
@@ -39,8 +42,20 @@ def index(request):
 		'date': date_field, 'unpublished_submissions':unpublished})
 
 def publish(request, sub_id):
+	subject = "Results Published!"
+	manager_users = User.objects.filter(groups__name='Manager')
 	submission = NominationSubmitted.objects.get(id=sub_id)
+	templates_name = submission.template_name
+	awards_name = submission.award_name
+	template_name = 'nominate_app/emails/publish_mail.html'
 	submission.is_published=True
 	submission.save()
+	for manager in manager_users:
+		message_value_html_template = render_to_string(template_name,\
+		{'name':manager.username, 'award_template':templates_name, \
+		'award_name':awards_name})
+		plain_message_value = strip_tags(message_value_html_template)
+		send_mail(subject=subject, from_email='no-reply@pramati.com', \
+		recipient_list=[str(manager.email)], message=plain_message_value, fail_silently=False)
 	return redirect('nominate_app:results')
 
