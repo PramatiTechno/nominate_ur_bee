@@ -1,0 +1,18 @@
+<div class="card">
+        <div class="card-header">
+            Notifications
+        </div>
+        <div class="card-body">
+            {% for nomination in notifications %}
+            <div class="notifications">
+                {{ nomination.email }} has {{ nomination|get_status:nomination.status }} {{nomination.award_name}}.
+            </div>
+            {% empty %}
+                <div style="font-size: 15px">
+                    No new notifications found.
+                </div>
+                    
+                
+            {% endfor %}
+        </div>
+</div>

@@ -1,0 +1,35 @@
+.page-content {
+  margin: 8px;
+}
+
+#container {
+  padding-left:0px !important;
+  padding-right:0px !important;
+}
+
+#column {
+  padding-bottom: 6px; 
+  padding-top: 0;
+}
+
+#trash {
+  color: #bf1a1a;
+}
+
+.was-validated .form-control:valid{
+    background-image: none;
+    border-color: #ced4da;
+  }
+
+.form_det{
+    font-size: 24px;
+    display: inline;
+    color: #d22b2b;
+}
+
+.edit_fa{
+    font-size: 24px !important;
+    color: #2c54c5;
+    margin:0px 10px;
+    text-decoration: inline;
+}

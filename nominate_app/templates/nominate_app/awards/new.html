@@ -3,16 +3,14 @@
 {% block content %}
 {% load staticfiles %}
 <script src="{% static 'js/award_creation.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/awards.css' %}">
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
 
 <!-- header -->
-<div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+<div class="header">
   <h5>
-    <a href="{% url 'nominate_app:awards' %}" class="pull-left mr-4"><i class="fa fa-chevron-left" style="color: white;"></i></a>
+    <a href="{% url 'nominate_app:awards' %}" class="pull-left mr-4"><i class="fa fa-chevron-left back-nav"></i></a>
     Create a New Award
-    <div class="custom-control custom-switch pull-right">
-      {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
-      <label class="custom-control-label" for="customSwitch1" ></label>
-    </div>
   </h5>
 </div>
 
@@ -20,7 +18,10 @@
    <div class="form-group">
       <form method = "post" action="/awards/" id="needs-validation">
         {% csrf_token %}
-          
+        <div class="custom-control custom-switch pull-right">
+          {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
+          <label class="custom-control-label" for="customSwitch1" ></label>
+        </div>
         <div class = "row award_top_margin">
           <div class="col-md-2">
             <label class="col-form-label" for="name">Award Name</label>
@@ -91,7 +92,7 @@
         
           <div class="mt-4">
             <span class="fa del_btn_formset">
-              <label><span class="fa fa-trash-o fa-lg" style="color: #bf1a1a">
+              <label><span class="fa fa-trash-o fa-lg" id="trash">
                {{ form.DELETE | attr:"class:hide_checkbox"}}
               </span>
               </label>
@@ -106,12 +107,6 @@
               <button name="add_more" id="add_more" type="button" class="btn btn-outline-primary ml-1 add_more"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add Period</button>
             </div>
         </div> 
-
-<!--          <div class = "row award_top_margin">
-          <div class="col-md-3">
-               <i class="fa fa-plus-circle fa-2x add_more col-md-2 offset-2" aria-hidden="true"></i>
-          </div>
-         </div> -->
 
         <div class ="row award_top_margin">
           <div class="col-md-2"> 
@@ -131,10 +126,4 @@
    </div>
 </div>
 
-<style>
-  .was-validated .form-control:valid{
-    background-image: none;
-    border-color: #ced4da;
-  }
-</style>
 {% endblock %}

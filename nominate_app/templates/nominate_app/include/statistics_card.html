@@ -1,0 +1,65 @@
+{% load staticfiles %}
+<script src="{% static 'js/graphs.js' %}"></script>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script>
+    $(document).ready(function(){
+
+        Highcharts.chart('graph-container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '{{ award_selected.name.capitalize }} Statistics'
+            },
+            xAxis: {
+                categories: [{% for k,v in award_stats.submitted.data.items %}'{{ k.capitalize }}'{% if not forloop.last %}, {% endif %}{% endfor %}]
+
+            },
+            series: [{
+                name: 'Submitted',
+                data: [{% for k,v in award_stats.submitted.data.items %}{{ v }}{% if not forloop.last %}, {% endif %}{% endfor %}]
+            },{
+                name: 'Saved',
+                data: [{% for k,v in award_stats.saved.data.items %}{{ v }}{% if not forloop.last %}, {% endif %}{% endfor %}]
+            }           
+        ]
+        });
+    });
+    
+</script>
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+                <div class="col-sm-3" style="padding:5px 5px 5px 15px">
+                        Statistics    
+                </div>
+                <div class="col-sm-9 dropdown show" style="text-align: right;">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        
+                        {% if award_selected %}
+                            {{ award_selected }}
+                        {% else %}
+                            No Awards 
+                        {% endif %}
+                        </a>
+                    
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {% for award in award_categories %}
+                        {% if award_selected.name == award.name %}
+                            <a class="dropdown-item active" id="dropdown-item"  onclick="location.href='{% url 'nominate_app:dashboard' %}?award={{ award.id }}'" value='{{ award.id }}'>{{ award.name|title }}</a>
+                        {% else %}
+                            <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}"  onclick="location.href='{% url 'nominate_app:dashboard'%}?award={{ award.id }}'" value='{{ award.id }}'>{{ award.name|title }}</a>
+                        {% endif %}
+                        {% empty %}
+                            <a class="dropdown-item" id="dropdown-item">No Awards Found</a>
+                        {% endfor %}
+                        </div>
+                </div>
+            </div>
+    </div>
+        
+    <div class="graph-box">
+        <div id="graph-container"></div>
+    </div>
+</div>

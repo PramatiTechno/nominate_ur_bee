@@ -1,14 +1,11 @@
 {% extends 'base.html' %}
+{% load staticfiles%}
 {% block content %}
+
+<link href="{% static 'css/nomination_instances.css' %}" rel="stylesheet"/>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <br>
 <div class="container">
-<!--   <nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-      <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Team of Month</a>
-      <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Gold Class</a>
-    </div>
-  </nav> -->
   <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
       <div id="accordion-todo_nominations">
@@ -27,8 +24,8 @@
                       <table class="table table-borderless">
                         <tbody>
                             <tr class="d-flex">
-                              <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination_chain.nomination_instance.award_template }} </td>
-                              <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:create_nomination' nomination_chain.id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
+                              <td class="col-10" > {{ nomination_chain.nomination_instance.award_template }} </td>
+                              <td class="col-2" ><input input onclick="location.href='{% url 'nominate_app:create_nomination' nomination_chain.id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
                             </tr>
                         </tbody>
                       </table>
@@ -58,8 +55,8 @@
                       <table class="table table-borderless">
                         <tbody>
                             <tr class="d-flex">
-                              <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination_chain.nomination_instance.award_template }} </td>
-                              <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:create_nomination' nomination_chain.id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
+                              <td class="col-10" > {{ nomination_chain.nomination_instance.award_template }} </td>
+                              <td class="col-2" ><input input onclick="location.href='{% url 'nominate_app:create_nomination' nomination_chain.id %}'" type="button" class="btn btn-success" value = "Submit Nomination"></td>
                             </tr>
                         </tbody>
                       </table>
@@ -89,8 +86,8 @@
                       <table class="table table-borderless">
                         <tbody>
                             <tr class="d-flex">
-                              <td class="col-10" style="padding-bottom: 6px; padding-top: 0;"> {{ nomination_chain.nomination_instance.award_template }} </td>
-                              <td class="col-2" style="padding-bottom: 6px; padding-top: 0;"><input input onclick="location.href='{% url 'nominate_app:view_nomination' nomination_chain.id %}'" type="button" class="btn btn-success" value = "View Nomination"></td>
+                              <td class="col-10" > {{ nomination_chain.nomination_instance.award_template }} </td>
+                              <td class="col-2" ><input input onclick="location.href='{% url 'nominate_app:view_nomination' nomination_chain.id %}'" type="button" class="btn btn-success" value = "View Nomination"></td>
                             </tr>
                         </tbody>
                       </table>

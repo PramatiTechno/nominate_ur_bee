@@ -49,9 +49,9 @@
 .nav-link.leftsidebar:hover {
   background: #22374c !important ;
 }
-.nav-link.leftsidebar.active {
+/*.nav-link.leftsidebar.active {
   border-right: 3px solid #00b6d5;
-}
+}*/
 .nav.navbar-nav.navbar-collapse.collapse.flex-column {
   text-align: left !important;
 }

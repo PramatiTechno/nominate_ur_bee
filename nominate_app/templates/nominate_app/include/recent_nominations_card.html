@@ -1,0 +1,54 @@
+<div class="card">
+    <div class="card-header">
+        Recent Nominations
+    </div>
+    <div class="card-body">
+        <table>
+            <thead>
+                <tr class="tr_body table_head">
+                    <td class="td_body table_head">
+                        Award 
+                    </td>
+                    <td class="td_body table_head">
+                        Template 
+                    </td>
+                    <td class="td_body table_head">
+                            End Date
+                    </td>
+                    <td class="td_body table_head">
+                        Group
+                    </td>
+                    
+    
+                </tr>
+            </thead>
+            <tbody>
+                {% for nomination in recent_nominations %}
+                        <tr class="link tr_body" onclick='location.href="{% url 'nominate_app:nomination_status_load_template' nomination.award_template.award.name nomination.award_template.template_name %}"'>
+                            
+                            <td class="td_body">
+                                {{ nomination.award_template.award.name }}
+                            </td>
+                            <td class="td_body">
+                                {{ nomination.award_template.template_name }}
+                            </td>
+                            <td class="td_body">
+                                    {{ nomination.end_day }}
+                            </td>
+                            <td class="td_body">
+                                {{ nomination.group.name }}
+                            </td>
+                            
+                        
+                        </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" style="font-size: 15px"> No awards and award templates found. Please create a <a href="{% url 'nominate_app:awards' %}">award </a> and
+                            <a href="{% url 'nominate_app:award_templates_home' %}"> award template.</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

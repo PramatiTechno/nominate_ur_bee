@@ -1,0 +1,80 @@
+.infinite-item{
+  width:100%;
+}
+.nomination_filters{
+  width:100%;
+  padding: 10px 40px;
+  box-shadow: 2px 2px 8px rgba(110,110,110,0.2);
+}
+
+
+.panel{
+  padding:0px 15px !important;
+}
+
+.card{
+  border: 0px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 8px rgba(110,110,110,0.2);
+}
+
+.qa{
+  border-bottom: 1px solid #f1f1f1;
+  padding: 10px;
+  margin: 10px;
+}
+
+.card-link.like-count{
+  padding: 10px 0px;
+  display: block;
+} 
+
+.link-custom{
+color:#0897b1d6;
+}
+
+.link-custom:hover{
+color:#067084d6;
+}
+
+.post-form{
+  margin:10px 0px;
+}
+
+.nomination_form{
+  width:100%;
+}
+
+.mySelect {
+  width: 100%;
+}
+
+.header {
+        padding: 8px;
+        background-color: #1a3d6e;
+    }
+
+#arrow {
+  float: right;
+  padding-top: 5px;
+  font-size: 20px;
+}
+
+.down-arrow {
+  vertical-align: top;
+}
+
+#filter {
+  text-align:right;
+  padding-top:10px;
+  width:100%;
+  display:block;
+}
+
+.infinite-container {
+  padding:0px 20px;
+}
+
+.loading {
+  display: none;
+}

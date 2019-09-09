@@ -43,6 +43,8 @@ urlpatterns = [
   path("users/<user_id>/", user_management.user,name="user"),
   path("invited_users/<invited_user_id>/", user_management.invited_user,name="invited_user"),
 
+  path("users/<user_id>/delete", user_management.delete_user,name="delete_user"),
+  path("invited_users/<user_invite_id>/delete", user_management.delete_invite,name="delete_invited_user"),
 
   path("nominations/",nominations.index,name="nominations"),
   path('nominations/<status_value>', nominations.status_index, name="nomination_status_index"),
@@ -53,9 +55,12 @@ urlpatterns = [
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/edit/",nomination_instances.edit,name="edit_nomination_instance"),
   path("nominations/<nomination_id>/nomination_instances/<nomination_instance_id>/",nomination_instances.nomination_instance,name="nomination_instance"),   
   path("dashboard/",dashboard.index,name="dashboard"),      
+
   path("approvals/",approvals.index,name="approval"),
   path("approvals/<submission_id>",approvals.approve,name="approve"),    
+  path("approvals/<submission_id>/edit",approvals.edit,name="approval_edit"),    
 
+  
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
   path('nomination_status_load/<award_name>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
   path('nomination_status_load/awards/<award_name>/templates/<template_name>', nomination_status_view.nomination_status_load_template, name='nomination_status_load_template'),
@@ -72,6 +77,7 @@ urlpatterns = [
   path('nomination_review/<int:nomination_submitted_id>', nomination_review.nomination_rating.as_view(), name='nomination_review_rating'),
 
   path('results/', results.index, name='results'),
+  path('publish/<int:sub_id>/', results.publish, name='publish'),
   path('reemail/<nomination>/<int:nomination_id>/', nomination_status_view.email, name='reemail')
 ]
 

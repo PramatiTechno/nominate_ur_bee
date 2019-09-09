@@ -30,13 +30,13 @@ def add_months(sourcedate, months):
 
 def sending(values, nom_obj, template_name, subject):
     for index, value in enumerate(values):
-        print(value.email)
-        print(value.username)
+        print('email'+str(value.email))
+        print('username'+ str(value.username))
         context = {str(nom_obj[index].group.name)+'_name':value, 
         'start_date':nom_obj[index].start_day, 'last_date':nom_obj[index].end_day}
         message_value_html_template = render_to_string(template_name, context=context)
         plain_message_value = strip_tags(message_value_html_template)
-        send_mail(subject=subject, from_email='no-reply@pramati.com', recipient_list=[str(value)], message=plain_message_value, fail_silently=False)
+        send_mail(subject=subject, from_email='no-reply@pramati.com', recipient_list=[str(value.email)], message=plain_message_value, fail_silently=False)
         print('mail sent to ' + str(value))
     return 'mail sent'
 managers_start_sent = False
@@ -58,10 +58,10 @@ director_end_sent = False
 def populate_monthly_frequency():
     print("Starting the script from the console")
     frequencies = {'YEARLY': 12,'MONTHLY': 1,'QUATERLY': 3}
-    awards = Awards.objects.all()
+    awards = Awards.objects.filter(is_active=True)
     for award in awards: 
         print("Checking awards");
-        award_templates = award.awardtemplate_set.all()
+        award_templates = award.awardtemplate_set.filter(is_active=True)
         periods = award.nominationperiod_set.all()
         frequency = award.frequency
         for period in periods:

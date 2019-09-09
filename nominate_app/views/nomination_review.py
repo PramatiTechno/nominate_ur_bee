@@ -15,16 +15,21 @@ from django.core.mail import send_mail
 from IPython import embed
 
 
+@group_required('Technical Jury Member', raise_exception=True)
 def index(request):
 	statuses = ('To be Reviewed', 'Reviewed')
 	status = request.GET['status'] if 'status' in request.GET else statuses[0]
+	submission_list = []
 	today = datetime.today().date()
 	if status == 'To be Reviewed':
-		submissions = NominationSubmitted.objects.filter(status=0, nomination__end_day__gte=today) # status for submitted
+		submissions = NominationSubmitted.objects.filter(status__in=[0, 1], nomination__end_day__gte=today) # status for submitted
+		for submission in submissions:
+			if not submission.ratings.filter(user=request.user).exists():
+				submission_list.append(submission)
 	else:
-		submissions = NominationSubmitted.objects.filter(ratings__user=request.user)
+		submission_list = NominationSubmitted.objects.filter(ratings__user=request.user)
 
-	return render(request, 'nominate_app/nomination_review/index.html', {'statuses': statuses, 'c_status':status, 'submissions': submissions}) 
+	return render(request, 'nominate_app/nomination_review/index.html', {'statuses': statuses, 'c_status':status, 'submissions': submission_list}) 
 
 
 @method_decorator(csrf_exempt, name='dispatch')
