@@ -4,10 +4,11 @@
 
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
 <div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
-  <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
+    <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
         <h5>Dashboard</h5>
-  </div>
+    </div>
 </div>
 
     <div class="container" >
@@ -46,5 +47,33 @@
             </div>            
         {% endif %}
     </div>
+    {% if user.userprofile.get_group_name == "admin" %}
+    <div class="row row-pad">
+        <div class="col-md-6">
+            {% include "nominate_app/include/awards_card.html" %}
+        </div>
+        <div class="col-md-6">
+            {% include "nominate_app/include/summary_card.html" %}
+        </div>
+    </div>
+    <div class="row row-pad">
+        <div class="col-sm-12">
+            {% include "nominate_app/include/statistics_card.html" %}
+        </div>
+    </div>
+    {% else %}
+    <div class="row row-pad">
+        <div class="col-sm-12">
+            {% include "nominate_app/include/my_activities.html" %}
+        </div>
+    </div>
+    <div class="row row-pad">
+        <div class="col-sm-12">
+            {% include "nominate_app/include/my_graph.html" %}
+        </div>
+    </div>
+    {% endif %}
+</div>
 
 {% endblock %}
+

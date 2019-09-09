@@ -15,6 +15,7 @@
             {% for status in statuses %}
             {% if forloop.counter == 1 %}
             <button class="btn-outline-secondary form-control" type="button" data-toggle="dropdown">
+
             <div class="row">
                 <div class="col-sm-11" id="award_name_container">
                     {{ selected_status.capitalize }}
@@ -24,33 +25,28 @@
                 </div>
             </div>
           </button>
-          <div class="dropdown-menu dropdown-menu-awards">
-            {% endif %}
-            {% if status.lower == selected_status %}
-              <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:nomination_status_index' status_value=status.lower %}" >{{ status }}</a>
-            {% else %}             
-                <a class="dropdown-item" href="{% url 'nominate_app:nomination_status_index' status_value=status.lower %}" id="dropdown-item{{ forloop.counter }}">{{ status }}</a>
-            {% endif %}
-            {% endfor %}
-          </div>
-
+        <div class="dropdown-menu dropdown-menu-awards">
+            {% endif %} {% if status.lower == selected_status %}
+            <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:nomination_status_index' status_value=status.lower %}">{{ status }}</a> {% else %}
+            <a class="dropdown-item" href="{% url 'nominate_app:nomination_status_index' status_value=status.lower %}" id="dropdown-item{{ forloop.counter }}">{{ status }}</a> {% endif %} {% endfor %}
         </div>
-  <div class="page-content row">
-            <table>
-              <thead>
+
+    </div>
+    <div class="page-content row">
+        <table>
+            <thead>
                 <tr>
-                  <th scope='col'>Nomination Name</th>
-                  <th scope='col'>Start Date</th>
-                  <th scope='col'>End Date</th>
-                  <th scope='col'>Action</th>
+                    <th scope='col'>Nomination Name</th>
+                    <th scope='col'>Start Date</th>
+                    <th scope='col'>End Date</th>
+                    <th scope='col'>Action</th>
                 </tr>
-              </thead>
-              <tbody>
-              {% if selected_status.lower == "new" or selected_status.lower == "saved" %}
-                {% for nomination in data %}
-                  <tr>
+            </thead>
+            <tbody>
+                {% if selected_status.lower == "new" or selected_status.lower == "saved" %} {% for nomination in data %}
+                <tr>
                     <td>
-                    {{ nomination.award_template.template_name.capitalize }} 
+                        {{ nomination.award_template.template_name.capitalize }}
                     </td>
                     <td>
                         {{ nomination.start_day }}
@@ -59,40 +55,36 @@
                         {{ nomination.end_day }}
                     </td>
                     <td>
-                      {% if selected_status.lower == "new" %}
-                      <input input onclick="location.href='{% url 'nominate_app:new_nomination_instance' nomination.id %}'" type="button" class="btn btn-success" value = "Submit">
-                      {% else %}
-                      <input input onclick="location.href='{% url 'nominate_app:edit_nomination_instance' nomination.id nomination.nomination_instance_id %}'" type="button" class="btn btn-success" value = "Submit">
-                      {% endif %}
+                        {% if selected_status.lower == "new" %}
+                        <input input onclick="location.href='{% url 'nominate_app:new_nomination_instance' nomination.id %}'" type="button" class="btn btn-success" value="Submit"> {% else %}
+                        <input input onclick="location.href='{% url 'nominate_app:edit_nomination_instance' nomination.id nomination.nomination_instance_id %}'" type="button" class="btn btn-success" value="Submit"> {% endif %}
                     </td>
-                  </tr>
+                </tr>
                 {% empty %}
                 <tr>
                     <td colspan="4">No {{ selected_status }} Nominations</td>
                 </tr>
-                {% endfor %}
-                {% else %}
-                  {% for nomination in data %}
-                  <tr>
+                {% endfor %} {% else %} {% for nomination in data %}
+                <tr>
                     <td>
-                      {{ nomination.template_name }}
+                        {{ nomination.template_name }}
                     </td>
                     <td>
-                      {{ nomination.nomination.start_day }}
+                        {{ nomination.nomination.start_day }}
                     </td>
                     <td>
-                      {{ nomination.nomination.end_day }}
+                        {{ nomination.nomination.end_day }}
                     </td>
                     <td>
-                      <input input  type="button"  onclick="location.href='{% url 'nominate_app:nomination_submitted' nomination.id %}'" class="btn btn-success" value = "View">
+                        <input input type="button" onclick="location.href='{% url 'nominate_app:nomination_submitted' nomination.id %}'" class="btn btn-success" value="View">
                     </td>
-                  </tr>
-                  {% empty %}
-                  <tr>
+                </tr>
+                {% empty %}
+                <tr>
                     <td colspan="4">
-                      No {{ selected_status }} nominations available.
+                        No {{ selected_status }} nominations available.
                     </td>
-                  </tr>
+                </tr>
                   {% endfor %}
                 {% endif %}
               </tbody>
@@ -112,16 +104,14 @@
             <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
           {% else %}
             <li><a href="?page={{ i }}">{{ i }}</a></li>
-          {% endif %}
-        {% endfor %}
-        {% if data.has_next %}
-          <li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
-        {% else %}
-          <li class="disabled"><span>&raquo;</span></li>
+            {% endif %} {% endfor %} {% if data.has_next %}
+            <li><a href="?page={{ data.next_page_number }}">&raquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
         {% endif %}
-      </ul>
-    {% endif %}
-  </div>
+    </div>
 
 </div>
 {% endblock %}

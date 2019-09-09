@@ -40,7 +40,7 @@ def index(request):
     if formset.is_valid():  
         created_award.save()
         formset.save()
-        created_award.save_nomination_period();
+        created_award.save_nomination_period()
         messages.success(request, 'Award is created successfully.')
         return redirect('nominate_app:awards')
 

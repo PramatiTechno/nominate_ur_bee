@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %} {% load staticfiles %}
+{% extends 'base.html' %} {% block title %}User Management{% endblock %}{% block content %} {% load staticfiles %}
 
 
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
@@ -12,7 +12,6 @@
     <div class="header">
         <h5>User Management <a href="{% url 'nominate_app:new_user' %}" class="pull-right"><i class="fa fa-user-plus add-icon"></i></a></h5>
     </div>
-
 
 <div class="dropdown">
     {% for group in groups %} {% if forloop.counter == 1 %}

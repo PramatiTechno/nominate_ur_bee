@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/data-table.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/approvals.css' %}">
+
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 <div class="container-fluid" id="top-nav">
@@ -37,55 +38,47 @@
 
     </div>
     <div class="page-content">
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Award Name</th>
-            <th scope="col">Template Name</th>
-            <th scope="col">Email</th>
-            {% if selected_status == 'history' %}
-            <th scope="col">Submitted At</th>
-            <th scope="col">Status</th>
-            {% endif %}
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for submission in data %}
-            <tr data-rowId={{submission.id}}>
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Award Name</th>
+                    <th scope="col">Template Name</th>
+                    <th scope="col">Email</th>
+                    {% if selected_status == 'history' %}
+                    <th scope="col">Submitted At</th>
+                    <th scope="col">Status</th>
+                    {% endif %}
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for submission in data %}
+                <tr data-rowId={{submission.id}}>
 
-              <td scope="row" data-label="Award Name">{{submission.award_name}}</td>
-              <td scope="row" data-label="Template Name">{{submission.template_name}}</td>
-              <td scope="row" data-label="Email">{{submission.email}}</td>
-              {% if selected_status == 'history' %}
-                <td scope="row" data-label="Submitted At">{{ submission.submitted_at }}</td>
-                <td scope="row" data-label="Status">{{ submission.status }}</td>
-              {% endif %}
-              <td scope="row" data-label="Action">
-                {% if selected_status.lower == "reviewed" %} 
-                  {% if submission.avg_rating >= 3.0 %}
-                    <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}'" type="button" class="btn btn-success" value="Approve"> 
-                  {% else %}
-                    <a class="text-muted">Not enough rating</a> 
-                  {% endif %}
-                {% else %}
-                  {% if submission.editable %}
-                    <input onclick="location.href='{% url 'nominate_app:approval_edit' submission.id %}'" type="button" class="btn btn-success" value="Edit"> 
-                  {% else %}
-                    <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}'" type="button" class="btn btn-success" value="View"> 
-                  {% endif %}
-                {% endif %}
-              </td>
-          </tr>
-          {% empty %}
-          <tr>
-              <td colspan="4">No nominations reviewed. </td>
+                    <td scope="row" data-label="Award Name">{{submission.award_name}}</td>
+                    <td scope="row" data-label="Template Name">{{submission.template_name}}</td>
+                    <td scope="row" data-label="Email">{{submission.email}}</td>
+                    {% if selected_status == 'history' %}
+                    <td scope="row" data-label="Submitted At">{{ submission.submitted_at }}</td>
+                    <td scope="row" data-label="Status">{{ submission.status }}</td>
+                    {% endif %}
+                    <td scope="row" data-label="Action">
+                        {% if selected_status.lower == "reviewed" %} {% if submission.avg_rating >= 3.0 %}
+                        <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}'" type="button" class="btn btn-success" value="Approve"> {% else %}
+                        <a class="text-muted">Not enough rating</a> {% endif %} {% else %} {% if submission.editable %}
+                        <input onclick="location.href='{% url 'nominate_app:approval_edit' submission.id %}'" type="button" class="btn btn-success" value="Edit"> {% else %}
+                        <input onclick="location.href='{% url 'nominate_app:approve' submission.id %}'" type="button" class="btn btn-success" value="View"> {% endif %} {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No nominations reviewed. </td>
 
-          </tr>
+                </tr>
 
-          {% endfor %}
-        </tbody>
-      </table>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <div class="row bottom">

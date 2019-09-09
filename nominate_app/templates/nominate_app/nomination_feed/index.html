@@ -4,6 +4,7 @@
 <link href="{% static 'css/bootstrap-editable.css' %}" rel="stylesheet"/>
 <link href="{% static 'css/header.css' %}" rel="stylesheet"/>
 <link href="{% static 'css/nomination_feed.css' %}" rel="stylesheet"/>
+
 <script src="{% static 'js/bootstrap-editable.js' %}"></script>
 <script src="{% static 'js/nomination_feed.js' %}"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
@@ -71,68 +72,62 @@
 
 <!-- Modal -->
 <div id="like_modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+    <div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Liked by</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-      
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Liked by</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
     </div>
-
-  </div>
 </div>
 
 <script>
-
     var infinite = new Waypoint.Infinite({
-      element: $('.infinite-container')[0],
-      onBeforePageLoad: function () {
-        $('.loading').show();
-        query_strings = window.location.search
-        if (query_strings !== ""){
-        	$('.infinite-more-link').attr('href', $('.infinite-more-link').attr('href') + "&" + query_strings)
-    	}
-      },
-      onAfterPageLoad: function ($items) {
-        $('.loading').hide();
-      }
+        element: $('.infinite-container')[0],
+        onBeforePageLoad: function() {
+            $('.loading').show();
+            query_strings = window.location.search
+            if (query_strings !== "") {
+                $('.infinite-more-link').attr('href', $('.infinite-more-link').attr('href') + "&" + query_strings)
+            }
+        },
+        onAfterPageLoad: function($items) {
+            $('.loading').hide();
+        }
     });
-  </script>
+</script>
 
-  <script>
-$(document).ready(function(){ 
-  $("#filter-block").css("display", "none");
-  $("#filter-block").css("position", "absolute");
-  $("#filter-block").css("z-index", "999");
-  $("#filter-block").css("background", "white");
+<script>
+    $(document).ready(function() {
+        $("#filter-block").css("display", "none");
+        $("#filter-block").css("position", "absolute");
+        $("#filter-block").css("z-index", "999");
+        $("#filter-block").css("background", "white");
 
-$("#arrow").click(function(){
-   if ($("#filter-block").is(":visible")){ 
-    $("#arrow").css("transform", "rotate(360deg)");
-     $("#filter-block").css("display", "none");
-     $("#filter-block").css("position", "absolute");
-     $("#filter-block").css("z-index", "999");
-     $("#filter-block").css("background", "white");
-   }
-   else{
-    $("#arrow").css("transform", "rotate(180deg)");
-    $("#arrow").css("padding-bottom", "5px");
-     $("#filter-block").css("display", "block");
-   }
-});
-});
+        $("#arrow").click(function() {
+            if ($("#filter-block").is(":visible")) {
+                $("#arrow").css("transform", "rotate(360deg)");
+                $("#filter-block").css("display", "none");
+                $("#filter-block").css("position", "absolute");
+                $("#filter-block").css("z-index", "999");
+                $("#filter-block").css("background", "white");
+            } else {
+                $("#arrow").css("transform", "rotate(180deg)");
+                $("#arrow").css("padding-bottom", "5px");
+                $("#filter-block").css("display", "block");
+            }
+        });
+    });
 </script>
 
 {% endblock %}
-
-
-
-   
