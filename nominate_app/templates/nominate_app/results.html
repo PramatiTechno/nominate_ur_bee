@@ -4,24 +4,7 @@
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/results.css' %}">
-<script>
-    $(function() {
-
-        $("#datepicker").datepicker({
-            format: "MM yyyy",
-            startView: "months",
-            minViewMode: "months"
-        });
-
-        $('.submit').on('click', function() {
-            var date = $('#datepicker').val()
-            if (date != '') {
-                $('#date-form').submit()
-            }
-        })
-
-    })
-</script>
+<script type="text/javascript" src="{% static 'js/results.js' %}"></script>
 
 <div class="container-fluid top-nav">
   <div class="header" >

@@ -5,7 +5,6 @@
 <link href="{% static 'css/header.css' %}" rel="stylesheet"/>
 <link href="{% static 'css/nomination_feed.css' %}" rel="stylesheet"/>
 
-<script src="{% static 'js/bootstrap-editable.js' %}"></script>
 <script src="{% static 'js/nomination_feed.js' %}"></script>
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
@@ -91,43 +90,6 @@
     </div>
 </div>
 
-<script>
-    var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
-        onBeforePageLoad: function() {
-            $('.loading').show();
-            query_strings = window.location.search
-            if (query_strings !== "") {
-                $('.infinite-more-link').attr('href', $('.infinite-more-link').attr('href') + "&" + query_strings)
-            }
-        },
-        onAfterPageLoad: function($items) {
-            $('.loading').hide();
-        }
-    });
-</script>
 
-<script>
-    $(document).ready(function() {
-        $("#filter-block").css("display", "none");
-        $("#filter-block").css("position", "absolute");
-        $("#filter-block").css("z-index", "999");
-        $("#filter-block").css("background", "white");
-
-        $("#arrow").click(function() {
-            if ($("#filter-block").is(":visible")) {
-                $("#arrow").css("transform", "rotate(360deg)");
-                $("#filter-block").css("display", "none");
-                $("#filter-block").css("position", "absolute");
-                $("#filter-block").css("z-index", "999");
-                $("#filter-block").css("background", "white");
-            } else {
-                $("#arrow").css("transform", "rotate(180deg)");
-                $("#arrow").css("padding-bottom", "5px");
-                $("#filter-block").css("display", "block");
-            }
-        });
-    });
-</script>
 
 {% endblock %}
