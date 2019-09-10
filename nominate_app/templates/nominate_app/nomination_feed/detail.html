@@ -12,6 +12,8 @@
     		  <div class="col-md-6"><h5 class="card-title">{{submission.award_name}} - {{submission.template_name}}</h5></div>
               <div class="col-md-6" style="text-align:right;"><h6 class="text-muted">{{submission.email}}<p style="font-size:14px;color: #747591a6;">{{submission.submitted_at}}</p></h6></div>
             </div>
+            <button type="button" class="btn btn-link view-more">View-more...</button>
+
     		<div class="card-text">
     		{% for qa in qa_list %}
                 <div class="qa">
@@ -59,5 +61,15 @@
 
 	<hr>
 </div>
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            $('.qa').css('display','none');
+            $(".view-more").click(function(){
+            $(".qa").toggle();
+            });
+         });
+
+</script>
 
 {% endblock %}
