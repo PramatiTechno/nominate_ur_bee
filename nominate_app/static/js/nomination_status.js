@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
   $("#start_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
   $("#end_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
   $('.datepicker').attr('autocomplete',"off");
@@ -50,6 +51,17 @@ $(document).ready(function(){
   });
   $('.enddate').on('hidden', function(e, editable) {
     $(this).editable('destroy');
+  });
+
+  $('.submission-rating').starRating({
+      starSize: 15,
+      readOnly: true,
+      callback: function(currentRating, $el){
+      }
+  })
+
+  $("#show-nominations i").click(function(){
+      $(this).toggleClass('fa-plus fa-minus');
   });
 
 });

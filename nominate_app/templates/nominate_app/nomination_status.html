@@ -3,44 +3,18 @@
 <link href="{% static 'css/bootstrap-editable.css' %}" rel="stylesheet" />
 <script src="{% static 'js/bootstrap-editable.js' %}"></script>
 
-<link rel="stylesheet" href="{% static 'css/header.css' %}">
-<link rel="stylesheet" href="{% static 'css/nomination_status.css' %}">
-<link rel="stylesheet" href="{% static 'css/data_table.css' %}">
-<script src="{% static 'js/nomination_status.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
+<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}"></script>
+
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
-<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+<link rel="stylesheet" href="{% static 'css/nomination_status.css' %}">
+<link rel="stylesheet" href="{% static 'css/data_table.css' %}">
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
-<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}"></script>
+<script src="{% static 'js/nomination_status.js' %}"></script>
 
-<script>
-    $(document).ready(function() {
-        $('.submission-rating').starRating({
-            starSize: 15,
-            readOnly: true,
-            callback: function(currentRating, $el) {}
-        })
-    })
-</script>
-
-<script>
-$(document).ready(function(){
-	$('.submission-rating').starRating({
-   		starSize: 15,
-		readOnly: true,
-    	callback: function(currentRating, $el){
-    	}
-	})
-
-    $("#show-nominations i").click(function(){
-        $(this).toggleClass('fa-plus fa-minus');
-    });
-});
-</script>
 
 
 <div class="header" >
