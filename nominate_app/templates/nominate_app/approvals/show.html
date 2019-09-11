@@ -4,18 +4,10 @@
 {% load staticfiles %}
 <script src="{% static 'js/award_creation.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'css/star-rating-svg.css' %}">
-<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}">
-</script>
-<script>
-$(document).ready(function(){
-	$('.submission-rating').starRating({
-   		starSize: 18,
-		readOnly: true,
-    	callback: function(currentRating, $el){
-        // make a server call here
-    	}
-	})
-})</script>
+<script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/approve/show.js' %}"></script>
+
+
 <!-- header -->
 <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
   <h5>
