@@ -24,22 +24,28 @@ def index(request):
     NominationFormset = inlineformset_factory(Awards, NominationPeriod, form=NominationPeriodForm, extra=1)
     award_form = AwardsForm(request.POST)
     formset = NominationFormset(request.POST)
+    
     for form_id in range(int(request.POST['nominationperiod_set-TOTAL_FORMS'])):
       start_day = datetime.strptime(request.POST['nominationperiod_set-{0}-start_day'.format(form_id)], '%m/%d/%Y')
       end_day = datetime.strptime(request.POST['nominationperiod_set-{0}-end_day'.format(form_id)], '%m/%d/%Y')
       if start_day > end_day:
         messages.error(request, "End date must be greater than start date.")
         return render(request, 'nominate_app/awards/new.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items()})
+      
     if award_form.is_valid():
         created_award = award_form.save(commit=False)
         formset = NominationFormset(request.POST, instance=created_award)
+        if formset.is_valid():  
+            created_award.save()
+            formset.save()
+            created_award.save_nomination_period()
+            messages.success(request, 'Award is created successfully.')
+            return redirect('nominate_app:awards')
 
-    if formset.is_valid():  
-        created_award.save()
-        formset.save()
-        created_award.save_nomination_period()
-        messages.success(request, 'Award is created successfully.')
-        return redirect('nominate_app:awards')
+    else:
+        for field, err in award_form.errors.items():
+            messages.error(request,str(err[0])) 
+        return render(request, 'nominate_app/awards/new.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items()})
 
 def new(request):
   award = Awards()
