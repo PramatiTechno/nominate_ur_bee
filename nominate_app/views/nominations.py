@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from nominate_app.models import NominationPeriod, Awards
 from django.forms import modelformset_factory, inlineformset_factory
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from nominate_app.forms import AwardsForm, AwardsActiveForm, NominationPeriodForm
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
@@ -24,7 +24,11 @@ def change_date(request, nomination_id):
   date = request.POST['date']
   nomination.end_day = datetime.strptime(date, '%m/%d/%Y').date()
   nomination.save()
-  return redirect('nominate_app:nomination_status') 
+  return JsonResponse({
+    'status':'success',
+    'end_day': nomination.end_day.strftime('%d %B'),
+    'end_day_data': nomination.end_day,
+  })
 
 @group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def index(request):

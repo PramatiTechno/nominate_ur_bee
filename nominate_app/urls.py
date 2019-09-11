@@ -78,7 +78,7 @@ urlpatterns = [
 
   path('results/', results.index, name='results'),
   path('publish/<int:sub_id>/', results.publish, name='publish'),
-  path('reemail/<nomination>/<int:nomination_id>/', nomination_status_view.email, name='reemail')
+  path('reemail/<username>/<int:nomination_id>/', nomination_status_view.email, name='reemail')
 ]
 
 if settings.DEBUG:

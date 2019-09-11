@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
-from nominate_app.models import Awards, AwardTemplate, NominationInstance, User, Nomination, Group, NominationSubmitted, NominationRating
+from nominate_app.models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers 
-from django.http import JsonResponse
 from IPython import embed
 from datetime import datetime
 from django.contrib import messages
@@ -159,7 +158,6 @@ def get_nomination_details(page, award_name=None, template_name=None, start_day=
     nomination_data = get_nomination_data(award_name, award_template, page, start_day=start_day, end_day=end_day, request=request)
   else:
     award_template = None
-
   return {'award_categories': union_awards, 'nominations': nomination_data, 'award_selected': award_name, 'award_templates': award_templates, 'selected_template': award_template}
 
 
@@ -168,24 +166,32 @@ def nomination_status_load_template(request, award_name, template_name):
     page = request.GET.get('page', 1)
     return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award_name, template_name=template_name))
 
-def email(request, nomination, nomination_id):
+def email(request, username, nomination_id):
   subject = "Reminder mail"
-  user = User.objects.get(username=nomination)
+  user = User.objects.get(username=username)
   nomination = Nomination.objects.get(id=nomination_id)
   award_template = nomination.award_template.template_name
   end_day = nomination.end_day
   award_name = nomination.award_template.award.name
   template_name = 'nominate_app/emails/reminder.html'
-  new_status_dict = {0:'nominate',2:'review',3:'approve/decline',6:'approve/decline'}
+  new_status_dict = {0:'submit',2:'review',3:'approve/decline',6:'approve/decline'}
   try:
-    new_status = new_status_dict[nomination.nominationinstance_set.all()[0].status]
+    if not nomination.nominationinstance_set.filter(user=user).exists():
+      new_status = "submit"
+    else:
+      instance = nomination.nominationinstance_set.get(user=user)
+      status = instance.get_status(instamce.status)
+      new_status = "submit"
+
+    # snew_status = new_status_dict[nomination.nominationinstance_set.all()[0].status]
     message_value_html_template = render_to_string(template_name,\
     {'name':user.username, 'award_template':award_template, \
     'award_name':award_name, 'end_day':end_day, 'new_status':new_status})
     plain_message_value = strip_tags(message_value_html_template)
     send_mail(subject=subject, from_email='no-reply@pramati.com', \
     recipient_list=[str(user.email)], message=plain_message_value, fail_silently=False)
+  except Exception as e: 
+    print (str(e))
+    return JsonResponse({'status':'unsent'})
 
-  except:
-    pass
-  return redirect('nominate_app:nomination_status')
+  return JsonResponse({'status':'sent'})
