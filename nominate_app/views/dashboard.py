@@ -41,7 +41,15 @@ def index(request):
     return render(request, 'nominate_app/dashboard.html', results)
 
 def get_notifications():
-    return NominationSubmitted.objects.all().order_by('updated_at').reverse()[:3]
+    notifications = list()
+    submissions = NominationSubmitted.objects.all().order_by('-updated_at')[:3]
+    for submission in submissions:
+        data = dict()
+        data['user'] = submission.get_user(submission.status)
+        data['status'] = submission.get_status(submission.status).lower()
+        data['award'] = submission.award_name
+        notifications.append(data)
+    return notifications
 
 
 def get_recent_nominations():
@@ -49,34 +57,42 @@ def get_recent_nominations():
     return nominations
 
 def get_activities(user_obj):
-    group_name = user_obj.groups.first()
-    assigned_nominations = group_name.nomination_set.filter(end_day__gte=datetime.now().date())
-    template_date = dict()
-    submitted_date = dict()
-    for nom in assigned_nominations:
-        template_date[nom.award_template.template_name] = nom.end_day
-    submitted_nominations = user_obj.nominationinstance_set.\
-        filter(Q(submitted_at__gte=(datetime.now()- timedelta(weeks=1)).date()) | \
-            Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date()))
-    for sub_nom in submitted_nominations:
-        submitted_date[sub_nom.nomination.award_template.template_name]=sub_nom.nomination.updated_at\
-             if sub_nom.nomination.updated_at else sub_nom.nomination.submitted_at
+    unsubmitted_list = []
+    submissions = NominationSubmitted.objects.filter(email=user_obj.email, \
+        nomination__end_day__gte=datetime.now().date())
+    for sub in submissions: 
+        template_date = dict() 
+        template_date['template_name']=sub.nomination.award_template.template_name
+        template_date['time']=sub.nomination.end_day.strftime('%B %d')
+        template_date['status']=sub.get_status(sub.status) 
+        unsubmitted_list.append(template_date) 
+    submitted_list = []
+    for nom in NominationSubmitted.objects.filter(Q(submitted_at__gte=(datetime.now()- timedelta(weeks=1)).date()) |Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date()),email=user_obj.email):
+        submitted_date = dict()
+        submitted_date['status']=nom.get_status(nom.status)
+        submitted_date['template_name']=nom.nomination.award_template.template_name 
+        submitted_date['reviewed_by'] = nom.get_user(nom.status)
+        submitted_date['time']=nom.submitted_at.strftime('%B %d')
+        submitted_list.append(submitted_date)
     my_like_list = get_likes(user_obj)
     my_comments_list = get_comments(user_obj)
     my_graph = get_mygraph(user_obj)
+    published_results = get_published_results()
     return {'likes_list':my_like_list, 'comment_list':my_comments_list, \
-        'template_date':template_date, 'submitted_date':submitted_date, 'graph_data':my_graph}
+        'template_date':unsubmitted_list, 'submitted_date':submitted_list, \
+            'graph_data':my_graph, 'published_results':published_results}
 
 def get_likes(user):
-    my_like_list = [] 
+    my_like_list = []
     for instance in user.nominationinstance_set.all():
         for submissions in instance.nomination.submissions.\
             filter(Q(created_at__gte=(datetime.now()- timedelta(weeks=1)).date()) |\
                  Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date())):
             for like in submissions.likes.all():
                 z = dict()
-                z[instance.nomination.award_template.template_name]=like.voter 
-                my_like_list.append(z) 
+                z[instance.nomination.award_template.template_name]=\
+                    str(like.voter.first_name) + " " + str(like.voter.last_name)
+                my_like_list.append(z)
     return my_like_list
 
 def get_comments(user):
@@ -87,20 +103,30 @@ def get_comments(user):
                  Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date())):
             for comment in submissions.comments.all():
                 z = dict()
-                z[instance.nomination.award_template.template_name]=comment.author
+                z[instance.nomination.award_template.template_name]=\
+                    str(comment.author.first_name) + " " + str(comment.author.last_name)
                 my_comments_list.append(z)
     return my_comments_list
 
 def get_mygraph(user):
-    submissions = list(NominationSubmitted.objects.filter(email=user.email).\
-        values('status').annotate(scount=Count('status')).order_by('status'))
-    all_status = {0:'Submitted', 1:'Reviewed', 2:'Approved', 3:'Dismissed', 4:'On hold'}
-    status_list = [*all_status.values()]
-    for sub in submissions:
-        sub['status'] = all_status[sub['status']]
-        status_list.remove(sub['status'])
-    for val in status_list:submissions.append({'status':str(val), 'scount':0})
-    return  submissions
+    submissions = NominationSubmitted.objects.filter(email=user.email)
+    data = dict()
+    data['Submitted'] = submissions.filter(status=0).count()
+    data['Reviewed'] = submissions.filter(status=1).count()
+    data['Approved'] = submissions.filter(status=2, is_published=True).count()
+    data['Dismissed'] = submissions.filter(status=3,is_published=True).count()
+    data['On hold'] = submissions.filter(status=4,is_published=True).count()
+    return  data
+
+def get_published_results():
+    published = NominationSubmitted.objects.\
+        filter(Q(created_at__gte=(datetime.now()- timedelta(weeks=1)).date()) |\
+                 Q(updated_at__gte=(datetime.now()-timedelta(weeks=1)).date()))\
+                     .order_by('-updated_at')
+    results = list()
+    for result in published:
+        results.append(result.nomination.award_template.template_name)
+    return results
 
 def load_graph(award_id):
     if award_id:

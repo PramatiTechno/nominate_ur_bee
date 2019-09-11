@@ -10,6 +10,7 @@ import calendar
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
+from django.db.models import F
 from IPython import embed
 
 logger = get_task_logger(__name__)
@@ -90,7 +91,7 @@ def populate_monthly_frequency():
                                 pass
 
 
-# @periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
+@periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
 def email_task():
 	# subjects
     manager_start_date = "its time to nominate your bee"
@@ -120,13 +121,13 @@ def email_task():
                 sending(to_manager, nominations_manager, 'nominate_app/emails/managers_start-date.html', manager_start_date)
                 managers_start_sent = True
         else: managers_start_sent == False
-        if nominations_manager.filter(end_day=(datetime.today()+ timedelta(hours=72)).date()):
+        if nominations_manager.filter(end_day=(datetime.today()+ timedelta(hours=24)).date()):
             global managers_end_sent
             if managers_end_sent == False:
                 sending(to_manager, nominations_manager, 'nominate_app/emails/managers_end-date.html', manager_end_date)
                 managers_end_sent == True
         else: managers_end_sent = False
-        if nominations_manager.filter(updated_at=(datetime.today())):
+        if nominations_manager.filter(updated_at=(datetime.today()), updated_at__gte=F('created_at')):
             global managers_updated_sent
             if managers_updated_sent == False:
                 sending(to_manager, nominations_manager, 'nominate_app/emails/managers_extension.html', manager_extension_date)
@@ -139,13 +140,13 @@ def email_task():
                 sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jury_start-date.html', tech_jury_start_date)
                 tech_jury_start_sent = True
         else:tech_jury_start_sent = False
-        if nominations_tech_jury.filter(end_day=(datetime.today()+ timedelta(hours=72)).date()):
+        if nominations_tech_jury.filter(end_day=(datetime.today()+ timedelta(hours=24)).date()):
             global tech_jury_end_sent
             if tech_jury_end_sent == False:
                 sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jury_end-date.html', tech_jury_end_date)
                 tech_jury_end_sent = True
         else: tech_jury_end_sent = False
-        if nominations_tech_jury.filter(updated_at=(datetime.today())):
+        if nominations_tech_jury.filter(updated_at=(datetime.today()), updated_at__gte=F('created_at')):
             global tech_jury_updated_sent
             if tech_jury_updated_sent == False:
                 sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jurys_extension_extension.html', tech_jury_extension_date)
@@ -158,13 +159,13 @@ def email_task():
                 sending(to_director, nominations_director, 'nominate_app/emails/directors_start-date.html', director_start_date)
                 director_start_sent = True
         else:director_start_sent = False
-        if nominations_director.filter(end_day=(datetime.today()+ timedelta(hours=72)).date()):
+        if nominations_director.filter(end_day=(datetime.today()+ timedelta(hours=24)).date()):
             global director_end_sent
             if director_end_sent == False:
                 sending(to_director, nominations_director, 'nominate_app/emails/directors_end-date.html', director_start_date)
                 director_end_sent = True
         else: director_end_sent = False
-        if nominations_director.filter(updated_at=(datetime.today())):
+        if nominations_director.filter(updated_at=(datetime.today()), updated_at__gte=F('created_at')):
             global director_updated_sent
             if director_updated_sent == False:
                 sending(to_director, nominations_director, 'nominate_app/emails/directors_extension.html', director_extension_date)

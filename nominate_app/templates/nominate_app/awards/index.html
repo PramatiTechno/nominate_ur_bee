@@ -29,7 +29,7 @@
   <tbody>
     {% for form in forms %}
     <tr data-rowId={{form.id}}>
-      <td scope="row" data-label="Select" class="row-function row-selection" onclick="handleSelectCellClick(event);"><input type="checkbox" onclick="checkboxClick(event);"/></td>
+      <td></td>
       <td scope="row" data-label="Name"><a href="{% url 'nominate_app:award' form.id %}">{{form.name}}</a></td>
       <td scope="row" data-label="Templates"><a href="{% url 'nominate_app:award_templates_index' form.id%}">{{form.awardtemplate_set.count}}</a></td>
       <td scope="row" data-label="Status">{{form.is_active}}</td>

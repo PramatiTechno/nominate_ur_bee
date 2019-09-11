@@ -52,7 +52,7 @@
         <tbody>
             {% for template in load_templates %}
             <tr data-rowId={{form.id}}>
-                <td scope="row" data-label="Select" class="row-function row-selection" onclick="handleSelectCellClick(event);"><input type="checkbox" onclick="checkboxClick(event);" /></td>
+                <td></td>
 
                 <td scope="row" data-label="Name"><a href="{% url 'nominate_app:award_template' award.id template.id %}">{{template.template_name}}</a></td>
 
