@@ -1,24 +1,6 @@
-<!DOCTYPE html> {% load staticfiles %}
-<html>
+Dear {{Manager_name}},
 
-<head>
-    <meta charset="UTF-8">
-
-</head>
-
-<body>
-        <div style="font-family: arial,sans-serif">
-
-            <p>
-                Dear {{Manager_name}},
-                <br>Greetings!</br>
-                <br>Yet to submit reviews?</br>
-                <br>We have extended the nominations submission date from {{end_date}} to {{new_end_date}}.<br>
-                <br>Please submit as soon as possible.</br>
-            </p>
-
-     
-    </div>
-</body>
-
-</html>
+Greetings!
+Yet to submit your nomination?
+This is to inform you that we have extended the nominations submission date from {{end_date}} to {{new_end_date}} <a href = {{nomination_submit_link}}>(here)</a>.
+Please submit as soon as possible.

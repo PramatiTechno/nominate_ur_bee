@@ -1,24 +1,6 @@
-<!DOCTYPE html> {% load staticfiles %}
-<html>
+Dear {{manager_name}},
 
-<head>
-    <meta charset="UTF-8">
-</head>
-
-<body>
-  <div style="font-family: arial,sans-serif">
-
-            <p>
-                <br>Dear {{manager_name}}, <br>
-                <br>Greetings!</br>
-                <br>Please consider this notification as gentle reminder to submit your nominations.</br>
-                <br>The last date for submission is on {{last_date}}.</br>
-                <br>Do reach out to the HR team at for any clarification or support required. </br>
-            </p>
-
-
-   
-    </div>
-</body>
-
-</html>
+Greetings!
+Please consider this notification as a gentle reminder to submit your nominations.
+The last date for submission is on {{last_date}} <a href = {{nomination_submit_link}}>(here)</a>
+Do reach out to the HR team at for any clarification or support required.
