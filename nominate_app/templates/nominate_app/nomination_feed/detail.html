@@ -12,12 +12,19 @@
               <div class="col-md-6" style="text-align:right;"><h6 class="text-muted">{{submission.email}}<p style="font-size:14px;color: #747591a6;">{{submission.submitted_at}}</p></h6></div>
             </div>
     		<div class="card-text">
+
+            {% set count = 0%}
+
     		{% for qa in qa_list %}
+               {% set count = count + 1 %}
+
                 <div class="qa">
                     <p>{{qa.question}}</p>
                     <p>{{qa.answer}}</p>
                 </div>
     		{% endfor %}
+            {{count}}
+
     		</div>
 
             <div class="row" style="padding:10px 20px;">
@@ -58,5 +65,19 @@
 
 	<hr>
 </div>
+
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            var count = "{{count}}";
+            if count > 2 {
+            $('.qa').css('display','none');
+            $(".view-more").click(function(){
+            $(".qa").toggle();
+            });
+          }
+         });
+
+</script>
 
 {% endblock %}
