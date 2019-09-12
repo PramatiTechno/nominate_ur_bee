@@ -1,7 +1,6 @@
 {% load staticfiles%}
 {% block content %}
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">  
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>  
 <br>
@@ -20,6 +19,7 @@
             <button type="button" class="btn btn-link view-more">View-more...</button>
 
     		<div class="card-text">
+
     		{% for qa in qa_list %}
                 <div class="qa">
                     <p>{{qa.question}}</p>
@@ -66,15 +66,4 @@
 
 	<hr>
 </div>
-
-<script type="text/javascript">
-        $(document).ready(function() {
-            $('.qa').css('display','none');
-            $(".view-more").click(function(){
-            $(".qa").toggle();
-            });
-         });
-
-</script>
-
 {% endblock %}

@@ -8,12 +8,12 @@
                 type: 'column'
             },
             title: {
-                text: 'Activities Statistics'
+                text: 'My Nomination Status'
             },
             xAxis: {
                 categories: ['Nominations']
             },
-            series: [{% for mydict in graph_data %}{ name:'{{ mydict.status }}', data:[{{ mydict.scount }}] }{% if not forloop.last %}, {% endif %}{% endfor %}]
+            series: [{% for key, value in graph_data.items %}{ name:'{{ key }}', data:[{{ value }}] }{% if not forloop.last %}, {% endif %}{% endfor %}]
         });
     });    
 </script>

@@ -4,24 +4,9 @@
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/results.css' %}">
-<script>
-    $(function() {
+<script type="text/javascript" src="{% static 'js/results.js' %}"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-        $("#datepicker").datepicker({
-            format: "MM yyyy",
-            startView: "months",
-            minViewMode: "months"
-        });
-
-        $('.submit').on('click', function() {
-            var date = $('#datepicker').val()
-            if (date != '') {
-                $('#date-form').submit()
-            }
-        })
-
-    })
-</script>
 
 <div class="container-fluid top-nav">
   <div class="header" >
@@ -42,6 +27,10 @@
 </div>
 
 	<div class="container">
+        <div class="d-flex p-2 bg-info text-white">
+            Published
+        </div>
+
 	    <div class="row">
 			{% for submission in submissions %}
 			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">      
@@ -51,7 +40,7 @@
 							{% if submission.image_avail %}
 								<img class="image" src="{{ submission.image_path }}" alt="Image Unavailable">
 							{% else %}
-		            			<i class="fa fa-star fa-5x star" aria-hidden="true"></i>
+                                <i class="fa fa-star fa-5x" style="color:gold; display: inline-block;" aria-hidden="true"></i>
 							{% endif %}
 		            	</div>
 						<div class="col-md-7">
@@ -67,49 +56,49 @@
 		            		            
 				 </div>
 			</div>
-
-            </div>
-        </div>
-        {% empty %}
-        <p class="p-2 text-muted ml-2">No Results Found</p>
-        {% endfor %}
-
-    </div>
-    {% if user.userprofile.get_group_name == "admin" %}
-    <div class="d-flex p-2 bg-info text-white">
-        To be Published
-    </div>
-    <div class="row">
-        {% for submission in unpublished_submissions %}
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-            <div class="box-part">
-                <div class="row">
-                    <div class="col-md-5">
-                        {% if submission.image_avail %}
-                        <img class="image" src="{{ submission.image_path }}" alt="Image Unavailable"> {% else %}
-                        <i class="fa fa-star fa-5x" style="color:gold; display: inline-block;" aria-hidden="true"></i> {% endif %}
-                    </div>
-                    <div class="col-md-4">
-                        <h6>{{ submission.object.award_name }}</h6>
-                        <h6>{{ submission.object.template_name }} </h6>
-                        <p class="text-muted text-sm"> {{ submission.nomination.start_day }} - {{ submission.nomination.end_day }}
-                    </div>
-                </div>
-                <div class="text p-1">
-                    <span>Director: {{ submission.comment }}</span>
-                </div>
-                <div class="col-md-12">
-                    <a href="/publish/{{ submission.object.id }}">
-                        <button type="submit" class="btn btn-success">Publish</button>
-                    </a>
-                </div>
-            </div>
             {% empty %}
-            <p class="p-2 text-muted ml-2">No Unpublished Results Found</p>
+            <p class="p-2 text-muted ml-2">No Results Found</p>
             {% endfor %}
         </div>
     </div>
-    {% endif %}
-</div>
+
+
+    {% if user.userprofile.get_group_name == "admin" %}
+    <div class="container">
+        <div class="d-flex p-2 bg-info text-white">
+            To be Published
+        </div>
+        <div class="row">
+            {% for submission in unpublished_submissions %}
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div class="box-part">
+                    <div class="row">
+                        <div class="col-md-5">
+                            {% if submission.image_avail %}
+                            <img class="image" src="{{ submission.image_path }}" alt="Image Unavailable"> {% else %}
+                            <i class="fa fa-star fa-5x" style="color:gold; display: inline-block;" aria-hidden="true"></i> {% endif %}
+                        </div>
+                        <div class="col-md-7">
+                            <h6>{{ submission.object.award_name }}</h6>
+                            <h6>{{ submission.object.template_name }} </h6>
+                            <p class="text-muted text-sm"> {{ submission.nomination.start_day }} - {{ submission.nomination.end_day }}
+                        </div>
+                    </div>
+                    <div class="text p-1">
+                        <span>Director: {{ submission.comment }}</span>
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <a href="/publish/{{ submission.object.id }}">
+                            <button type="submit" class="btn btn-success">Publish</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+                {% empty %}
+                <p class="p-2 text-muted ml-2">No Unpublished Results Found</p>
+                {% endfor %}
+        </div>
+        {% endif %}
+    </div>
 
 {% endblock %}

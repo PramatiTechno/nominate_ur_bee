@@ -1,10 +1,49 @@
 $(function() {
   // shortcut for onDocumentReady
+
+  // script for filter option
+  $("#filter-block").css("display", "none");
+  $("#filter-block").css("position", "absolute");
+  $("#filter-block").css("z-index", "999");
+  $("#filter-block").css("background", "white");
+
+  $("#arrow").click(function() {
+      if ($("#filter-block").is(":visible")) {
+          $("#arrow").css("transform", "rotate(360deg)");
+          $("#filter-block").css("display", "none");
+          $("#filter-block").css("position", "absolute");
+          $("#filter-block").css("z-index", "999");
+          $("#filter-block").css("background", "white");
+      } else {
+          $("#arrow").css("transform", "rotate(180deg)");
+          $("#arrow").css("padding-bottom", "5px");
+          $("#filter-block").css("display", "block");
+      }
+  });
+
+  //infinite scroll
+  var infinite = new Waypoint.Infinite({
+      element: $('.infinite-container')[0],
+      onBeforePageLoad: function() {
+          $('.loading').show();
+          query_strings = window.location.search
+          if (query_strings !== "") {
+              $('.infinite-more-link').attr('href', $('.infinite-more-link').attr('href') + "&" + query_strings)
+          }
+      },
+      onAfterPageLoad: function($items) {
+          $('.loading').hide();
+      }
+  });
+
+
   $(".comment-section").hide();
   $("#start_date").datepicker({ maxViewMode: 1, orientation: "bottom" });
   $("#end_date").datepicker({ maxViewMode: 1, orientation: "bottom" });
   $(".datepicker").attr("autocomplete", "off");
 
+
+  // like link event
   $(document).on("click", ".like-link", function() {
     var instance_id = $(this).attr("value");
     var like_btn = $(this);
@@ -32,6 +71,8 @@ $(function() {
     return false;
   });
 
+
+  // like count event
   $(document).on("click", ".like-count", function() {
     var instance_id = $(this).attr("value");
     var count_link = $(this);
@@ -54,7 +95,7 @@ $(function() {
     return false;
   });
 
-  // When you click an "a" tag who is child of an item with class "subcategory_list"…
+  // comment-link event
   $(document).on("click", ".comment-link", function() {
     var instance_id = $(this).attr("value");
     var comment_section = $(this)
@@ -85,6 +126,7 @@ $(function() {
     return false;
   });
 
+  // more comment event
   $(document).on("click", ".more-comments", function() {
     var more_comment_link = $(this);
     var comment_rows = $(this).parents("div.comment-rows");
@@ -106,6 +148,8 @@ $(function() {
     return false;
   });
 
+
+  // comment submit event
   $(document).on("submit", ".post-form", function() {
     var instance_id = $(this)
       .find(".send")
@@ -136,6 +180,8 @@ $(function() {
     return false;
   });
 
+
+  // comment delete event
   $(document).on("click", ".comment-delete", function() {
     var comment_section = $(this).parents("div.comment-section");
     var comment_row = $(this).parents("div.comment");

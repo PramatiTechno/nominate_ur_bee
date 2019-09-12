@@ -7,69 +7,6 @@
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<script>
-    var rows = document.querySelectorAll("[data-rowid]");
-    var selectInputCellWrappers = document.getElementsByClassName('row-selection');
-
-    function getInputsOfType(inputsArray, type) {
-        return Array.prototype.filter.call(inputsArray, function(input) {
-            return input.type.toLowerCase() === type.toLowerCase();
-        });
-    }
-
-    var selectInputs = Array.prototype.map.call(rows, function(row) {
-        return getInputsOfType(row.getElementsByTagName('input'), 'checkbox')[0];
-    });
-
-    function getSelectedRowId(child) {
-        var tableRows = document.getElementsByTagName('TR');
-        var selectedRow = Array.prototype.filter.call(tableRows, function(tableRow) {
-            return tableRow.contains(child);
-        })[0];
-
-        return selectedRow.dataset.rowid;
-    }
-
-    function handleSelectCellClick(event) {
-        var selectedRowId;
-
-        if (event.target.tagName.toLowerCase() === "input") {
-            selectedRowId = getSelectedRowId(Array.prototype.filter.call(selectInputCellWrappers, function(cell) {
-                return cell.contains(event.target);
-            })[0]);
-        } else {
-            selectedRowId = getSelectedRowId(event.target);
-        }
-
-        var selectedRow = document.querySelectorAll("[data-rowid='" + selectedRowId + "']")[0];
-        var selectedRowCheckbox = getInputsOfType(selectedRow.getElementsByTagName('input'), 'checkbox')[0];
-
-        if (event.target.checked == undefined) {
-
-            if (selectedRowCheckbox.checked === true) {
-                selectedRowCheckbox.checked = false;
-                selectedRow.classList.remove('selected');
-            } else {
-                console.log("select");
-                selectedRowCheckbox.checked = true;
-                selectedRow.classList.add('selected');
-            }
-        } else {
-            if (event.target.checked) {
-                selectedRow.classList.add('selected');
-            } else {
-                selectedRow.classList.remove('selected');
-            }
-        }
-    }
-
-
-    // Prevent the checkbox from preforming its on check, we will control this.
-    function checkboxClick(event) {
-        // event.preventDefault();
-        return false;
-    }
-</script>
 
 <div class="container-fluid" id="container">
   <div class="header">
@@ -92,7 +29,7 @@
   <tbody>
     {% for form in forms %}
     <tr data-rowId={{form.id}}>
-      <td scope="row" data-label="Select" class="row-function row-selection" onclick="handleSelectCellClick(event);"><input type="checkbox" onclick="checkboxClick(event);"/></td>
+      <td></td>
       <td scope="row" data-label="Name"><a href="{% url 'nominate_app:award' form.id %}">{{form.name}}</a></td>
       <td scope="row" data-label="Templates"><a href="{% url 'nominate_app:award_templates_index' form.id%}">{{form.awardtemplate_set.count}}</a></td>
       <td scope="row" data-label="Status">{{form.is_active}}</td>

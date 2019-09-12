@@ -6,17 +6,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/approvals.css' %}">
 <script type="text/javascript" src="{% static 'js/jquery.star-rating-svg.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/approve/edit.js' %}"></script>
 
-<script>
-$(document).ready(function(){
-	$('.submission-rating').starRating({
-   		starSize: 18,
-		  readOnly: true,
-    	callback: function(currentRating, $el){
-        // make a server call here
-    	}
-	})
-})</script>
+
 <!-- header -->
 <div class="header" >
   <h5>

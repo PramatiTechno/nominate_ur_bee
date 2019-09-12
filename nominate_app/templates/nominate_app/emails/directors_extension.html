@@ -1,30 +1,10 @@
-<!DOCTYPE html> {% load staticfiles %}
-<html>
+Dear {{ Directorial Board Member_name }},
 
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <link rel="stylesheet" href="/static/css/main.css">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+Greetings!
+This is to inform you that we have extended the approval submission date to {{end_date}}.
+Kindly help us with your feedback so that we can complete the final procedures.
 
-</head>
+Please find the below link provided.
+{{ link }}
 
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <p>
-                Hi {{director_name}},
-                <br>Greetings!</br>
-                <br>Yet to submit reviews? Then glad news for you...</br>
-                <br>We have extended the reviews submission date from {{end_date}} to {{new_end_date}}.<br>
-                <br>Don't miss it. </br>
-                <br>Submit as soon as possible.</br>
-            </p>
-
-        </div>
-    </div>
-    </div>
-</body>
-
-</html>
+Do reach out to the HR team for any clarification or support required.

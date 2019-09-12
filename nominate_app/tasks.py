@@ -10,6 +10,9 @@ import calendar
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
+from django.db.models import F
+from django.urls import reverse
+import os
 from IPython import embed
 
 logger = get_task_logger(__name__)
@@ -28,15 +31,17 @@ def add_months(sourcedate, months):
     day = min(sourcedate.day, calendar.monthrange(year,month)[1])
     return datetime(year, month, day)
 
-def sending(values, nom_obj, template_name, subject):
+def sending(values, nom_obj, template_name, subject, link):
     for index, value in enumerate(values):
         print('email'+str(value.email))
         print('username'+ str(value.username))
         context = {str(nom_obj[index].group.name)+'_name':value, 
-        'start_date':nom_obj[index].start_day, 'last_date':nom_obj[index].end_day}
+        'start_date':nom_obj[index].start_day, 'last_date':nom_obj[index].end_day, \
+            'link':link}
         message_value_html_template = render_to_string(template_name, context=context)
         plain_message_value = strip_tags(message_value_html_template)
-        send_mail(subject=subject, from_email='no-reply@pramati.com', recipient_list=[str(value.email)], message=plain_message_value, fail_silently=False)
+        send_mail(subject=subject, from_email='no-reply@pramati.com', \
+            recipient_list=[str(value.email)], message=plain_message_value, fail_silently=False)
         print('mail sent to ' + str(value))
     return 'mail sent'
 managers_start_sent = False
@@ -90,7 +95,7 @@ def populate_monthly_frequency():
                                 pass
 
 
-# @periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
+@periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
 def email_task():
 	# subjects
     manager_start_date = "its time to nominate your bee"
@@ -117,57 +122,66 @@ def email_task():
         if nominations_manager.filter(start_day=(datetime.today()+ timedelta(hours=24)).date()):
             global managers_start_sent
             if managers_start_sent == False:
-                sending(to_manager, nominations_manager, 'nominate_app/emails/managers_start-date.html', manager_start_date)
+                sending(to_manager, nominations_manager, 'nominate_app/emails/managers_start-date.html', \
+                    manager_start_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
                 managers_start_sent = True
         else: managers_start_sent == False
-        if nominations_manager.filter(end_day=(datetime.today()+ timedelta(hours=72)).date()):
+        if nominations_manager.filter(end_day=(datetime.today()+ timedelta(hours=24)).date()):
             global managers_end_sent
             if managers_end_sent == False:
-                sending(to_manager, nominations_manager, 'nominate_app/emails/managers_end-date.html', manager_end_date)
+                sending(to_manager, nominations_manager, 'nominate_app/emails/managers_end-date.html', \
+                    manager_end_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
                 managers_end_sent == True
         else: managers_end_sent = False
-        if nominations_manager.filter(updated_at=(datetime.today())):
+        if nominations_manager.filter(updated_at=(datetime.today()), updated_at__gte=(F('created_at')+timedelta(seconds=3))):
             global managers_updated_sent
             if managers_updated_sent == False:
-                sending(to_manager, nominations_manager, 'nominate_app/emails/managers_extension.html', manager_extension_date)
+                sending(to_manager, nominations_manager, 'nominate_app/emails/managers_extension.html', \
+                    manager_extension_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
                 managers_updated_sent = True
         else: managers_updated_sent = False
     elif nominations_tech_jury:
         if nominations_tech_jury.filter(start_day=(datetime.today()+ timedelta(hours=24)).date()):
             global tech_jury_start_sent
             if tech_jury_start_sent == False:
-                sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jury_start-date.html', tech_jury_start_date)
+                sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jury_start-date.html', \
+                    tech_jury_start_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index'))
                 tech_jury_start_sent = True
         else:tech_jury_start_sent = False
-        if nominations_tech_jury.filter(end_day=(datetime.today()+ timedelta(hours=72)).date()):
+        if nominations_tech_jury.filter(end_day=(datetime.today()+ timedelta(hours=24)).date()):
             global tech_jury_end_sent
             if tech_jury_end_sent == False:
-                sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jury_end-date.html', tech_jury_end_date)
+                sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jury_end-date.html', \
+                    tech_jury_end_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index'))
                 tech_jury_end_sent = True
         else: tech_jury_end_sent = False
-        if nominations_tech_jury.filter(updated_at=(datetime.today())):
+        if nominations_tech_jury.filter(updated_at=(datetime.today()), updated_at__gte=(F('created_at')+timedelta(seconds=3))):
             global tech_jury_updated_sent
             if tech_jury_updated_sent == False:
-                sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jurys_extension_extension.html', tech_jury_extension_date)
+                sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jurys_extension_extension.html', \
+                    tech_jury_extension_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index'))
                 tech_jury_updated_sent = True
         else: tech_jury_updated_sent = False
     elif nominations_director:
         if nominations_director.filter(start_day=(datetime.today()+ timedelta(hours=24)).date()):
             global director_start_sent
             if director_start_sent == False:
-                sending(to_director, nominations_director, 'nominate_app/emails/directors_start-date.html', director_start_date)
+                sending(to_director, nominations_director, 'nominate_app/emails/directors_start-date.html', \
+                    director_start_date, os.environ['SERVER_NAME'] + reverse('nominate_app:approval'))
                 director_start_sent = True
         else:director_start_sent = False
-        if nominations_director.filter(end_day=(datetime.today()+ timedelta(hours=72)).date()):
+        if nominations_director.filter(end_day=(datetime.today()+ timedelta(hours=24)).date()):
             global director_end_sent
             if director_end_sent == False:
-                sending(to_director, nominations_director, 'nominate_app/emails/directors_end-date.html', director_start_date)
+                sending(to_director, nominations_director, 'nominate_app/emails/directors_end-date.html', \
+                    director_start_date, os.environ['SERVER_NAME'] + reverse('nominate_app:approval'))
                 director_end_sent = True
         else: director_end_sent = False
-        if nominations_director.filter(updated_at=(datetime.today())):
+        if nominations_director.filter(updated_at=(datetime.today()), updated_at__gte=(F('created_at')+timedelta(seconds=3))):
             global director_updated_sent
             if director_updated_sent == False:
-                sending(to_director, nominations_director, 'nominate_app/emails/directors_extension.html', director_extension_date)
+                sending(to_director, nominations_director, 'nominate_app/emails/directors_extension.html', \
+                    director_extension_date, os.environ['SERVER_NAME'] + reverse('nominate_app:approval'))
                 tech_jury_updated_sent = True
         else: tech_jury_updated_sent = False
         

@@ -9,22 +9,46 @@
         My Activities
     </div>
     <div class="card-body">
-        {% for mydict in likes_list %} {% for mykey,myvalue in mydict.items %}
-        <div class="likes text-muted">
-            {{ myvalue }} liked your nomination for {{ mykey }}
-        </div>
-        {% endfor %} {% endfor %} {% for mydict in comment_list %} {% for mykey,myvalue in mydict.items %}
-        <div class="comments text-muted">
-            {{ myvalue }} commented your nomination for {{ mykey }}
-        </div>
-        {% endfor %} {% endfor %} {% for mykey,myvalue in template_date.items %}
+        {% for mydict in template_date %}
         <div class="submission text-muted">
-            The last date to submit your nominations for {{ mykey }} is on {{ myvalue }}.
+            The last date of submission for {{ mydict.template_name }} is on {{ mydict.time }}.
         </div>
-        {% endfor %} {% for mykey,myvalue in submitted_date.items %}
-        <div class="submitted text-muted">
-            you submitted your nominations for {{ mykey }} is on {{ myvalue }}.
-        </div>
+        {% endfor %}
+        {% for result in published_results %} 
+            <div class="published text-muted">
+                Hurry up !!! The results for {{ result }} has been published
+            </div>            
+        {% endfor %}
+        {% for mydict in submitted_date %}
+            {% if user.userprofile.get_group_name == "manager" %}
+                {% if mydict.status == "Submitted" %}
+                    <div class="submitted text-muted">
+                        You {{ mydict.status }} the nominations for {{ mydict.template_name }} on {{ mydict.time }}
+                    </div>
+                {% elif mydict.status == "Reviewed" %}
+                    <div class="reviewed text-muted">
+                        {{ mydict.reviewed_by }} has {{ mydict.status }} your nominations for {{ mydict.template_name }}
+                    </div>
+                {% endif %}
+            {% elif user.userprofile.get_group_name == "technical jury member" %}
+                {% if mydict.status == "Reviewed" %}
+                    {% if user.get_username == mydict.reviewed_by %}
+                        <div class="reviewed text-muted">
+                            {{ mydict.reviewed_by }} has {{ mydict.status }} the nominations for {{ mydict.template_name }}
+                        </div>
+                    {% else %}
+                        <div class="reviewed text-muted">
+                            You have {{ mydict.status }} the nominations for {{ mydict.template_name }}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% elif user.userprofile.get_group_name == "directorial board member" %}
+                {% if mydict.status == 'Approved' or mydict.status == 'Dismissed' or mydict.status == 'On hold' %}
+                    <div class="submitted text-muted">
+                        You have {{ mydict.status }} the nominations for {{ mydict.template_name }}
+                    </div>                
+                {% endif %}
+            {% endif %}
         {% endfor %}
     </div>
 </div>
