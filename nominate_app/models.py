@@ -53,8 +53,8 @@ class Awards(models.Model):
   )
   frequencies = {"": "Please select", "MONTHLY":"Monthly", "QUATERLY": "Quaterly", "YEARLY": "Yearly"}
   edit_frequencies = {"MONTHLY":"Monthly", "QUATERLY": "Quaterly", "YEARLY": "Yearly"}
-  name = models.CharField(max_length=30, null=False, blank=False)
-  is_active = models.BooleanField(default = False)
+  name = models.CharField(max_length=30, null=False, blank=False, unique=True)
+  is_active = models.BooleanField(default = True)
   frequency = models.CharField(max_length=10, choices=choice_type, null=False, blank=False)
   description = models.CharField(max_length=200, null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
