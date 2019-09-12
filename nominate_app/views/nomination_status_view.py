@@ -178,14 +178,19 @@ def email(request, nomination, nomination_id):
   template_name = 'nominate_app/emails/reminder.html'
   new_status_dict = {0:'nominate',2:'review',3:'approve/decline',6:'approve/decline'}
   try:
-    new_status = new_status_dict[nomination.nominationinstance_set.all()[0].status]
+    if not nomination.nominationinstance_set.filter(user=user).exists():
+      new_status = "submit"
+    else:
+      instance = nomination.nominationinstance_set.get(user=user)
+      status = instance.get_status(instamce.status)
+      new_status = "submit"
     message_value_html_template = render_to_string(template_name,\
     {'name':user.username, 'award_template':award_template, \
-    'award_name':award_name, 'end_day':end_day, 'new_status':new_status})
+    'award_name':award_name, 'end_day':end_day, 'new_status':new_status, \
+      'link':os.environ['SERVER_NAME'] + reverse('nominate_app:nominations')})
     plain_message_value = strip_tags(message_value_html_template)
     send_mail(subject=subject, from_email='no-reply@pramati.com', \
     recipient_list=[str(user.email)], message=plain_message_value, fail_silently=False)
-
-  except:
-    pass
-  return redirect('nominate_app:nomination_status')
+  except Exception as e: 
+    return JsonResponse({'status':'unsent'})
+  return JsonResponse({'status':'sent'})

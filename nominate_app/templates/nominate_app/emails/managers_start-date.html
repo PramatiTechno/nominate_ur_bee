@@ -1,28 +1,7 @@
-<!DOCTYPE html> {% load staticfiles %}
-<html>
+Dear {{ Manager_name }},
 
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <link rel="stylesheet" href="/static/css/main.css">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+Greetings!
+It's time to nominate your bee. Please consider this notification as a gentle reminder to start nominating from {{start_date}} to {{last_date}} <a href = {{link}}>(here)</a>.
 
-</head>
+Do reach out to the HR team for any clarification or support required. 
 
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <p>
-                <br>Hi {{ Manager_name }},</br>
-                <br>Greetings!</br>
-                <br>Its time to nominate your bee. You can start nominating from {{start_date}} to {{last_date}}</br>
-                <br>Please feel free to ask any questions and stay in loop for further updates.</br>
-            </p>
-
-        </div>
-    </div>
-    </div>
-</body>
-
-</html>

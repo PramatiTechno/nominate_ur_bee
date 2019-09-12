@@ -9,6 +9,8 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import send_mail
 from itertools import chain
+import os
+from django.urls import reverse
 from IPython import embed
 
 @register.filter
@@ -96,7 +98,7 @@ def approve(request, submission_id):
         subject_all = 'Results coming soon !!!'
         to_manager_and_tech_jury = list(chain(User.objects.filter(groups__name='Manager'), \
             User.objects.filter(groups__name='Technical Jury Member')))
-        for recipient in to_manager_and_tech_jury:
+        for recipient in to_manager_and_tech_jury: 
             message_value_html_template = render_to_string('nominate_app/emails/director_final_submission.html', \
                 {'director_name':request.user.first_name, \
                     'name':recipient.username})
@@ -108,7 +110,7 @@ def approve(request, submission_id):
         to_admin = User.objects.filter(groups__name='Admin')
         for admin in to_admin:
             message_value_html_template = render_to_string('nominate_app/emails/admins.html', \
-                {'admin_name':admin.username})
+                {'admin_name':admin.username, 'link':os.environ['SERVER_NAME'] + reverse('nominate_app:approve',args=(submission_id,))})
             plain_message_value = strip_tags(message_value_html_template)          
             send_mail(subject=subject_completion, from_email='no-reply@pramati.com', \
                 recipient_list=[str(admin.email)], message=plain_message_value, fail_silently=False)
