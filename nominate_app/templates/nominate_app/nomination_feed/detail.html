@@ -13,18 +13,12 @@
             </div>
     		<div class="card-text">
 
-            {% set count = 0%}
-
     		{% for qa in qa_list %}
-               {% set count = count + 1 %}
-
                 <div class="qa">
                     <p>{{qa.question}}</p>
                     <p>{{qa.answer}}</p>
                 </div>
     		{% endfor %}
-            {{count}}
-
     		</div>
 
             <div class="row" style="padding:10px 20px;">
