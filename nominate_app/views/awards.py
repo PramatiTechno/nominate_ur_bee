@@ -12,10 +12,7 @@ from datetime import datetime
 from IPython import embed
 
 def home(request):
-  if request.user.groups.filter(name="Admin").exists():
     return redirect('nominate_app:dashboard')
-  else:
-    return redirect('nominate_app:nominations')
 
 @group_required('Admin', raise_exception=True)
 def index(request):

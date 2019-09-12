@@ -62,7 +62,6 @@ def index(request):
 	users = User.objects.filter(groups=selected_group['id'], is_active=True)
 	for user in users:
 		if user.groups.order_by('-group')[0] == group:  # to get the users if the group is his/her highest
-			# embed()
 			user_list.append({
 				'id': user.id,
 				'first_name': user.first_name,
@@ -166,7 +165,7 @@ def create(request):
 	invite.save()
 	message_value_html_template = render_to_string('nominate_app/emails/invitation.html',{'user_group':group.name,'url':os.environ['SERVER_NAME']})
 	plain_message_value = strip_tags(message_value_html_template)
-	send_mail(subject='Welcome To Nominate Your Bee !!!!', from_email='pramati@gmail.com', \
+	send_mail(subject='Welcome To Nominate Your Bee !!!!', from_email='no-reply@pramati.com', \
 		recipient_list=[str(email)], message=plain_message_value, fail_silently=False)
 	return redirect('/users?group=0')
 

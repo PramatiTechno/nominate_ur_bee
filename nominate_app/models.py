@@ -185,6 +185,21 @@ class NominationSubmitted(models.Model):
     for status in self.statuses:
       if status[1] == status_code:
         return status[0]
+  
+  def get_user(self, status):
+    if status==0:
+      user = User.objects.get(email=self.email)
+      full_name = str(user.first_name) + " " + str(user.last_name)
+    elif status==1:
+      ratings = NominationRating.objects.get(submission_id=self.id)
+      user = ratings.user
+      full_name = str(user.first_name) + " " + str(user.last_name)
+    else:
+      comment = DirectorComments.objects.get(nomination_submitted_id=self.id)
+      user = comment.user
+      full_name = str(user.first_name) + " " + str(user.last_name)
+    return full_name
+
 
 class QuestionAnswers(models.Model):
   UPLOAD_TO = 'answers/images'

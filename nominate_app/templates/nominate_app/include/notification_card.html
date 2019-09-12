@@ -3,16 +3,32 @@
             Notifications
         </div>
         <div class="card-body">
-            {% for nomination in notifications %}
-            <div class="notifications">
-                {{ nomination.email }} has {{ nomination|get_status:nomination.status }} {{nomination.award_name}}.
-            </div>
-            {% empty %}
+            {% if user.userprofile.get_group_name == "admin" %}
+                {% for nomination in notifications %}
+                <div class="notifications">
+                    {{ nomination.user }} has {{ nomination.status }} {{ nomination.award }}.
+                </div>
+                {% empty %}
+                    <div style="font-size: 15px">
+                        No new notifications found.
+                    </div>
+                {% endfor %}
+            {% elif likes_list|length %}
+                {% for mydict in likes_list %} {% for mykey,myvalue in mydict.items %}
+                <div class="likes">
+                    {{ myvalue }} liked your nomination for {{ mykey }}
+                </div>
+                {% endfor %} {% endfor %} 
+            {% elif comment_list|length %}
+                {% for mydict in comment_list %} {% for mykey,myvalue in mydict.items %}
+                <div class="comments">
+                    {{ myvalue }} commented your nomination for {{ mykey }}
+                </div>
+                {% endfor %}{% endfor %}
+            {% else %}
                 <div style="font-size: 15px">
                     No new notifications found.
-                </div>
-                    
-                
-            {% endfor %}
+                </div>            
+            {% endif %}
         </div>
 </div>

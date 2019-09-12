@@ -186,7 +186,8 @@ def email(request, username, nomination_id):
     # snew_status = new_status_dict[nomination.nominationinstance_set.all()[0].status]
     message_value_html_template = render_to_string(template_name,\
     {'name':user.username, 'award_template':award_template, \
-    'award_name':award_name, 'end_day':end_day, 'new_status':new_status})
+    'award_name':award_name, 'end_day':end_day, 'new_status':new_status, \
+      'link':os.environ['SERVER_NAME'] + reverse('nominate_app:nominations')})
     plain_message_value = strip_tags(message_value_html_template)
     send_mail(subject=subject, from_email='no-reply@pramati.com', \
     recipient_list=[str(user.email)], message=plain_message_value, fail_silently=False)
