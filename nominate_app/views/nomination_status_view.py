@@ -3,13 +3,15 @@ from nominate_app.models import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers 
-from IPython import embed
 from datetime import datetime
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import send_mail
 from django.db.models import Avg
+from django.urls import reverse
+import os
+from IPython import embed
 # Create your views here.
 
 def home(request):
@@ -183,7 +185,7 @@ def email(request, username, nomination_id):
       status = instance.get_status(instamce.status)
       new_status = "submit"
 
-    # snew_status = new_status_dict[nomination.nominationinstance_set.all()[0].status]
+    # new_status = new_status_dict[nomination.nominationinstance_set.all()[0].status]
     message_value_html_template = render_to_string(template_name,\
     {'name':user.username, 'award_template':award_template, \
     'award_name':award_name, 'end_day':end_day, 'new_status':new_status, \
@@ -191,8 +193,12 @@ def email(request, username, nomination_id):
     plain_message_value = strip_tags(message_value_html_template)
     send_mail(subject=subject, from_email='no-reply@pramati.com', \
     recipient_list=[str(user.email)], message=plain_message_value, fail_silently=False)
+    
+    # messages.success(request, "Email has been sent successfully!")
+
   except Exception as e: 
     print (str(e))
+    # messages.error(request, "Some error in sending the Email. Please try again later")
     return JsonResponse({'status':'unsent'})
 
   return JsonResponse({'status':'sent'})
