@@ -47,32 +47,6 @@
             </div>            
         {% endif %}
     </div>
-    {% if user.userprofile.get_group_name == "admin" %}
-    <div class="row row-pad">
-        <div class="col-md-6">
-            {% include "nominate_app/include/awards_card.html" %}
-        </div>
-        <div class="col-md-6">
-            {% include "nominate_app/include/summary_card.html" %}
-        </div>
-    </div>
-    <div class="row row-pad">
-        <div class="col-sm-12">
-            {% include "nominate_app/include/statistics_card.html" %}
-        </div>
-    </div>
-    {% else %}
-    <div class="row row-pad">
-        <div class="col-sm-12">
-            {% include "nominate_app/include/my_activities.html" %}
-        </div>
-    </div>
-    <div class="row row-pad">
-        <div class="col-sm-12">
-            {% include "nominate_app/include/my_graph.html" %}
-        </div>
-    </div>
-    {% endif %}
 </div>
 
 {% endblock %}

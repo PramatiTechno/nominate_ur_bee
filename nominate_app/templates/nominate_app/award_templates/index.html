@@ -1,6 +1,5 @@
 {% extends 'base.html' %} {% block title %}Award Templates{% endblock %} {% block content %} {% load staticfiles %}
 
-<script src="{% static 'js/award_index.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/data_table.css' %}">
 <link rel="stylesheet" href="{% static 'css/award_templates.css' %}">
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
@@ -39,6 +38,7 @@
     </div>
 </div>
 
+
 <div class="page-content">
     <table>
         <thead>
@@ -52,7 +52,7 @@
         <tbody>
             {% for template in load_templates %}
             <tr data-rowId={{form.id}}>
-                <td scope="row" data-label="Select" class="row-function row-selection" onclick="handleSelectCellClick(event);"><input type="checkbox" onclick="checkboxClick(event);" /></td>
+                <td></td>
 
                 <td scope="row" data-label="Name"><a href="{% url 'nominate_app:award_template' award.id template.id %}">{{template.template_name}}</a></td>
 

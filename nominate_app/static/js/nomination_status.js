@@ -1,11 +1,19 @@
 $(document).ready(function(){
-  $("#start_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
-  $("#end_date").datepicker({ maxViewMode: 1, orientation: "bottom"});
+
+  $("#start_date").datepicker({
+    maxViewMode: 1, 
+    orientation: "bottom",
+    autoclose: true,
+  });
+  $("#end_date").datepicker({
+    maxViewMode: 1, 
+    orientation: "bottom",
+    autoclose: true,
+  });
+
   $('.datepicker').attr('autocomplete',"off");
   $('.nomination-instances').hide()
-  $(document).ajaxStop(function(){
-    window.location.reload();
-  });
+  
   $(".show-nominations").on('click', function(){
     $(this).parent().parent().next().toggle();
   });
@@ -35,21 +43,55 @@ $(document).ready(function(){
         },
         dataType: 'json',
         success: function (data) {
-          
+          window.location.reload();
         }
-      });
+      });    
     })
 
     $(this).next().find('.datetext')
-    $(datetext).datepicker({ startDate: "today",  maxViewMode: 1, orientation: "bottom",});
+    $(datetext).datepicker({ startDate: "today",  maxViewMode: 1, orientation: "bottom", autoclose: true});
 
     $(datetext).on('click', function(e){
       e.stopPropagation()
     })
     
   });
+
+
   $('.enddate').on('hidden', function(e, editable) {
     $(this).editable('destroy');
   });
+
+  $('.submission-rating').starRating({
+      starSize: 15,
+      readOnly: true,
+      callback: function(currentRating, $el){
+      }
+  })
+
+  $("#show-nominations i").click(function(){
+      $(this).toggleClass('fa-plus fa-minus');
+  });
+
+
+  $(document).on('click', '.reminder-mail', function(event){
+    var username_and_instance_id = $(this).attr('value')
+    $.ajax({
+      type: "GET",
+      url: "/reemail/"+ username_and_instance_id + "/",
+      success: function(data) {
+        console.log("success", data);
+        if (data.status === "sent"){
+          alert("Reminder Email has been sent")
+        }else{
+          alert("Email not sent !")
+        }
+      },
+      error: function(response) {
+        console.log("error", response);
+      }
+    })
+    return false
+  })
 
 });

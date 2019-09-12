@@ -53,8 +53,8 @@ class Awards(models.Model):
   )
   frequencies = {"": "Please select", "MONTHLY":"Monthly", "QUATERLY": "Quaterly", "YEARLY": "Yearly"}
   edit_frequencies = {"MONTHLY":"Monthly", "QUATERLY": "Quaterly", "YEARLY": "Yearly"}
-  name = models.CharField(max_length=30, null=False, blank=False)
-  is_active = models.BooleanField(default = False)
+  name = models.CharField(max_length=30, null=False, blank=False, unique=True)
+  is_active = models.BooleanField(default = True)
   frequency = models.CharField(max_length=10, choices=choice_type, null=False, blank=False)
   description = models.CharField(max_length=200, null=True, blank=True)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
@@ -185,6 +185,21 @@ class NominationSubmitted(models.Model):
     for status in self.statuses:
       if status[1] == status_code:
         return status[0]
+  
+  def get_user(self, status):
+    if status==0:
+      user = User.objects.get(email=self.email)
+      full_name = str(user.first_name) + " " + str(user.last_name)
+    elif status==1:
+      ratings = NominationRating.objects.get(submission_id=self.id)
+      user = ratings.user
+      full_name = str(user.first_name) + " " + str(user.last_name)
+    else:
+      comment = DirectorComments.objects.get(nomination_submitted_id=self.id)
+      user = comment.user
+      full_name = str(user.first_name) + " " + str(user.last_name)
+    return full_name
+
 
 class QuestionAnswers(models.Model):
   UPLOAD_TO = 'answers/images'
