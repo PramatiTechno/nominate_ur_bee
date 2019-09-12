@@ -64,35 +64,32 @@ def populate_monthly_frequency():
     print("Starting the script from the console")
     frequencies = {'YEARLY': 12,'MONTHLY': 1,'QUATERLY': 3}
     awards = Awards.objects.filter(is_active=True)
-    for award in awards: 
+    for award in awards:
         print("Checking awards");
         award_templates = award.awardtemplate_set.filter(is_active=True)
         periods = award.nominationperiod_set.all()
+        submission_period = periods[0]
         frequency = award.frequency
         for period in periods:
             print("Iterating the periods");
             for template in award_templates:
                 print("Iterating the templates");
-                day,month = period.start_day.day,period.start_day.month
                 group_nominations = template.nomination_set.filter(group=period.group)
                 if  group_nominations.count() == 0:
                     print("Group count is zero");
-                    if period.start_day == (datetime.now() + timedelta(hours=24)).date():
+                    if submission_period.start_day == (datetime.now() + timedelta(hours=24)).date():
                         if Questions.objects.filter(groups=period.group, award_template=template).exists():
-                                new_instance = Nomination.objects.get_or_create(award_template_id= template.id,start_day=period.start_day,end_day=period.end_day,group=period.group)
-                        else:
-                            pass
+                                Nomination.objects.get_or_create(award_template_id= template.id,\
+                                    start_day=submission_period.start_day,end_day=submission_period.end_day,group=period.group)
                 else:
                     for nom in group_nominations:
                         print("Iterating the noms");
-                        last_nomination = template.nomination_set.last()
-                        next_nomination_starts_at = add_months(last_nomination.start_day,frequencies[frequency]) 
-                        next_nomination_ends_at = add_months(last_nomination.end_day,frequencies[frequency])
+                        next_nomination_starts_at = add_months(submission_period.start_day,frequencies[frequency]) 
+                        next_nomination_ends_at = add_months(submission_period.end_day,frequencies[frequency])
                         if next_nomination_starts_at == (datetime.now() + timedelta(hours=24)).date():
                             if Questions.objects.filter(groups=period.group, award_template=template).exists():
-                                new_instance = Nomination.objects.get_or_create(award_template_id=template.id,start_day=next_nomination_starts_at,end_day=next_nomination_ends_at,group=period.group)
-                            else:
-                                pass
+                                Nomination.objects.get_or_create(award_template_id=template.id,\
+                                    start_day=next_nomination_starts_at,end_day=next_nomination_ends_at,group=period.group)
 
 
 @periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
