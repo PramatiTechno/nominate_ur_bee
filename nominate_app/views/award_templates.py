@@ -94,14 +94,6 @@ def new(request,award_id):
   award = Awards.objects.get(id=award_id)
   return render(request, 'nominate_app/award_templates/new.html', {'formset':formset,'award_form':award_form,'award': award })
 
-def append(request,award_id,award_template_id):
-    award = Awards.objects.get(id=award_id)
-    award_template = AwardTemplate.objects.get(id = award_template_id)
-    append_name = "{0}-{1}".format(award.name, award_template.template_name)
-
-    messages.success(request, 'Appended successfully.')
-    return render(request, 'nominate_app/award_templates/new.html', {'formset':formset,'award_form':award_form,'award': award })
-
 def edit(request,award_id,award_template_id):
     award = Awards.objects.get(id=award_id)
     award_template = AwardTemplate.objects.get(id = award_template_id)

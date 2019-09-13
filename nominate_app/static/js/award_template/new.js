@@ -18,7 +18,6 @@ $(".objective-type").on('change', function(event){
     
     $(this).parent().next().show()
     id = $(this).attr('id').split('-')[1]
-    debugger;
     $('input[name="questions_set-'+ id +'-objectives"]').attr('required', true);
 
 
