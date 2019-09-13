@@ -90,9 +90,9 @@ class NominationPeriod(models.Model):
     db_table='nomination_periods'
   
 class AwardTemplate(models.Model):
-  template_name = models.CharField(max_length=150, null=False, blank=False)
+  template_name = models.CharField(max_length=30, null=False, blank=False, unique=True)
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
-  is_active = models.BooleanField(default = False)
+  is_active = models.BooleanField(default = True)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
 
