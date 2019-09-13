@@ -191,13 +191,15 @@ class NominationSubmitted(models.Model):
       user = User.objects.get(email=self.email)
       full_name = str(user.first_name) + " " + str(user.last_name)
     elif status==1:
-      ratings = NominationRating.objects.get(submission_id=self.id)
-      user = ratings.user
-      full_name = str(user.first_name) + " " + str(user.last_name)
+      user_names = list()
+      ratings = NominationRating.objects.filter(submission_id=self.id)
+      for rating in ratings:user_names.append(rating.user.first_name + " " + rating.user.last_name)
+      full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]])
     else:
-      comment = DirectorComments.objects.get(nomination_submitted_id=self.id)
-      user = comment.user
-      full_name = str(user.first_name) + " " + str(user.last_name)
+      user_names = list()
+      comments = DirectorComments.objects.filter(nomination_submitted_id=self.id)
+      for comment in comments:user_names.append(comment.user.first_name + " " + comment.user.last_name)
+      full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]])
     return full_name
 
 
