@@ -139,10 +139,12 @@ class Nomination(models.Model):
   group = models.ForeignKey(Group ,on_delete=models.CASCADE)
   start_day = models.DateField(max_length=20, null=False, blank=False)
   end_day = models.DateField(max_length=20, null=False, blank=False)
+  review_start_day = models.DateField(null=False, blank=False)
+  review_end_day = models.DateField(null=False, blank=False)
+  approval_start_day = models.DateField(null=False, blank=False)
+  approval_end_day = models.DateField(null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
-
-
   class Meta:
     db_table='nominations'  
 
