@@ -78,8 +78,12 @@ def index(request,award_id):
 
           question.save()
 
-          messages.success(request, 'Award Template created successfully.')
+          messages.success(request, 'Award Template is created successfully.')
         return redirect('nominate_app:award_templates_index', award_id=award.id)
+    else:
+        for field, err in award_form.errors.items():
+            messages.error(request,str(err[0]))
+        return render(request, 'nominate_app/award_templates/new.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items()})       
 
 def new(request,award_id):
   award_template = AwardTemplate()
@@ -89,6 +93,14 @@ def new(request,award_id):
   formset = TemplateFormset(instance=award_template, form_kwargs={'award_id': award_id})
   award = Awards.objects.get(id=award_id)
   return render(request, 'nominate_app/award_templates/new.html', {'formset':formset,'award_form':award_form,'award': award })
+
+def append(request,award_id,award_template_id):
+    award = Awards.objects.get(id=award_id)
+    award_template = AwardTemplate.objects.get(id = award_template_id)
+    append_name = "{0}-{1}".format(award.name, award_template.template_name)
+
+    messages.success(request, 'Appended successfully.')
+    return render(request, 'nominate_app/award_templates/new.html', {'formset':formset,'award_form':award_form,'award': award })
 
 def edit(request,award_id,award_template_id):
     award = Awards.objects.get(id=award_id)
@@ -177,7 +189,7 @@ def award_template(request,award_id,award_template_id):
     elif method == 'delete':
 
       if award_template.delete():
-         messages.success(request, 'Award is deleted successfully')
+         messages.success(request, 'Award Template is deleted successfully')
          return redirect('nominate_app:award_templates_index', award_id=award.id)
       else:
          messages.success(request, 'Could not delete award. Contact Admin')
