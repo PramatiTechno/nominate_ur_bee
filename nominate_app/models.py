@@ -197,7 +197,7 @@ class NominationSubmitted(models.Model):
       full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]])
     else:
       user_names = list()
-      comments = DirectorComments.objects.get(nomination_submitted_id=self.id)
+      comments = DirectorComments.objects.filter(nomination_submitted_id=self.id)
       for comment in comments:user_names.append(comment.user.first_name + " " + comment.user.last_name)
       full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]])
     return full_name
