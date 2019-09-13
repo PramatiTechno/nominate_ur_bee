@@ -13,7 +13,7 @@ from django.template.defaulttags import register
 from nominate_app.utils import group_required
 from nominate_app.models import Nomination,NominationPeriod, AwardTemplate, NominationInstance, User, Questions, NominationAnswers, NominationSubmitted
 from IPython import embed
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @register.filter
 def get_item(dictionary, key):
@@ -33,7 +33,7 @@ def change_date(request, nomination_id):
 @group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def index(request):
     requested_user_group = request.user.groups.first()
-    nominations = Nomination.objects.filter(group=requested_user_group, start_day__lte= datetime.today(), end_day__lte= datetime.today())
+    nominations = Nomination.objects.filter(group=requested_user_group, start_day__lte=datetime.today() + timedelta(days=1), end_day__lte= datetime.today())
     new_nominations = []
     for nomination in nominations:
         nomination_instance = nomination.nominationinstance_set.filter(user=request.user)
