@@ -13,22 +13,32 @@
                 <h5 class="card-title" style="margin-top: -10px">                
                     <p style="color: #6c757d; font-size: 12px; margin-bottom: 0.2rem">{{submission.group}}</p>
                     {{submission.award_name}} - {{submission.template_name}}</h5>
-                
-
-   
-            </div>
+             </div>
               <div class="col-md-6" style="text-align:right;"><h6 class="text-muted">{{submission.email}}<p style="font-size:13px;color: #747591a6;">{{submission.submitted_at}}</p></h6></div>
             </div>
 
-    		<div class="card-text">
 
-    		{% for qa in qa_list %}
-                <div class="qa">
-                    <p>{{qa.question}}</p>
-                    <p>{{qa.answer}}</p>
-                </div>
-    		{% endfor %}
-    		</div>
+    		 {% for qa in qa_list %}
+          {% if forloop.counter < 3 %}
+          <div class="card-text">
+              <div class="qa">
+                <p>{{qa.question}}</p>
+                <p>{{qa.answer}}</p>
+              </div>
+          
+          {% else %}
+        
+              <div class="qaa" style="padding-left: 20px">
+                <p>{{qa.question}}</p>
+                <p>{{qa.answer}}</p>
+              </div>
+           
+            </div>
+
+          {% endif %}
+        {% endfor %}
+            <button type="button" class="btn btn-link view-more" style="padding-left:20px; color: #747591a6">View-more...</button>
+            <button type="button" class="btn btn-link show-less" style="padding-left:20px; color: #747591a6">Show less...</button>
 
             <div class="row" style="padding:10px 20px;">
                 <div class="col-md-6" style="text-align:left;padding: 10px 0px;color:#00d0ff;">
@@ -68,4 +78,28 @@
 
 	<hr>
 </div>
+
+ <script type="text/javascript">
+         $(document).ready(function() {
+
+          
+            $('.show-less').hide();
+            $('.view-more').show();
+            $('.qaa').hide();
+
+            $('.view-more').click(function(){
+              // debugger
+              $(this).closest('.card-text').find('.qaa').show();
+              $(this).next().show();             
+              $(this).hide();
+            });
+
+            $('.show-less').click(function(){
+              $(this).closest('.card-text').find('.qaa').hide();            
+              $(this).prev().show();
+              $(this).hide();
+             });
+          });
+ </script>
+
 {% endblock %}
