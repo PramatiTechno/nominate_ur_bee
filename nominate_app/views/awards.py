@@ -11,6 +11,19 @@ from nominate_app.utils import group_required
 from datetime import datetime
 from IPython import embed
 
+
+def static_group_dropdown(formset):
+  for idx in sorted([1,2], reverse=True):
+    del formset[0].fields['group'].choices[idx]  
+
+  for idx in sorted([0,2], reverse=True):
+    del formset[1].fields['group'].choices[idx]
+
+  for idx in sorted([0,1], reverse=True):
+    del formset[2].fields['group'].choices[idx]
+
+
+
 def home(request):
     return redirect('nominate_app:dashboard')
 
@@ -19,6 +32,7 @@ def index(request):
   if request.method == 'GET':
     forms = Awards.objects.all()
     return render(request, 'nominate_app/awards/index.html',{'forms':forms})
+
   elif request.method == 'POST':
     award = Awards(name=request.POST['name'])
     NominationFormset = inlineformset_factory(Awards, NominationPeriod, form=NominationPeriodForm, extra=1)
@@ -41,17 +55,21 @@ def index(request):
             created_award.save_nomination_period()
             messages.success(request, 'Award is created successfully.')
             return redirect('nominate_app:awards')
-
     else:
         for field, err in award_form.errors.items():
             messages.error(request,str(err[0])) 
         return render(request, 'nominate_app/awards/new.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items()})
 
+
 def new(request):
   award = Awards()
   award_form = AwardsForm(instance=award)
-  NominationFormset = inlineformset_factory(Awards, NominationPeriod, form=NominationPeriodForm, extra=1)
+  NominationFormset = inlineformset_factory(Awards, NominationPeriod, form=NominationPeriodForm, extra=3)
   formset = NominationFormset(instance=award)
+
+  # to have only single options 
+  static_group_dropdown(formset)
+
   return render(request, 'nominate_app/awards/new.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items()})
 
 def edit(request,award_id):
@@ -68,6 +86,10 @@ def edit(request,award_id):
     x=1
   NominationFormset = inlineformset_factory(Awards, NominationPeriod, form=NominationPeriodForm, extra=x)
   formset = NominationFormset(instance=award)
+
+  # to have only single options 
+  static_group_dropdown(formset)
+
   return render(request, 'nominate_app/awards/edit.html', {'formset':formset, 'award':award, 'award_form':award_form, 'frequencies': Awards.edit_frequencies.items() })
 
 @group_required('Admin', raise_exception=True)

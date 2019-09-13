@@ -22,10 +22,6 @@
          <input type="hidden" name="_method" value="put">
 
          {% csrf_token %}
-         <div class="custom-control custom-switch pull-right">
-            {{ award_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
-            <label class="custom-control-label" for="customSwitch1" ></label>
-         </div>
          <div class = "row award_top_margin">
             <div class="col-md-2">
                <label class="col-form-label" for="name">Award Name</label>
@@ -33,6 +29,10 @@
             <div class="col-md-8">
                <input type="text" name="name" class="form-control" value="{{  award.name }}" />
             </div>
+           <div class="col-md-2 custom-control custom-switch pull-right">
+              {{ award_form.is_active|attr:"class:custom-control-input" |attr:"id=customSwitch1"  }}
+              <label class="custom-control-label pull-right" for="customSwitch1" ></label>
+           </div>
          </div>
 
          <div class = "row award_top_margin">
@@ -74,7 +74,7 @@
 
                 <div class="col-md-4">
                     <label class="col-form-label">Group</label>
-                    {{ form.group|attr:"class:form-control" }}
+                    {{ form.group| attr:"class:form-control" }}
                 </div>
 
                 <div class="col-md-4">
@@ -96,24 +96,24 @@
               </div>
             </div>
             
-            <div class="mt-4">
+            <!-- <div class="mt-4">
               <span class="fa del_btn_formset remove_nomination">
                 <label><span class="fa fa-trash-o fa-lg" id="trash">
                  {{ form.DELETE | attr:"class:hide_checkbox"}}
                 </span>
                 </label>
               </span>
-            </div>
+            </div> -->
 
           </div>
           {% endfor %} 	
 
-        <div class = "row award_top_margin">
+        <!-- <div class = "row award_top_margin">
           <div class="col-md-3">
               <button name="add_more" id="add_more" type="button" class="btn btn-outline-primary ml-1 add_more"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i> Add Period</button>
           </div>
-        </div> 
-
+        </div>  -->
+        <br>
          <div class ="row award_top_margin justify-content-md-center">
             <div class="col-sm-4">
                <a type="button" class="btn btn-danger" href="{% url 'nominate_app:awards' %}">Cancel</a>
