@@ -64,11 +64,22 @@
                     <form action="{% url 'nominate_app:award_template' award.id template.id %}" method="post" id="form_{{form.id}}" class="form_det">
                         {% csrf_token%}
                         <input type="hidden" name="_method" value="delete">
-                        <i class="fa fa-trash" type="submit" value="Delete" onclick='$("#form_{{form.id}}").submit()'></i>
+                        <i class="fa fa-trash" type="submit" value="Delete" onclick="return clicked();"></i>
                     </form>
                 </td>
 
             </tr>
+
+<script type="text/javascript">
+  function clicked() {
+     if (confirm('Are you sure?')) {
+           $("#form_{{form.id}}").submit();
+       } else {
+           return false;
+       }
+  }
+</script>
+
             {% empty %}
             <tr class="d-flex">
                 <td class="col-10" id="column"> No Awards Found </td>
