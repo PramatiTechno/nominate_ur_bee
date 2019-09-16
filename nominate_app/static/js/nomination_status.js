@@ -15,8 +15,13 @@ $(document).ready(function(){
   $('.nomination-instances').hide()
   
   $(".show-nominations").on('click', function(){
-    $(this).parent().parent().next().toggle();
+    var nomination_row = $(this).parents('.nomination-row')
+    while (nomination_row.attr('class') !== "nomination-instances"){
+      nomination_row = nomination_row.next()
+    }
+    nomination_row.toggle()
   });
+  
   $.fn.editable.defaults.mode = 'inline';
 
   $('.enddate').click(function(e) {
