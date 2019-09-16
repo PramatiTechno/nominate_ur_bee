@@ -112,11 +112,11 @@ class Command(BaseCommand):
         at11 = create_award_template('Template 1', award1.id)
         at12 = create_award_template('Template 2', award1.id)
         at13 = create_award_template('Template 3', award1.id)
-        at21 = create_award_template('Template 1', award2.id)
-        at22 = create_award_template('Template 2', award2.id)
-        at23 = create_award_template('Template 3', award2.id)
-        at24 = create_award_template('Template 4', award2.id)
-        at25 = create_award_template('Template 5', award2.id)
+        at21 = create_award_template('Template 1 award2', award2.id)
+        at22 = create_award_template('Template 2 award2', award2.id)
+        at23 = create_award_template('Template 3 award2', award2.id)
+        at24 = create_award_template('Template 4 award2', award2.id)
+        at25 = create_award_template('Template 5 award2', award2.id)
 
         # # Create questions for templates.
         create_questions(at11)
