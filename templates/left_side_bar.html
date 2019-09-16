@@ -9,9 +9,9 @@
         <a href="{% url 'nominate_app:awards' %}" class="nav-link leftsidebar {% if "/awards/" in request.path and "/award_templates/" not in request.path and "/nomination_status_load/" not in request.path %}active{% endif %}">Awards</a>
         <a href="{% url 'nominate_app:award_templates_home' %}" class="nav-link leftsidebar {% if "/award_templates/" in request.path %}active{% endif %}">Award Templates</a>
         <a href="{% url 'nominate_app:nomination_status' %}" class="nav-link leftsidebar {% if request.path == "/nomination_status/" or "/nomination_status_load/" in request.path %}active{% endif %}">Nomination Status</a>
-        <a href="{% url 'nominate_app:users' %}" class="nav-link leftsidebar {% if request.path == "/users/" %}active{% endif %}">User Management</a>
+        <a href="{% url 'nominate_app:users' %}" class="nav-link leftsidebar {% if "/users/" in request.path %}active{% endif %}">User Management</a>
         {% else %}
-        <a href="{% url 'nominate_app:nominations' %}" class="nav-link leftsidebar {% if request.path == "/nominations/" %}active{% endif %}">Nominate</a>
+        <a href="{% url 'nominate_app:nominations' %}" class="nav-link leftsidebar {% if "/nominations/" in request.path %}active{% endif %}">Nominate</a>
       {% endif %}
       <a href="{% url 'nominate_app:nomination_feed' %}" class="nav-link leftsidebar {% if "/nomination_feed/" in request.path and "/nomination_templates/" not in request.path %}active{% endif %}">Nominations</a>
       {% if user.userprofile.get_group_name == "directorial board member" %}

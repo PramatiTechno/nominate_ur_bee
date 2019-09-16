@@ -22,7 +22,7 @@
         
         <div class = "row award_top_margin">
           <div class="col-md-2">
-            <label class="col-form-label" for="name">Award Name</label>
+            <label class="col-form-label" for="name">Award Name*</label>
           </div>
           <div class="col-md-8">
              <input type="text" name="name" class="form-control" placeholder="Enter award name" value="" required />
@@ -38,7 +38,7 @@
 
         <div class = "row award_top_margin">
           <div class="col-md-2">
-            <label class="col-form-label" for="name">Frequency</label>
+            <label class="col-form-label" for="name">Frequency*</label>
           </div>
           <div class="col-md-8">
               <select class="form-control" id="exampleSelect1" name="frequency" required>
@@ -71,20 +71,23 @@
                     {{ form.group|attr:"class:form-control"}}
                 </div>
             
-                <div class="col-md-4">   
-                  <label class="col-form-label" for="">Start Date</label>
-                    {{ form.start_day|attr:"class:form-control datepicker" }}
-                    <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
+                <div class="col-md-4">
+                      
+                      <label class="col-form-label" for="">Start Date*</label>
+                            {{ form.start_day|attr:"class:form-control datepicker" }}
+                            <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+
                 </div>
             
                 <div class="col-md-4">
-                  <label class="col-form-label" for="name">End Date</label>	
-                    {{ form.end_day|attr:"class:form-control datepicker" }}
-                    <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
+                    <label class="col-form-label" for="name">End Date*</label>	
+                    
+                        {{ form.end_day|attr:"class:form-control datepicker" }}
+                        <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
                 </div>
                 
               </div>

@@ -78,3 +78,16 @@ color:#067084d6;
 .loading {
   display: none;
 }
+
+.text-muted{
+  font-size: 14px;
+}
+
+.border-styling {
+  background: #e6e6e6;
+  border-radius: 4px;
+  margin-top: -20px;
+  margin-left: -20px;
+  margin-right: -20px;
+  padding-top: 22px;
+}
