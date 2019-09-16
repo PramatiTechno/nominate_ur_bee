@@ -9,6 +9,7 @@ from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE
 import safedelete.managers as managers
 import safedelete
+import IPython
 # from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
@@ -84,23 +85,21 @@ class NominationPeriod(models.Model):
   end_day = models.DateField(max_length=20, null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
-
-
   class Meta:
     db_table='nomination_periods'
   
 class AwardTemplate(models.Model):
-  template_name = models.CharField(max_length=150, null=False, blank=False)
+  template_name = models.CharField(max_length=30, null=False, blank=False, unique=True)
   award = models.ForeignKey(Awards, on_delete=models.CASCADE)
-  is_active = models.BooleanField(default = False)
+  is_active = models.BooleanField(default = True)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
-
   class Meta:
     db_table='award_templates'
 
   def __str__(self):
-    return self.template_name
+    return self.award.name.capitalize() + " " + self.template_name.capitalize()
+
 
 class Questions(SafeDeleteModel):
   _safedelete_policy = SOFT_DELETE
@@ -134,18 +133,41 @@ class Questions(SafeDeleteModel):
   #     return False
     
 
+class NominationTiming(models.Model):
+  award_template = models.ForeignKey(AwardTemplate, null=True, on_delete=models.SET_NULL)
+  start_day = models.DateField(null=False, blank=False)
+  end_day = models.DateField(null=False, blank=False)
+  review_start_day = models.DateField(null=False, blank=False)
+  review_end_day = models.DateField(null=False, blank=False)
+  approval_start_day = models.DateField(null=False, blank=False)
+  approval_end_day = models.DateField(null=False, blank=False)
+  created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
+  class Meta:
+    db_table='nomination_timings'
+
 class Nomination(models.Model):
   award_template = models.ForeignKey(AwardTemplate, null=True, on_delete=models.SET_NULL)
   group = models.ForeignKey(Group ,on_delete=models.CASCADE)
-  start_day = models.DateField(max_length=20, null=False, blank=False)
-  end_day = models.DateField(max_length=20, null=False, blank=False)
+  nomination_timing = models.ForeignKey(NominationTiming, null=False, on_delete=models.CASCADE)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
-
-
   class Meta:
-    db_table='nominations'  
+    db_table='nominations'
+  
+  def __init__(self, *args, **kwargs):
+    super(Nomination, self).__init__(*args,  **kwargs)
+    self.define_dynamic_methods()
 
+  def define_dynamic_methods(self):
+    dynamic_methods = ["start_day_","end_day_","review_start_day_","review_end_day_","approval_start_day_","approval_end_day_"]
+    for method in dynamic_methods:
+      def return_statement(self,method=method):    
+          return eval("self.nomination_timing.{}".format(method[:-1]))
+      setattr(self.__class__,method,return_statement)
+      #self.start_day = self.start_day_()
+      exec("self.{} = self.{}()".format(method[:-1],method))
+      
 class DirectorComments(models.Model):
   class Meta:
     db_table='director_comment'
@@ -179,8 +201,6 @@ class NominationSubmitted(models.Model):
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
   is_published = models.BooleanField(default=False)
-
-
   def get_status(self, status_code):
     for status in self.statuses:
       if status[1] == status_code:
@@ -191,13 +211,15 @@ class NominationSubmitted(models.Model):
       user = User.objects.get(email=self.email)
       full_name = str(user.first_name) + " " + str(user.last_name)
     elif status==1:
-      ratings = NominationRating.objects.get(submission_id=self.id)
-      user = ratings.user
-      full_name = str(user.first_name) + " " + str(user.last_name)
+      user_names = list()
+      ratings = NominationRating.objects.filter(submission_id=self.id)
+      for rating in ratings:user_names.append(rating.user.first_name + " " + rating.user.last_name)
+      full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]])
     else:
-      comment = DirectorComments.objects.get(nomination_submitted_id=self.id)
-      user = comment.user
-      full_name = str(user.first_name) + " " + str(user.last_name)
+      user_names = list()
+      comments = DirectorComments.objects.filter(nomination_submitted_id=self.id)
+      for comment in comments:user_names.append(comment.user.first_name + " " + comment.user.last_name)
+      full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]])
     return full_name
 
 

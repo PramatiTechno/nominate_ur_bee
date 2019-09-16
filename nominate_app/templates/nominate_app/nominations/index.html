@@ -64,7 +64,9 @@
                 <tr>
                     <td colspan="4">No {{ selected_status }} Nominations</td>
                 </tr>
-                {% endfor %} {% else %} {% for nomination in data %}
+                {% endfor %} {% else %} 
+                {{data}}
+                {% for nomination in data %}
                 <tr>
                     <td>
                         {{ nomination.template_name }}

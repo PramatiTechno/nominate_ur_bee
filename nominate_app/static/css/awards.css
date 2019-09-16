@@ -12,6 +12,11 @@
   padding-top: 0;
 }
 
+.custom-switch {
+  position:relative;
+  bottom:43px;
+}
+
 #trash {
   color: #bf1a1a;
 }

@@ -15,8 +15,13 @@ $(document).ready(function(){
   $('.nomination-instances').hide()
   
   $(".show-nominations").on('click', function(){
-    $(this).parent().parent().next().toggle();
+    var nomination_row = $(this).parents('.nomination-row')
+    while (nomination_row.attr('class') !== "nomination-instances"){
+      nomination_row = nomination_row.next()
+    }
+    nomination_row.toggle()
   });
+  
   $.fn.editable.defaults.mode = 'inline';
 
   $('.enddate').click(function(e) {
@@ -29,6 +34,7 @@ $(document).ready(function(){
     datetext = $(this).next().find('.datetext')
     $('.editable-submit').addClass('fa fa-check')
     $('.editable-cancel').addClass('fa fa-times')
+    var period = $(this).attr('data-period')
     id = $(this).attr('data-pk')
     $('.editable-submit').on('click', function(e){
       e.stopPropagation();
@@ -38,6 +44,7 @@ $(document).ready(function(){
         url: '/nominations/'+ id + '/',
         data: {
           'date': datetext.val(),
+          'period': period,
           'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val(),
 
         },
