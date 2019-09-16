@@ -81,10 +81,12 @@ def populate_monthly_frequency():
                 if  group_nominations.count() == 0:
                     print("Group count is zero");
                     if submission_period.start_day == (datetime.now() + timedelta(hours=24)).date():
-                        nt = NominationTiming.objects.get_or_create(award_template_id= template.id,start_day=submission_period.start_day,end_day=submission_period.end_day,
+                        nt,created = NominationTiming.objects.get_or_create(award_template_id= template.id,start_day=submission_period.start_day,end_day=submission_period.end_day,
                                 review_start_day=review_period.start_day, review_end_day=review_period.end_day,
                                     approval_start_day=approval_period.start_day, approval_end_day=approval_period.end_day)
-                        Nomination.objects.get_or_create(award_template_id= template.id,group=period.group,nomination_timing_id=nt[0].id)
+                        if created:
+                            nt.save()
+                        Nomination.objects.get_or_create(award_template_id= template.id,group=period.group,nomination_timing=nt)
                 else:
                     for nom in group_nominations:
                         print("Iterating the noms");
@@ -95,10 +97,12 @@ def populate_monthly_frequency():
                         next_approval_starts_at = add_months(approval_period.start_day, frequencies[frequency])
                         next_approval_ends_at  = add_months(approval_period.end_day, frequencies[frequency])
                         if next_nomination_starts_at == (datetime.now() + timedelta(hours=24)).date():
-                            nt = NominationTiming.objects.get_or_create(award_template_id= template.id,start_day=next_nomination_starts_at, end_day=next_nomination_ends_at,
+                            nt,created = NominationTiming.objects.get_or_create(award_template_id= template.id,start_day=next_nomination_starts_at, end_day=next_nomination_ends_at,
                             review_start_day=next_review_starts_at, review_end_day=next_review_ends_at,
                             approval_start_day=next_approval_starts_at, approval_end_day=next_approval_ends_at)
-                            nomination = Nomination.objects.get_or_create(award_template_id=template.id,group=period.group,nomination_timing_id=nt[0].id)
+                            if created:
+                                nt.save()
+                            nomination = Nomination.objects.get_or_create(award_template_id=template.id,group=period.group,nomination_timing=nt)
 
 
 def email_task():
