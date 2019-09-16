@@ -18,7 +18,7 @@
     <form method="POST" action="/users/create">{% csrf_token %}
         <div class="row mt-2">
             <div class="col-md-2">
-                <label for="">Email</label>
+                <label for="">Email*</label>
             </div>
             <div class="col-md-6">
                 {{invite_form.email}}
