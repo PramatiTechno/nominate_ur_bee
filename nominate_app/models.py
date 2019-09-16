@@ -9,6 +9,7 @@ from safedelete.models import SafeDeleteModel
 from safedelete.models import SOFT_DELETE
 import safedelete.managers as managers
 import safedelete
+import IPython
 # from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
@@ -84,8 +85,6 @@ class NominationPeriod(models.Model):
   end_day = models.DateField(max_length=20, null=False, blank=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
-
-
   class Meta:
     db_table='nomination_periods'
   
@@ -95,7 +94,6 @@ class AwardTemplate(models.Model):
   is_active = models.BooleanField(default = True)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
-
   class Meta:
     db_table='award_templates'
 
@@ -135,18 +133,41 @@ class Questions(SafeDeleteModel):
   #     return False
     
 
+class NominationTiming(models.Model):
+  award_template = models.ForeignKey(AwardTemplate, null=True, on_delete=models.SET_NULL)
+  start_day = models.DateField(null=False, blank=False)
+  end_day = models.DateField(null=False, blank=False)
+  review_start_day = models.DateField(null=False, blank=False)
+  review_end_day = models.DateField(null=False, blank=False)
+  approval_start_day = models.DateField(null=False, blank=False)
+  approval_end_day = models.DateField(null=False, blank=False)
+  created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+  updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
+  class Meta:
+    db_table='nomination_timings'
+
 class Nomination(models.Model):
   award_template = models.ForeignKey(AwardTemplate, null=True, on_delete=models.SET_NULL)
   group = models.ForeignKey(Group ,on_delete=models.CASCADE)
-  start_day = models.DateField(max_length=20, null=False, blank=False)
-  end_day = models.DateField(max_length=20, null=False, blank=False)
+  nomination_timing = models.ForeignKey(NominationTiming, null=False, on_delete=models.CASCADE)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
-
-
   class Meta:
-    db_table='nominations'  
+    db_table='nominations'
+  
+  def __init__(self, *args, **kwargs):
+    super(Nomination, self).__init__(*args,  **kwargs)
+    self.define_dynamic_methods()
 
+  def define_dynamic_methods(self):
+    dynamic_methods = ["start_day_","end_day_","review_start_day_","review_end_day_","approval_start_day_","approval_end_day_"]
+    for method in dynamic_methods:
+      def return_statement(self,method=method):    
+          return eval("self.nomination_timing.{}".format(method[:-1]))
+      setattr(self.__class__,method,return_statement)
+      #self.start_day = self.start_day_()
+      exec("self.{} = self.{}()".format(method[:-1],method))
+      
 class DirectorComments(models.Model):
   class Meta:
     db_table='director_comment'
@@ -180,8 +201,6 @@ class NominationSubmitted(models.Model):
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
   is_published = models.BooleanField(default=False)
-
-
   def get_status(self, status_code):
     for status in self.statuses:
       if status[1] == status_code:

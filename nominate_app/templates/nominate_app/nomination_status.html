@@ -103,20 +103,24 @@
                         <tr>
                             <th scope="col">Start Date</th>
                             <th scope="col">End Date</th>
+                            <th scope="col">Period</th>
                             <th scope="col">Job Title</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for nomination in nominations %}
-                        <tr>
+                        <tr class="nomination-row">
                             <td>
                                 {{ nomination.start_day }}
                             </td>
                             <td>
                                 <div>
                                     <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
-                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.end_day_data }}" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.end_day }}<span class="fa fa-edit edit-end-date"></span></button>
+                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.end_day_data }}" data-period="submission" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.end_day }}<span class="fa fa-edit edit-end-date"></span></button>
                                 </div>
+                            </td>
+                            <td>
+                                Submission
                             </td>
                             <td>
                                 {{ nomination.group_name }}
@@ -127,8 +131,48 @@
                                 </button>
                             </td>
                         </tr>
+
+                        <!-- Review end date row -->
+                        {% ifequal nomination.group_name "Technical Jury Member" %}
+                        <tr>
+                            <td style="border-top:0px;">
+                                {{ nomination.review_start_day }}
+                            </td>
+                            <td style="border-top:0px;">
+                                <div>
+                                    <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.review_end_day_data }}" data-period="review"data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.review_end_day }}<span class="fa fa-edit edit-end-date"></span></button>
+                                </div>
+                            </td>
+                            <td style="border-top:0px;">
+                                Review
+                            </td>
+                        
+                        </tr>
+                        {% endifequal %}
+
+                        <!-- Approval end date row -->
+                        {% ifequal nomination.group_name "Directorial Board Member" %}
+                        <tr>
+                            <td style="border-top:0px;">
+                                {{ nomination.approval_start_day }}
+                            </td>
+                            <td style="border-top:0px;">
+                                <div>
+                                    <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.approval_end_day_data }}" data-period="approval"data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.approval_end_day }}<span class="fa fa-edit edit-end-date"></span></button>
+                                </div>
+                            </td>
+                            <td style="border-top:0px;">
+                                Approval
+                            </td>
+                        
+                        </tr>
+                        {% endifequal %}
+
+                        <!-- nested instances -->
                         <tr class="nomination-instances">
-                            <td class="left-padding" colspan="4" >
+                            <td class="left-padding" colspan="5" >
                                 <div>
                                     {% for nomination_instance in nomination.instances %}
                                     <div class="user">

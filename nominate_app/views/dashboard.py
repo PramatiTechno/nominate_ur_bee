@@ -17,13 +17,10 @@ def get_status(submission, status_code):
     return submission.get_status(status_code).lower()
 
 def index(request):
-    
     award = request.GET.get('award',default=None)
     graph_data = load_graph(award)
     awards_list = Awards.objects.all().order_by('created_at').reverse()[:4]
-    
     awards = {'data': [], 'show': False}
-    
     recent_nominations = get_recent_nominations()
     notifications = get_notifications()
     activities = get_activities(request.user)
@@ -38,7 +35,7 @@ def index(request):
     if Awards.objects.count() > 3:
         awards['show'] = True
     results.update(activities)
-    return render(request, 'nominate_app/dashboard.html', results)
+    return render(request, 'nominate_app/dashboard.html',results)
 
 def get_notifications():
     notifications = list()
@@ -53,17 +50,17 @@ def get_notifications():
 
 
 def get_recent_nominations():
-    nominations = Nomination.objects.all().order_by('end_day')[:3]
+    nominations = Nomination.objects.all().order_by('id')[:3]
     return nominations
 
 def get_activities(user_obj):
     unsubmitted_list = []
-    submissions = NominationSubmitted.objects.filter(email=user_obj.email, \
-        nomination__end_day__gte=datetime.now().date())
+    submissions = NominationSubmitted.objects.filter(email=user_obj.email)#, \
+        #nomination__nomination_timing__end_day__gte=datetime.now().date())
     for sub in submissions: 
         template_date = dict() 
         template_date['template_name']=sub.nomination.award_template.template_name
-        template_date['time']=sub.nomination.end_day.strftime('%B %d')
+        template_date['time']=sub.nomination.nomination_timing.end_day.strftime('%B %d')
         template_date['status']=sub.get_status(sub.status) 
         unsubmitted_list.append(template_date) 
     submitted_list = []

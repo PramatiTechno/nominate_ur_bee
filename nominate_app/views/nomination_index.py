@@ -44,8 +44,6 @@ class NominationIndexView(View):
 		instances = []
 		for submission in submissions:
 			instances.append(nomination_instance_detail(submission, request.user))
-
-
 		return render(request, self.template_name, {'instances': instances, 'comment_form': comment_form, 'filter_form': nominate_form})
 
 

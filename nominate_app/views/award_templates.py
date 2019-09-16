@@ -71,7 +71,7 @@ def index(request,award_id):
             attachment_need=attachment_needed, created_at=timezone.now(), award_template_id = created_award.id, options=content.getlist('questions_set-{0}-objectives'.format(i)))
             
           question.save()
-          groups = content.getlist('questions_set-0-group')
+          groups = content.getlist('questions_set-{0}-group'.format(i))
           for group_id in groups:
             group = Group.objects.get(id=group_id)
             question.groups.add(group)

@@ -1,4 +1,4 @@
-from nominate_app.models import User, Group, Awards, AwardTemplate, NominationRating, DirectorComments, NominationPeriod, Nomination, NominationSubmitted, QuestionAnswers, Questions, NominationInstance, NominationAnswers
+from nominate_app.models import User, Group, Awards, AwardTemplate, NominationRating,NominationTiming, DirectorComments, NominationPeriod, Nomination, NominationSubmitted, QuestionAnswers, Questions, NominationInstance, NominationAnswers
 from django.utils import timezone
 from datetime import datetime
 from datetime import timedelta
@@ -103,12 +103,12 @@ class Command(BaseCommand):
         technical_jury_user.groups.add(groups[2])
         director_user.groups.add(groups[3])
 
-        # Create Awards
+        # # Create Awards
         award1 = create_award('WaveRiders', 'QUATERLY', manager_offsets=(1, 5), tech_offsets=(1,5), director_offsets=(1,5))
         award2 = create_award('Infinity', 'QUATERLY', manager_offsets=(0, 5), tech_offsets=(1,5), director_offsets=(2,5))
 
 
-        # Create Award Templates
+        # # Create Award Templates
         at11 = create_award_template('Template 1', award1.id)
         at12 = create_award_template('Template 2', award1.id)
         at13 = create_award_template('Template 3', award1.id)
@@ -118,7 +118,7 @@ class Command(BaseCommand):
         at24 = create_award_template('Template 4', award2.id)
         at25 = create_award_template('Template 5', award2.id)
 
-        # Create questions for templates.
+        # # Create questions for templates.
         create_questions(at11)
         create_questions(at12)
         create_questions(at13)
@@ -131,10 +131,20 @@ class Command(BaseCommand):
         # Create Nomination for award2
         nominations = []
         for at in [at21, at22, at23, at24, at25]:
+            periods = at.award.nominationperiod_set.all()
+            submission_period = periods[0]
+            review_period = periods[1]
+            approval_period = periods[2]
             for i in range(1, 4):
                 np = NominationPeriod.objects.get(award_id=award2.id,group=groups[i])
-                nomination, created = Nomination.objects.get_or_create(award_template=at, group=groups[i], start_day=np.start_day, end_day=np.end_day)
-                nomination.save()
+                nt,created = NominationTiming.objects.get_or_create(award_template_id= at.id,start_day=submission_period.start_day,end_day=submission_period.end_day,
+                            review_start_day=review_period.start_day, review_end_day=review_period.end_day,
+                                approval_start_day=approval_period.start_day, approval_end_day=approval_period.end_day)
+                if created: 
+                    nt.save()
+                nomination,nom_created = Nomination.objects.get_or_create(award_template=at, group=groups[i],nomination_timing=nt)
+                if nom_created:
+                    nomination.save()
                 nominations.append(nomination) 
 
         save_nominations = nominations[3:6]
@@ -194,7 +204,7 @@ class Command(BaseCommand):
         
         manager_submitted = NominationSubmitted.objects.filter(group__name="Manager")[:2]
 
-        # Create 2 nomination reviews.
+        # # Create 2 nomination reviews.
         for nomination in manager_submitted:
             review_user = User.objects.filter(groups__name='Technical Jury Member')[0]
             obj, created = NominationRating.objects.get_or_create(rating="3", review="Great Idea!", submission=nomination, user_id=review_user.id)
@@ -202,7 +212,7 @@ class Command(BaseCommand):
             nomination.status = 1
             nomination.save()    
 
-        # approve one review.
+        # # approve one review.
         approve_nomination = manager_submitted[0]
         approve_user = User.objects.filter(groups__name='Directorial Board Member')[0]
         obj, created = DirectorComments.objects.get_or_create(comment='Approved !!', nomination_submitted=approve_nomination, user=approve_user)
