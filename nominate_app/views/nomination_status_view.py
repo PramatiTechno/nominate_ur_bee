@@ -69,6 +69,16 @@ def get_nomination_data(award_name, award_template_name, page, start_day=None, e
       'nomination_id': nomination.id,
       'instances': []
     }
+    if nomination.group.name == 'Technical Jury Member':
+      nd['review_start_day'] = nomination.review_start_day.strftime('%d %B')
+      nd['review_end_day'] = nomination.review_end_day.strftime('%d %B')
+      nd['review_end_day_data'] = nomination.review_end_day
+
+    if nomination.group.name == 'Directorial Board Member':
+      nd['approval_start_day'] = nomination.approval_start_day.strftime('%d %B')
+      nd['approval_end_day'] = nomination.approval_end_day.strftime('%d %B')
+      nd['approval_end_day_data'] = nomination.approval_end_day
+
     users = User.objects.filter(groups__id=nomination.group_id)
     for user in users:
       nomination_submitted = NominationSubmitted.objects.filter(template_name=award_template_name, email=user.email)
