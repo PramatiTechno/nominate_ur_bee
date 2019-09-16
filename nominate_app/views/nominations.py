@@ -21,13 +21,14 @@ def get_item(dictionary, key):
 
 def change_date(request, nomination_id):
     nomination = Nomination.objects.get(id=nomination_id)
+    nt = nomination.nomination_timing
     date = request.POST['date']
-    nomination.end_day = datetime.strptime(date, '%m/%d/%Y').date()
-    nomination.save()
+    nt.end_day = datetime.strptime(date, '%m/%d/%Y').date()
+    nt.save()
     return JsonResponse({
         'status':'success',
-        'end_day': nomination.end_day.strftime('%d %B'),
-        'end_day_data': nomination.end_day,
+        'end_day': nt.end_day.strftime('%d %B'),
+        'end_day_data': nt.end_day,
     })
 
 @group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
