@@ -23,12 +23,17 @@ def change_date(request, nomination_id):
     nomination = Nomination.objects.get(id=nomination_id)
     nt = nomination.nomination_timing
     date = request.POST['date']
-    nt.end_day = datetime.strptime(date, '%m/%d/%Y').date()
+    period = request.POST['period']
+    if period == 'submission':
+        nt.end_day = datetime.strptime(date, '%m/%d/%Y').date()
+    if period == 'review':
+        nt.review_end_day = datetime.strptime(date, '%m/%d/%Y').date()
+    if period == 'approval':
+        nt.approval_end_day = datetime.strptime(date, '%m/%d/%Y').date()
+
     nt.save()
     return JsonResponse({
-        'status':'success',
-        'end_day': nt.end_day.strftime('%d %B'),
-        'end_day_data': nt.end_day,
+        'status':'success'
     })
 
 @group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
