@@ -3,9 +3,11 @@ from celery.decorators import periodic_task
 from celery.utils.log import get_task_logger
 from django.core.mail import send_mail
 from nominate_app.models import User, UserProfile, \
-Nomination,Awards, AwardTemplate,NominationInstance,Group, NominationPeriod, Questions
-from dateutil.relativedelta import *
+Nomination,Awards, AwardTemplate,NominationInstance,Group, \
+NominationPeriod, Questions, NominationTiming
+from IPython import embed
 from datetime import datetime,timedelta
+from dateutil.relativedelta import *
 import calendar
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -13,7 +15,6 @@ from django.conf import settings
 from django.db.models import F
 from django.urls import reverse
 import os
-from IPython import embed
 
 logger = get_task_logger(__name__)
 
@@ -63,10 +64,10 @@ director_end_sent = False
 def populate_monthly_frequency():
     print("Starting the script from the console")
     frequencies = {'YEARLY': 12,'MONTHLY': 1,'QUATERLY': 3}
-    awards = Awards.objects.filter(is_active=True)
+    awards = Awards.objects.all()#filter(is_active=True)
     for award in awards:
         print("Checking awards");
-        award_templates = award.awardtemplate_set.filter(is_active=True)
+        award_templates = award.awardtemplate_set.all()##.filter#(is_active=True)
         periods = award.nominationperiod_set.all()
         submission_period = periods[0]
         review_period = periods[1]
@@ -80,12 +81,10 @@ def populate_monthly_frequency():
                 if  group_nominations.count() == 0:
                     print("Group count is zero");
                     if submission_period.start_day == (datetime.now() + timedelta(hours=24)).date():
-                        if Questions.objects.filter(groups=period.group, award_template=template).exists():
-                                Nomination.objects.get_or_create(award_template_id= template.id,
-                                    start_day=submission_period.start_day,end_day=submission_period.end_day,
-                                        review_start_day=review_period.start_day, review_end_day=review_period.end_day,
-                                            approval_start_day=approval_period.start_day, approval_end_day=approval_period.end_day,
-                                                 group=period.group)
+                        nt = NominationTiming.objects.get_or_create(award_template_id= template.id,start_day=submission_period.start_day,end_day=submission_period.end_day,
+                                review_start_day=review_period.start_day, review_end_day=review_period.end_day,
+                                    approval_start_day=approval_period.start_day, approval_end_day=approval_period.end_day)
+                        Nomination.objects.get_or_create(award_template_id= template.id,group=period.group,nomination_timing_id=nt[0].id)
                 else:
                     for nom in group_nominations:
                         print("Iterating the noms");
@@ -96,15 +95,12 @@ def populate_monthly_frequency():
                         next_approval_starts_at = add_months(approval_period.start_day, frequencies[frequency])
                         next_approval_ends_at  = add_months(approval_period.end_day, frequencies[frequency])
                         if next_nomination_starts_at == (datetime.now() + timedelta(hours=24)).date():
-                            if Questions.objects.filter(groups=period.group, award_template=template).exists():
-                                Nomination.objects.get_or_create(award_template_id=template.id,
-                                    start_day=next_nomination_starts_at, end_day=next_nomination_ends_at,
-                                        review_start_day=next_review_starts_at, review_end_day=next_review_ends_at,
-                                            approval_start_day=next_approval_starts_at, approval_end_day=next_approval_ends_at,                                        
-                                                group=period.group)
+                            nt = NominationTiming.objects.get_or_create(award_template_id= template.id,start_day=next_nomination_starts_at, end_day=next_nomination_ends_at,
+                            review_start_day=next_review_starts_at, review_end_day=next_review_ends_at,
+                            approval_start_day=next_approval_starts_at, approval_end_day=next_approval_ends_at)
+                            nomination = Nomination.objects.get_or_create(award_template_id=template.id,group=period.group,nomination_timing_id=nt[0].id)
 
 
-@periodic_task(run_every=(crontab(minute='*/1')), name="email_task", ignore_result=True)
 def email_task():
 	# subjects
     manager_start_date = "its time to nominate your bee"

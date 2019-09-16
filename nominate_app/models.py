@@ -133,6 +133,7 @@ class Questions(SafeDeleteModel):
     
 
 class NominationTiming(models.Model):
+  award_template = models.ForeignKey(AwardTemplate, null=True, on_delete=models.SET_NULL)
   start_day = models.DateField(null=False, blank=False)
   end_day = models.DateField(null=False, blank=False)
   review_start_day = models.DateField(null=False, blank=False)
@@ -156,9 +157,6 @@ class Nomination(models.Model):
   def __init__(self, *args, **kwargs):
     super(Nomination, self).__init__(*args,  **kwargs)
     self.define_dynamic_methods()
-
-  def __call__(self):
-        self.start_day= datetime.now()
 
   def define_dynamic_methods(self):
     dynamic_methods = ["start_day_","end_day_","review_start_day_","review_end_day_","approval_start_day_","approval_end_day_"]

@@ -30,7 +30,7 @@ def index(request):
     statuses = ['reviewed', 'history']
     nomination_data = []
     if selected_status == 'reviewed':
-        submissions = NominationSubmitted.objects.filter(status=1, nomination__approval_start_day__lte=today, nomination__approval_end_day__gte=today)
+        submissions = NominationSubmitted.objects.filter(status=1, nomination__nomination_timing__approval_start_day__lte=today, nomination__nomination_timing__approval_end_day__gte=today)
         for submission in submissions:
             nomination_data.append({
                 'id': submission.id,
