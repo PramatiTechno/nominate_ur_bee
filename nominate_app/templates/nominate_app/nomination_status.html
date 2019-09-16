@@ -116,7 +116,7 @@
                             <td>
                                 <div>
                                     <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
-                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.end_day_data }}" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.end_day }}<span class="fa fa-edit edit-end-date"></span></button>
+                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.end_day_data }}" data-period="submission" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.end_day }}<span class="fa fa-edit edit-end-date"></span></button>
                                 </div>
                             </td>
                             <td>
@@ -141,7 +141,7 @@
                             <td style="border-top:0px;">
                                 <div>
                                     <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
-                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.review_end_day_data }}" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.review_end_day }}<span class="fa fa-edit edit-end-date"></span></button>
+                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.review_end_day_data }}" data-period="review"data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.review_end_day }}<span class="fa fa-edit edit-end-date"></span></button>
                                 </div>
                             </td>
                             <td style="border-top:0px;">
@@ -160,7 +160,7 @@
                             <td style="border-top:0px;">
                                 <div>
                                     <input type='hidden' name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
-                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.approval_start_day_data }}" data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.approval_start_day }}<span class="fa fa-edit edit-end-date"></span></button>
+                                    <button id="enddate{{ forloop.counter }}" class='enddate' data-inputclass="form-control datetext" data-value="{{ nomination.approval_end_day_data }}" data-period="approval"data-type="text" data-pk="{{ nomination.nomination_id }}" data-title="Select end-date">{{ nomination.approval_end_day }}<span class="fa fa-edit edit-end-date"></span></button>
                                 </div>
                             </td>
                             <td style="border-top:0px;">

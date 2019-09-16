@@ -34,6 +34,7 @@ $(document).ready(function(){
     datetext = $(this).next().find('.datetext')
     $('.editable-submit').addClass('fa fa-check')
     $('.editable-cancel').addClass('fa fa-times')
+    var period = $(this).attr('data-period')
     id = $(this).attr('data-pk')
     $('.editable-submit').on('click', function(e){
       e.stopPropagation();
@@ -43,6 +44,7 @@ $(document).ready(function(){
         url: '/nominations/'+ id + '/',
         data: {
           'date': datetext.val(),
+          'period': period,
           'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val(),
 
         },
