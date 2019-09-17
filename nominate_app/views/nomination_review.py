@@ -22,7 +22,7 @@ def index(request):
 	submission_list = []
 	today = datetime.today().date()
 	if status == 'To be Reviewed':
-		submissions = NominationSubmitted.objects.filter(status__in=[0, 1], nomination__review_start_day__lte=today, nomination__review_end_day__gte=today) # status for submitted
+		submissions = NominationSubmitted.objects.filter(status__in=[0, 1], nomination__nomination_timing__review_start_day__lte=today, nomination__nomination_timing__review_end_day__gte=today) # status for submitted
 		for submission in submissions:
 			if not submission.ratings.filter(user=request.user).exists():
 				submission_list.append(submission)
