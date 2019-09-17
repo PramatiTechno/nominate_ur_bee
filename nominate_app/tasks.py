@@ -66,11 +66,11 @@ director_updated_sent = False
 director_end_sent = False
 
 
-# @periodic_task(
-#   run_every=(crontab(minute='*/1')),
-#   name="populate_monthly_frequency",
-#   ignore_result=True
-# )
+@periodic_task(
+  run_every=(crontab(minute='*/1')),
+  name="populate_monthly_frequency",
+  ignore_result=True
+)
 def populate_monthly_frequency():
     print("Starting the script from the console")
     frequencies = {'YEARLY': 12,'MONTHLY': 1,'QUATERLY': 3}
@@ -117,7 +117,7 @@ def populate_monthly_frequency():
 
 
 @periodic_task(
-  run_every=(crontab(minute='*/1')),
+  run_every=(crontab(hour='*/24', minute='0')),
   name="email_task",
   ignore_result=True
 )
