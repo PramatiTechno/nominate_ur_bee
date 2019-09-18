@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from nominate_app.models import *
+from nominate_app.forms import NominationStatusDateForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers 
@@ -17,7 +18,7 @@ from IPython import embed
 def home(request):
     return render(request, 'base.html')
 
-def get_nomination_data(award_name, award_template_name, page, start_day=None, end_day=None, request=None):
+def get_nomination_data(award_name, award_template_name, page, start_day=None, end_day=None):
   page = int(page)
   nomination_data = []
 
@@ -37,19 +38,15 @@ def get_nomination_data(award_name, award_template_name, page, start_day=None, e
   if submissions:
     submitted_nominations = Nomination.objects.filter(id__in=submissions.values('nomination_id'))
 
-  if start_day and end_day:
-    if start_day < end_day:
-        nominations = nominations.filter(start_day__gte=start_day, end_day__lte=end_day)
-        submitted_nominations = submitted_nominations.filter(start_day__gte=start_day, end_day__lte=end_day)
-    else:
-      messages.error(request, "End date must be greater than start date.")
-
   if award_template_exist:
     if submissions:
       nominations = nominations.union(submitted_nominations)
   else:
     nominations = submitted_nominations
 
+  if start_day and end_day:
+    if start_day > end_day:
+      nominations = nominations.filter(nomination_timing__start_day__gte=start_day, nomination_timing__end_day__lte=end_day)
 
   paginator = Paginator(nominations, 9)
   try:
@@ -117,33 +114,9 @@ def get_nomination_data(award_name, award_template_name, page, start_day=None, e
   return nominations
 
 
-def nomination_status(request):
-  if request.method == 'GET':
-    submitted_awards =  NominationSubmitted.objects.all().values_list('award_name', flat=True).distinct() 
-    awards = Awards.objects.all().values_list('name', flat=True).distinct()
-    union_awards = submitted_awards.union(awards)
-    page = request.GET.get('page', 1)
-    if union_awards:
-      award = union_awards[0]
-      return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award))
-    else: 
-      return render(request, 'nominate_app/nomination_status.html')
 
-def nomination_status_load(request, award_name):
-  if request.method == 'GET':
-    # award = Awards.objects.get(id=id)
-    page = request.GET.get('page', 1)
-    return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award_name))
-
-def nomination_status_load_filter(request, award_name, template_name):
-  page = request.GET.get('page', 1)
-  days = request.GET.getlist('filter')
-  start_day = datetime.strptime(days[0], '%m/%d/%Y').date()
-  end_day = datetime.strptime(days[1], '%m/%d/%Y').date()
-  return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award_name, template_name=template_name, start_day=start_day, end_day=end_day, request=request))
-
-
-def get_nomination_details(page, award_name=None, template_name=None, start_day=None, end_day=None, request=None):  
+def get_nomination_details(page, award_name=None, template_name=None, start_day=None, end_day=None):  
+  date_form = NominationStatusDateForm()
   submitted_awards =  NominationSubmitted.objects.all().values_list('award_name', flat=True).distinct() 
   awards = Awards.objects.all().values_list('name', flat=True).distinct()
   union_awards = submitted_awards.union(awards)
@@ -161,22 +134,59 @@ def get_nomination_details(page, award_name=None, template_name=None, start_day=
     award_templates = submissions.values_list('template_name', flat=True).distinct()
 
   nomination_data = None
+  if start_day and end_day:
+    date_form.initial['from_'] = start_day
+    date_form.initial['to'] = end_day
+    start_day = datetime.strptime(start_day, '%m/%d/%Y').date()
+    end_day = datetime.strptime(end_day, '%m/%d/%Y').date()
+
 
   if award_templates:
     if template_name:
       award_template = template_name
     else:
       award_template = award_templates[0]
-    nomination_data = get_nomination_data(award_name, award_template, page, start_day=start_day, end_day=end_day, request=request)
+    nomination_data = get_nomination_data(award_name, award_template, page, start_day=start_day, end_day=end_day)
   else:
     award_template = None
-  return {'award_categories': union_awards, 'nominations': nomination_data, 'award_selected': award_name, 'award_templates': award_templates, 'selected_template': award_template}
+
+  return {
+    'award_categories': union_awards, 
+    'nominations': nomination_data, 
+    'award_selected': award_name, 
+    'award_templates': award_templates, 
+    'selected_template': award_template,
+    'date_form': date_form
+  }
 
 
-def nomination_status_load_template(request, award_name, template_name):
+
+def nomination_status(request):
   if request.method == 'GET':
     page = request.GET.get('page', 1)
-    return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award_name, template_name=template_name))
+
+    if 'award_name' in request.GET:
+      award_name = request.GET['award_name']
+      if 'template_name' in request.GET:
+        template_name = request.GET['template_name']
+        if 'from_' and 'to' in request.GET:
+          start_day = request.GET['from_']
+          end_day = request.GET['to']
+          if start_day > end_day:
+            messages.error(request, "End date must be greater than start date.")
+          return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award_name, template_name=template_name, start_day=start_day, end_day=end_day))
+        return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award_name, template_name=template_name))
+      return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award_name))
+
+    submitted_awards =  NominationSubmitted.objects.all().values_list('award_name', flat=True).distinct() 
+    awards = Awards.objects.all().values_list('name', flat=True).distinct()
+    union_awards = submitted_awards.union(awards)
+    if union_awards:
+      award = union_awards[0]
+      return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award))
+    else: 
+      return render(request, 'nominate_app/nomination_status.html')
+
 
 def email(request, username, nomination_id):
   subject = "Reminder mail"

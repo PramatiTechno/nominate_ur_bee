@@ -50,7 +50,7 @@ def get_notifications():
 
 
 def get_recent_nominations():
-    nominations = Nomination.objects.all().order_by('id')[:3]
+    nominations = Nomination.objects.filter(~Q(award_template=None)).order_by('id')[:3]
     return nominations
 
 def get_activities(user_obj):
