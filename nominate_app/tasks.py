@@ -39,6 +39,8 @@ def sending(values, start_day, end_day, award_name, template_path, subject, link
     for index, value in enumerate(values):
         print('email-'+str(value.email))
         print('award-'+ str(award_name))
+        email = value.email
+  
         context = {
             'name': value,
             'award': award_name, 
@@ -50,7 +52,7 @@ def sending(values, start_day, end_day, award_name, template_path, subject, link
         plain_message_value = strip_tags(message_value_html_template)
 
         send_mail(subject=subject, from_email='no-reply@pramati.com', \
-            recipient_list=[str(value.email)], message=plain_message_value, html_message=message_value_html_template, fail_silently=False)
+            recipient_list=[email], message=plain_message_value, html_message=message_value_html_template, fail_silently=False)
         print('mail sent to ' + str(value))
     return 'mail sent'
 
@@ -140,25 +142,20 @@ def email_task():
     to_tech_jury = list(User.objects.filter(groups__name='Technical Jury Member'))
     to_director = list(User.objects.filter(groups__name='Directorial Board Member'))
     # nominations_admin = Nomination.objects.filter(group__name='Admin')
-    submission_start_nominations = Nomination.objects.filter(nomination_timing__start_day=(datetime.today()+ timedelta(hours=24)).date())
-    rating_start_nominations = Nomination.objects.filter(nomination_timing__review_start_day=(datetime.today()+ timedelta(hours=24)).date())
-    approval_start_nominations = Nomination.objects.filter(nomination_timing__approval_start_day=datetime.today().date())
+    submission_start_timings = NominationTiming.objects.filter(start_day=(datetime.today()+ timedelta(hours=24)).date())
+    rating_start_timings = NominationTiming.objects.filter(review_start_day=(datetime.today()+ timedelta(hours=24)).date())
+    approval_start_timings = NominationTiming.objects.filter(approval_start_day=(datetime.today()+ timedelta(hours=24)).date())
 
-    submission_end_nominations = Nomination.objects.filter(nomination_timing__end_day=(datetime.today()+ timedelta(hours=24)).date())
-    rating_end_nominations = Nomination.objects.filter(nomination_timing__review_end_day=(datetime.today()+ timedelta(hours=24)).date())
-    approval_end_nominations = Nomination.objects.filter(nomination_timing__approval_end_day=(datetime.today()+ timedelta(hours=24)).date())
+    submission_end_timings = NominationTiming.objects.filter(end_day=(datetime.today()+ timedelta(hours=24)).date())
+    rating_end_timings = NominationTiming.objects.filter(review_end_day=(datetime.today()+ timedelta(hours=24)).date())
+    approval_end_timings = NominationTiming.objects.filter(approval_end_day=(datetime.today()+ timedelta(hours=24)).date())
 
 
-# submissions
-    if submission_start_nominations:
-        print("Nomination started")
-        timing_set = set()
-        for nomination in submission_start_nominations:
-            timing_set.add(nomination.nomination_timing)
-        
-        for timing in timing_set:
-            submission_recipients = []
-            template = timing.award_template
+# submissions        
+    for timing in submission_start_timings:
+        submission_recipients = []
+        template = timing.award_template
+        if template:
             if template.questions.filter(groups__id=2).exists():
                 submission_recipients.extend(list(to_manager))
 
@@ -173,15 +170,11 @@ def email_task():
                 manager_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:nominations')))
 
 
-
-    if submission_end_nominations:
-        timing_set = set()
-        for nomination in submission_start_nominations:
-            timing_set.add(nomination.nomination_timing)
         
-        for timing in timing_set:
-            submission_recipients = []
-            template = timing.award_template
+    for timing in submission_end_timings:
+        submission_recipients = []
+        template = timing.award_template
+        if template:
             if template.questions.filter(groups__id=2).exists():
                 submission_recipients.extend(list(to_manager))
 
@@ -196,53 +189,38 @@ def email_task():
 
 
 # ratings
-    if rating_start_nominations:
-        print("Rating started")
-        rating_recipients = list(to_tech_jury)
-        timing_set = set()
-        for nomination in rating_start_nominations:
-            timing_set.add(nomination.nomination_timing)
-
-        for timing in timing_set:
-            template = timing.award_template
+    rating_recipients = list(to_tech_jury)
+    for timing in rating_start_timings:
+        template = timing.award_template
+        if template:
             print("Rating start reminder sending...")
             sending(rating_recipients, timing.review_start_day, timing.review_end_day, template, 'nominate_app/emails/tech_jurys_start-date.html', \
                 tech_jury_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index')))
 
 
-    if rating_end_nominations:
-        rating_recipients = list(to_tech_jury)
-        timing_set = set()
-        for nomination in rating_end_nominations:
-            timing_set.add(nomination.nomination_timing)
 
-        for timing in timing_set:
-            template = timing.award_template
+    for timing in rating_end_timings:
+        template = timing.award_template
+        if template:
             sending(rating_recipients, timing.review_start_day, timing.review_end_day, template, 'nominate_app/emails/tech_jurys_end-date.html', \
                 tech_jury_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index')))
 
 
 # approvals
-    if approval_start_nominations:
-        approval_recipients = list(to_director)
-        timing_set = set()
-        for nomination in approval_start_nominations:
-            timing_set.add(nomination.nomination_timing)
-
-        for timing in timing_set:
-            template = timing.award_template
+    approval_recipients = list(to_director)
+    for timing in approval_start_timings:
+        template = timing.award_template
+        if template:
             sending(approval_recipients, timing.approval_start_day, timing.approval_end_day, template, 'nominate_app/emails/directors_start-date.html', \
                 director_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:approval')))
 
 
-    if approval_end_nominations:
-        approval_recipients = list(to_director)
-        timing_set = set()
-        for nomination in approval_end_nominations:
-            timing_set.add(nomination.nomination_timing)
-
-        for timing in timing_set:
-            template = timing.award_template
+    for timing in approval_end_timings:
+        template = timing.award_template
+        if template:
             sending(approval_recipients, timing.approval_start_day, timing.approval_end_day, template, 'nominate_app/emails/directors_end-date.html', \
                 director_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:approval')))
+    
+
+
 
