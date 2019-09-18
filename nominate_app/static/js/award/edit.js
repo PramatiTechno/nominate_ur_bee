@@ -18,7 +18,7 @@ $(document).ready(function(){
   $(document).on("focus", ".datepicker", function(){
       $('.datepicker').attr('autocomplete',"off");
 
-      $(this).datepicker({ startDate: "today",  maxViewMode: 1, orientation: "bottom",});
+      $(this).datepicker({ startDate: "today",  maxViewMode: 1, orientation: "bottom", autoclose: true});
   });
 
   $('.datepicker').on('click', function(){
@@ -85,7 +85,7 @@ $(document).ready(function(){
      newElement.find('input.datepicker')
     .removeData('datepicker')
     .unbind()
-    .datepicker({ startDate: "today", maxViewMode: 1, orientation: "bottom",});
+    .datepicker({ startDate: "today", maxViewMode: 1, orientation: "bottom", autoclose: true});
     $(selector).after(newElement);
   }
 
