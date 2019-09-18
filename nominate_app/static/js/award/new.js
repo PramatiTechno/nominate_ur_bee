@@ -36,6 +36,7 @@ $(document).ready(function(){
       startDate: "today",
       maxViewMode: 1,
       orientation: "bottom",
+      autoclose: true
     });
   });
 
@@ -82,6 +83,7 @@ $(document).ready(function(){
         startDate: "today",
         maxViewMode: 1,
         orientation: "bottom",
+        autoclose: true
     }
     );
     $(selector).after(newElement);

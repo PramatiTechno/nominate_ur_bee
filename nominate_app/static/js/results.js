@@ -3,7 +3,8 @@ $(function() {
     $("#datepicker").datepicker({
         format: "MM yyyy",
         startView: "months",
-        minViewMode: "months"
+        minViewMode: "months",
+        autoclose: true
     });
 
     $('.submit').on('click', function() {
