@@ -179,36 +179,46 @@ def nomination_status_load_template(request, award_name, template_name):
     return render(request, 'nominate_app/nomination_status.html', get_nomination_details(page, award_name=award_name, template_name=template_name))
 
 def email(request, username, nomination_id):
-  subject = "Reminder mail"
-  user = User.objects.get(username=username)
+  users = User.objects.filter(email=username)
   nomination = Nomination.objects.get(id=nomination_id)
   award_template = nomination.award_template.template_name
   end_day = nomination.end_day
   award_name = nomination.award_template.award.name
   template_name = 'nominate_app/emails/reminder.html'
-  new_status_dict = {0:'submit',2:'review',3:'approve/decline',6:'approve/decline'}
+  subjects = { 
+              0:['Reminder to Review the Nominations', 'review'], 
+              1:['Reminder to Approve the Nominations', 'approve/decline'],
+              4:['Reminder to Approve the Nominations', 'approve/decline']
+              }  
   try:
-    if not nomination.nominationinstance_set.filter(user=user).exists():
+    if not nomination.nominationinstance_set.filter(user__email=users.first()):
       new_status = "submit"
+      subject = 'Reminder to Submit your Nominations'
+      link = str(os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
+    elif nomination.nominationinstance_set.filter(user__email=users.first()):
+      new_status = "submit"
+      subject = 'Reminder to Submit your Nominations'
+      link = str(os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
     else:
-      instance = nomination.nominationinstance_set.get(user=user)
-      status = instance.get_status(instamce.status)
-      new_status = "submit"
-
-    # new_status = new_status_dict[nomination.nominationinstance_set.all()[0].status]
-    message_value_html_template = render_to_string(template_name,\
-    {'name':user.username, 'award_template':award_template, \
-    'award_name':award_name, 'end_day':end_day, 'new_status':new_status, \
-      'link':os.environ['SERVER_NAME'] + reverse('nominate_app:nominations')})
-    plain_message_value = strip_tags(message_value_html_template)
-    send_mail(subject=subject, from_email='no-reply@pramati.com', \
-    recipient_list=[str(user.email)], message=plain_message_value, fail_silently=False)
-    
-    # messages.success(request, "Email has been sent successfully!")
-
+      submission = nomination.submissions.get(email=users.first().email)
+      if submission.status == 0:
+        users = User.objects.filter(groups__name='Technical Jury Member')
+        end_day = nomination.review_end_day
+        link = str(os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index'))
+      elif submission.status in [1, 4]:
+        users  = User.objects.filter(groups__name='Directorial Board Member')
+        end_day = nomination.approval_end_day
+        link = str(os.environ['SERVER_NAME'] + reverse('nominate_app:approval'))
+      new_status = subjects[submission.status][1]
+      subject = subjects[submission.status][0]
+    for user in users:
+      message_value_html_template = render_to_string(template_name,\
+      {'name':user.username, 'award_template':award_template, \
+        'award_name':award_name, 'end_day':end_day, 'new_status':new_status, \
+          'link':link })
+      plain_message_value = strip_tags(message_value_html_template)
+      send_mail(subject=subject, html_message=message_value_html_template, from_email='no-reply@pramati.com', \
+      recipient_list=[str(user.email)], message=plain_message_value, fail_silently=False)
   except Exception as e: 
-    print (str(e))
-    # messages.error(request, "Some error in sending the Email. Please try again later")
     return JsonResponse({'status':'unsent'})
-
   return JsonResponse({'status':'sent'})

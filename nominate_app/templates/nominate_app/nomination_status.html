@@ -196,14 +196,23 @@
                                                 </div>
                                             </div>
                                             <div class="col-sm-4" style="text-align: right">
-                                                {% if nomination_instance.is_active %} {% if nomination_instance.status in 'New,Saved' %}
-                                                <a href="" class="reminder-mail" value="{{ nomination_instance.username }}/{{ nomination.nomination_id }}"><i class="fa fa-envelope"></i> Reminder</a>
+                                                {% if nomination_instance.is_active %} 
+                                                    {% if nomination_instance.status in 'New,Saved' %}
+                                                        <a href="#" value="{{ nomination_instance.username }}/{{ nomination.nomination_id }}" class="reminder-mail">
+                                                            <button class="btn btn-sm btn-success"><i class="fa fa-envelope"></i> Submission Reminder</button>
+                                                        </a>
+                                                    {% elif nomination_instance.status == 'Submitted' %}
+                                                        <a href="#" value="{{ nomination_instance.username }}/{{ nomination.nomination_id }}" class="reminder-mail">
+                                                            <button class="btn btn-sm btn-success"><i class="fa fa-envelope"></i> Review Reminder</button>
+                                                        </a>
+                                                    {% elif nomination_instance.status in 'Reviewed,On hold' %}
+                                                        <a href="#" value="{{ nomination_instance.username }}/{{ nomination.nomination_id }}" class="reminder-mail">
+                                                            <button class="btn btn-sm btn-success"><i class="fa fa-envelope"></i> Approval Reminder</button>
+                                                        </a>
+                                                    {% endif %} 
                                                 {% else %}
-                                                <a>
-                                                <button class="btn btn-success" disabled><i class="fa fa-envelope"></i> Reminder</button>
-                                                </a>
-                                                {% endif %} {% else %}
-                                                <a class="text-muted"> Out dated </a> {% endif %}
+                                                    <a class="text-muted"> Out dated </a> 
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>

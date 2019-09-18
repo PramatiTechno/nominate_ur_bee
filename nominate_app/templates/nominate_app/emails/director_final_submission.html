@@ -1,7 +1,17 @@
-
-Dear {{ name }},
-Thanks for your contributions.
-We are pleased to inform you that {{director_name}} have submitted the form.
-Hence it's time to declare the final results.
-Be in loop...
-Results will be announced soon.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<body>
+    Dear {{ name }},
+    Thanks for your contributions.
+                'template': nomination_submitted.nomination.award_template})
+    We are pleased to inform you that {{director_name}} have submitted the form for {{ template }}.
+    Hence it's time to declare the final results.
+    Be in loop...
+    Results will be announced soon.
+</body>
+</html>
