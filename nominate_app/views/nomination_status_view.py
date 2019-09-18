@@ -38,15 +38,20 @@ def get_nomination_data(award_name, award_template_name, page, start_day=None, e
   if submissions:
     submitted_nominations = Nomination.objects.filter(id__in=submissions.values('nomination_id'))
 
+  if start_day and end_day:
+    if start_day < end_day:
+      if award_template_exist:
+        nominations = nominations.filter(nomination_timing__start_day__gte=start_day, nomination_timing__approval_end_day__lte=end_day)
+      if submissions:
+        submitted_nominations = submitted_nominations.filter(nomination_timing__start_day__gte=start_day, nomination_timing__approval_end_day__lte=end_day)
+
+
   if award_template_exist:
     if submissions:
       nominations = nominations.union(submitted_nominations)
   else:
     nominations = submitted_nominations
 
-  if start_day and end_day:
-    if start_day > end_day:
-      nominations = nominations.filter(nomination_timing__start_day__gte=start_day, nomination_timing__end_day__lte=end_day)
 
   paginator = Paginator(nominations, 9)
   try:
@@ -139,7 +144,6 @@ def get_nomination_details(page, award_name=None, template_name=None, start_day=
     date_form.initial['to'] = end_day
     start_day = datetime.strptime(start_day, '%m/%d/%Y').date()
     end_day = datetime.strptime(end_day, '%m/%d/%Y').date()
-
 
   if award_templates:
     if template_name:
