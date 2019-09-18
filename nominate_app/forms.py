@@ -26,6 +26,16 @@ class AwardsActiveForm(forms.ModelForm):
     fields = '__all__'
 
 
+class NominationStatusDateForm(forms.Form):
+  from_ = forms.CharField(label='From', widget=forms.TextInput(attrs={'class': "form-control datepicker", 'id': "start_date", 'name': "start_date"}))
+  to = forms.CharField(label='To', widget=forms.TextInput(attrs={'class': "form-control datepicker", 'id': "end_date", 'name': "end_date"}))
+
+  def __init__(self, *args, **kwargs):
+    super(NominationStatusDateForm, self).__init__(*args, **kwargs)
+    self.fields['from_'].required = True
+    self.fields['to'].required = True
+
+
 class NominationFilterForm(forms.Form):
     SORT_CHOICES = [('latest', 'Latest'), ('oldest', 'Oldest')]
 

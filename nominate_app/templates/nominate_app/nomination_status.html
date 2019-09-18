@@ -38,8 +38,8 @@
     <div class="dropdown-menu dropdown-menu-awards">
 
         {% endif %} {% if award_selected == award %}
-        <a class="dropdown-item active" id="dropdown-item0" href="#" onclick="location.href='{% url 'nominate_app:nomination_status_load' award %}'" value='{{ award.id }}'>{{ award|title }}</a> {% else %}
-        <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}" href="#" onclick="location.href='{% url 'nominate_app:nomination_status_load' award %}'" value='{{ award.id }}'>{{ award|title }}</a> {% endif %} {% empty %}
+        <a class="dropdown-item active" id="dropdown-item0" href="{% url 'nominate_app:nomination_status' %}?award_name={{award}}" value='{{ award.id }}'>{{ award|title }}</a> {% else %}
+        <a class="dropdown-item" id="dropdown-item{{ forloop.counter }}" href="{% url 'nominate_app:nomination_status' %}?award_name={{ award }}" value='{{ award.id }}'>{{ award|title }}</a> {% endif %} {% empty %}
         <a class="dropdown-item">No Awards Found</a> {% endfor %}
 
     </div>
@@ -52,9 +52,9 @@
         <div class="side-template-nav">Award Templates</div>
             <ul class="template_ul">
                 {% for award_template in award_templates %} {% if selected_template == award_template %}
-                <li><a class="template-link-active" href="{% url 'nominate_app:nomination_status_load_template' award_selected award_template %}" >{{ award_template.capitalize }}</a></li>
+                <li><a class="template-link-active" href="{% url 'nominate_app:nomination_status' %}?award_name={{award_selected}}&template_name={{award_template}}" >{{ award_template.capitalize }}</a></li>
                 {% else %}
-                <li><a class="template-link" href="{% url 'nominate_app:nomination_status_load_template' award_selected award_template %}" >{{ award_template.capitalize }}</a></li>
+                <li><a class="template-link" href="{% url 'nominate_app:nomination_status' %}?award_name={{award_selected}}&template_name={{award_template}}" >{{ award_template.capitalize }}</a></li>
                 {% endif %} {%empty%}
                 <br> No Award Templates Available. {% endfor %}
             </ul>
@@ -64,7 +64,9 @@
             <div class="row filter-container">
                 <div class="col-sm-12">
 
-                    <form method="GET" action="{% if selected_template %}{% url 'nominate_app:nomination_filter' award_selected selected_template %}{% endif %}">
+                    <form method="GET" action="{% if selected_template %}{% url 'nominate_app:nomination_status' %}{% endif %}">
+                        <input type="hidden" name="award_name" value="{{award_selected}}">
+                        <input type="hidden" name="template_name" value="{{selected_template}}">
                         <div class="row">
                             <div class="col-sm-5">
                                 <div class="row">
@@ -72,7 +74,7 @@
                                         Start Date
                                     </div>
                                     <div class="col-md-8" >
-                                        <input type="text" id="start_date" class="form-control datepicker initial-date" name="filter" />
+                                        {{ date_form.from_ }}
                                     </div>
                                 </div>
 
@@ -84,7 +86,7 @@
                                         End Date
                                     </div>
                                     <div class="col-md-8" >
-                                        <input type="text" id="end_date" class="form-control datepicker final-date" name="filter" />
+                                        {{ date_form.to }}
                                     </div>
                                 </div>
                             </div>
