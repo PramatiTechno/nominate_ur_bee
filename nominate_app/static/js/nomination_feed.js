@@ -38,8 +38,12 @@ $(function() {
 
 
   $(".comment-section").hide();
-  $("#start_date").datepicker({ maxViewMode: 1, orientation: "bottom" });
-  $("#end_date").datepicker({ maxViewMode: 1, orientation: "bottom" });
+ 
+  $('.datepicker').datepicker({
+    maxViewMode: 1, 
+    orientation: "bottom",
+    autoclose: true,
+  });
   $(".datepicker").attr("autocomplete", "off");
 
 
