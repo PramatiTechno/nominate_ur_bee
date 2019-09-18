@@ -24,7 +24,7 @@
             </thead>
             <tbody>
                 {% for nomination in recent_nominations %}
-                        <tr class="link tr_body" onclick='location.href="{% url 'nominate_app:nomination_status_load_template' nomination.award_template.award.name nomination.award_template.template_name %}"'>
+                        <tr class="link tr_body" onclick='location.href="{% url 'nominate_app:nomination_status' %}?award_name={{nomination.award_template.award.name}}&template_name={{nomination.award_template.template_name}}"'>
                             
                             <td class="td_body">
                                 {{ nomination.award_template.award.name }}

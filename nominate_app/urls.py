@@ -60,11 +60,7 @@ urlpatterns = [
   path("approvals/<submission_id>",approvals.approve,name="approve"),    
   path("approvals/<submission_id>/edit",approvals.edit,name="approval_edit"),    
 
-  
   path('nomination_status/', nomination_status_view.nomination_status, name='nomination_status'),
-  path('nomination_status_load/<award_name>/', nomination_status_view.nomination_status_load, name='nomination_status_load'),
-  path('nomination_status_load/awards/<award_name>/templates/<template_name>', nomination_status_view.nomination_status_load_template, name='nomination_status_load_template'),
-  path('nomination_status_load/awards/<award_name>/templates/<template_name>/filter', nomination_status_view.nomination_status_load_filter, name="nomination_filter"),
   
   path('nomination_feed/', nomination_index.NominationIndexView.as_view(), name='nomination_feed'),
   path('nomination_feed/<int:nomination_submittion_id>/', nomination_index.nomination_instance_post, name='nomination_instance_post'),

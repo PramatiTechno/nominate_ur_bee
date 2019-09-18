@@ -22,7 +22,7 @@ def index(request):
 	submission_list = []
 	today = datetime.today().date()
 	if status == 'To be Reviewed':
-		submissions = NominationSubmitted.objects.filter(status__in=[0, 1], nomination__review_start_day__lte=today, nomination__review_end_day__gte=today) # status for submitted
+		submissions = NominationSubmitted.objects.filter(status__in=[0, 1], nomination__nomination_timing__review_start_day__lte=today, nomination__nomination_timing__review_end_day__gte=today) # status for submitted
 		for submission in submissions:
 			if not submission.ratings.filter(user=request.user).exists():
 				submission_list.append(submission)
@@ -68,8 +68,10 @@ class nomination_rating(GroupRequiredMixin, View):
 					str(request.user.last_name)
 				for director in to_directors:
 					message_value_html_template = render_to_string('nominate_app/emails/declaration_tech_jury.html', \
-						{'tech_jury_name':request.user.first_name, \
-							'name':director.username, 'submission_status':'Reviewed'})
+						{'tech_jury_name':request.user.first_name,
+						'name':director.username, 
+						'template':submission.nomination.award_template
+						})
 					plain_message_value = strip_tags(message_value_html_template)          
 					send_mail(subject=subject, from_email='no-reply@pramati.com', \
 						recipient_list=[str(director.email)], message=plain_message_value, fail_silently=False)
@@ -77,8 +79,11 @@ class nomination_rating(GroupRequiredMixin, View):
 				to_managers = User.objects.filter(groups__name='Manager')
 				for manager in to_managers:
 					message_value_html_template = render_to_string('nominate_app/emails/declaration_tech_jury.html', \
-						{'tech_jury_name':request.user.first_name, \
-							'name':manager.username, 'submission_status':'Reviewed'})
+						{
+						'tech_jury_name':request.user.first_name,
+						'name':manager.username, 
+						'template':submission.nomination.award_template
+						})
 					plain_message_value = strip_tags(message_value_html_template)          
 					send_mail(subject=subject, from_email='no-reply@pramati.com', \
 						recipient_list=[str(manager.email)], message=plain_message_value, fail_silently=False)

@@ -114,7 +114,7 @@ class Questions(SafeDeleteModel):
     
   qname = models.CharField(max_length=100, null=False, blank=False)
   qtype = models.CharField(max_length=100, choices=query_choice, null=False, blank=False, default='subjective')
-  award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE)
+  award_template = models.ForeignKey(AwardTemplate, on_delete=models.CASCADE, related_name='questions')
   groups = models.ManyToManyField(Group)
   attachment_need = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
@@ -213,13 +213,19 @@ class NominationSubmitted(models.Model):
     elif status==1:
       user_names = list()
       ratings = NominationRating.objects.filter(submission_id=self.id)
-      for rating in ratings:user_names.append(rating.user.first_name + " " + rating.user.last_name)
-      full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]])
+      if len(ratings)==1:
+        full_name = ratings.first().user.first_name + " " + ratings.first().user.last_name
+      else:
+        for rating in ratings:user_names.append(rating.user.first_name + " " + rating.user.last_name)
+        full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]]) 
     else:
       user_names = list()
       comments = DirectorComments.objects.filter(nomination_submitted_id=self.id)
-      for comment in comments:user_names.append(comment.user.first_name + " " + comment.user.last_name)
-      full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]])
+      if len(comments)==1:
+        full_name = comments.first().user.first_name + " " + comments.first().user.last_name
+      else:
+        for comment in comments:user_names.append(comment.user.first_name + " " + comment.user.last_name)
+        full_name = " and ".join([", ".join(user_names[:-1]),user_names[-1]])
     return full_name
 
 

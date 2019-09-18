@@ -56,6 +56,6 @@ def publish(request, sub_id):
 		'award_name':awards_name})
 		plain_message_value = strip_tags(message_value_html_template)
 		send_mail(subject=subject, from_email='no-reply@pramati.com', \
-		recipient_list=[str(manager.email)], message=plain_message_value, fail_silently=False)
+		recipient_list=[str(manager.email)], html_message=message_value_html_template, message=plain_message_value, fail_silently=False)
 	return redirect('nominate_app:results')
 
