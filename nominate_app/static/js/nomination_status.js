@@ -87,7 +87,6 @@ $(document).ready(function(){
       type: "GET",
       url: "/reemail/"+ username_and_instance_id + "/",
       success: function(data) {
-        console.log("success", data);
         if (data.status === "sent"){
           alert("Reminder Email has been sent")
         }else{

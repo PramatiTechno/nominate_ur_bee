@@ -124,7 +124,7 @@ def index(request,nomination_id):
         subject_tech_jury = "Nominations submitted by " + str(request.user.first_name) +\
            " " + str(request.user.last_name)
         message_value_html_template = render_to_string('nominate_app/emails/congratulate_manager.html', \
-          {'manager_name':request.user.first_name})
+          {'manager_name':request.user.first_name, 'template':nomination_instance.nomination.award_template})
         plain_message_value = strip_tags(message_value_html_template)
         send_mail(subject=subject_manager, from_email='no-reply@pramati.com', \
           recipient_list=[str(request.user.email)], \
@@ -132,7 +132,7 @@ def index(request,nomination_id):
         for jury in to_tech_jury:
           message_value_html_template = render_to_string('nominate_app/emails/tech_jury_notify_submission.html', \
             {'manager_name':request.user.first_name, 'tech_jury_name':jury.username, \
-              'award':nomination.award_template.award.name})
+              'template':nomination_instance.nomination.award_template})
           plain_message_value = strip_tags(message_value_html_template)          
           send_mail(subject=subject_tech_jury, from_email='no-reply@pramati.com', \
             recipient_list=[str(jury.email)], message=plain_message_value, fail_silently=False)

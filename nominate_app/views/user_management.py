@@ -166,6 +166,6 @@ def create(request):
 	message_value_html_template = render_to_string('nominate_app/emails/invitation.html',{'user_group':group.name,'url':os.environ['SERVER_NAME']})
 	plain_message_value = strip_tags(message_value_html_template)
 	send_mail(subject='Welcome To Nominate Your Bee !!!!', from_email='no-reply@pramati.com', \
-		recipient_list=[str(email)], message=plain_message_value, fail_silently=False)
+		recipient_list=[str(email)], html_message=message_value_html_template ,message=plain_message_value, fail_silently=False)
 	return redirect('/users?group=0')
 
