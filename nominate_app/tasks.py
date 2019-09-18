@@ -32,19 +32,31 @@ def add_months(sourcedate, months):
     day = min(sourcedate.day, calendar.monthrange(year,month)[1])
     return datetime(year, month, day)
 
-def sending(values, nom_obj, template_name, subject, link):
+
+
+def sending(values, start_day, end_day, award_name, template_path, subject, link):
+
     for index, value in enumerate(values):
-        print('email'+str(value.email))
-        print('username'+ str(value.username))
-        context = {str(nom_obj[index].group.name)+'_name':value, 
-        'start_date':nom_obj[index].start_day, 'last_date':nom_obj[index].end_day, \
-            'link':link}
-        message_value_html_template = render_to_string(template_name, context=context)
+        print('email-'+str(value.email))
+        print('award-'+ str(award_name))
+        email = value.email
+  
+        context = {
+            'name': value,
+            'award': award_name, 
+            'start_date': start_day, 
+            'last_date': end_day,
+            'link': link
+        }
+        message_value_html_template = render_to_string(template_path, context)
         plain_message_value = strip_tags(message_value_html_template)
+
         send_mail(subject=subject, from_email='no-reply@pramati.com', \
-            recipient_list=[str(value.email)], message=plain_message_value, fail_silently=False)
+            recipient_list=[email], message=plain_message_value, html_message=message_value_html_template, fail_silently=False)
         print('mail sent to ' + str(value))
     return 'mail sent'
+
+
 managers_start_sent = False
 managers_updated_sent = False
 managers_end_sent = False
@@ -69,9 +81,9 @@ def populate_monthly_frequency():
         print("Checking awards");
         award_templates = award.awardtemplate_set.all()##.filter#(is_active=True)
         periods = award.nominationperiod_set.all()
-        submission_period = periods[0]
-        review_period = periods[1]
-        approval_period = periods[2]
+        submission_period = periods.get(group_id=2)
+        review_period = periods.get(group_id=3)
+        approval_period = periods.get(group_id=4)
         frequency = award.frequency
         for period in periods:
             print("Iterating the periods");
@@ -105,6 +117,12 @@ def populate_monthly_frequency():
                             nomination = Nomination.objects.get_or_create(award_template_id=template.id,group=period.group,nomination_timing=nt)
 
 
+
+@periodic_task(
+  run_every=(crontab(hour='*/24', minute='0')),
+  name="email_task",
+  ignore_result=True
+)
 def email_task():
 	# subjects
     manager_start_date = "its time to nominate your bee"
@@ -119,78 +137,90 @@ def email_task():
 	# from
     from_email = settings.EMAIL_HOST_USER
 	# to
-    to_admin = User.objects.filter(groups__name='Admin')
-    to_manager = User.objects.filter(groups__name='Manager')
-    to_tech_jury = User.objects.filter(groups__name='Technical Jury Member')
-    to_director = User.objects.filter(groups__name='Directorial Board Member')
-    nominations_admin = Nomination.objects.filter(group__name='Admin')
-    nominations_manager = Nomination.objects.filter(group__name='Manager')
-    nominations_tech_jury = Nomination.objects.filter(group__name='Technical Jury Member')
-    nominations_director = Nomination.objects.filter(group__name='Directorial Board Member')
-    if nominations_manager:
-        if nominations_manager.filter(start_day=(datetime.today()+ timedelta(hours=24)).date()):
-            global managers_start_sent
-            if managers_start_sent == False:
-                sending(to_manager, nominations_manager, 'nominate_app/emails/managers_start-date.html', \
-                    manager_start_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
-                managers_start_sent = True
-        else: managers_start_sent == False
-        if nominations_manager.filter(end_day=(datetime.today()+ timedelta(hours=24)).date()):
-            global managers_end_sent
-            if managers_end_sent == False:
-                sending(to_manager, nominations_manager, 'nominate_app/emails/managers_end-date.html', \
-                    manager_end_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
-                managers_end_sent == True
-        else: managers_end_sent = False
-        if nominations_manager.filter(updated_at=(datetime.today()), updated_at__gte=(F('created_at')+timedelta(seconds=3))):
-            global managers_updated_sent
-            if managers_updated_sent == False:
-                sending(to_manager, nominations_manager, 'nominate_app/emails/managers_extension.html', \
-                    manager_extension_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
-                managers_updated_sent = True
-        else: managers_updated_sent = False
-    elif nominations_tech_jury:
-        if nominations_tech_jury.filter(start_day=(datetime.today()+ timedelta(hours=24)).date()):
-            global tech_jury_start_sent
-            if tech_jury_start_sent == False:
-                sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jury_start-date.html', \
-                    tech_jury_start_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index'))
-                tech_jury_start_sent = True
-        else:tech_jury_start_sent = False
-        if nominations_tech_jury.filter(end_day=(datetime.today()+ timedelta(hours=24)).date()):
-            global tech_jury_end_sent
-            if tech_jury_end_sent == False:
-                sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jury_end-date.html', \
-                    tech_jury_end_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index'))
-                tech_jury_end_sent = True
-        else: tech_jury_end_sent = False
-        if nominations_tech_jury.filter(updated_at=(datetime.today()), updated_at__gte=(F('created_at')+timedelta(seconds=3))):
-            global tech_jury_updated_sent
-            if tech_jury_updated_sent == False:
-                sending(to_tech_jury, nominations_tech_jury, 'nominate_app/emails/tech_jurys_extension_extension.html', \
-                    tech_jury_extension_date, os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index'))
-                tech_jury_updated_sent = True
-        else: tech_jury_updated_sent = False
-    elif nominations_director:
-        if nominations_director.filter(start_day=(datetime.today()+ timedelta(hours=24)).date()):
-            global director_start_sent
-            if director_start_sent == False:
-                sending(to_director, nominations_director, 'nominate_app/emails/directors_start-date.html', \
-                    director_start_date, os.environ['SERVER_NAME'] + reverse('nominate_app:approval'))
-                director_start_sent = True
-        else:director_start_sent = False
-        if nominations_director.filter(end_day=(datetime.today()+ timedelta(hours=24)).date()):
-            global director_end_sent
-            if director_end_sent == False:
-                sending(to_director, nominations_director, 'nominate_app/emails/directors_end-date.html', \
-                    director_start_date, os.environ['SERVER_NAME'] + reverse('nominate_app:approval'))
-                director_end_sent = True
-        else: director_end_sent = False
-        if nominations_director.filter(updated_at=(datetime.today()), updated_at__gte=(F('created_at')+timedelta(seconds=3))):
-            global director_updated_sent
-            if director_updated_sent == False:
-                sending(to_director, nominations_director, 'nominate_app/emails/directors_extension.html', \
-                    director_extension_date, os.environ['SERVER_NAME'] + reverse('nominate_app:approval'))
-                tech_jury_updated_sent = True
-        else: tech_jury_updated_sent = False
+    to_admin = list(User.objects.filter(groups__name='Admin'))
+    to_manager = list(User.objects.filter(groups__name='Manager'))
+    to_tech_jury = list(User.objects.filter(groups__name='Technical Jury Member'))
+    to_director = list(User.objects.filter(groups__name='Directorial Board Member'))
+    # nominations_admin = Nomination.objects.filter(group__name='Admin')
+    submission_start_timings = NominationTiming.objects.filter(start_day=(datetime.today()+ timedelta(hours=24)).date())
+    rating_start_timings = NominationTiming.objects.filter(review_start_day=(datetime.today()+ timedelta(hours=24)).date())
+    approval_start_timings = NominationTiming.objects.filter(approval_start_day=(datetime.today()+ timedelta(hours=24)).date())
+
+    submission_end_timings = NominationTiming.objects.filter(end_day=(datetime.today()+ timedelta(hours=24)).date())
+    rating_end_timings = NominationTiming.objects.filter(review_end_day=(datetime.today()+ timedelta(hours=24)).date())
+    approval_end_timings = NominationTiming.objects.filter(approval_end_day=(datetime.today()+ timedelta(hours=24)).date())
+
+
+# submissions        
+    for timing in submission_start_timings:
+        submission_recipients = []
+        template = timing.award_template
+        if template:
+            if template.questions.filter(groups__id=2).exists():
+                submission_recipients.extend(list(to_manager))
+
+            if template.questions.filter(groups__id=3).exists():
+                submission_recipients.extend(list(to_tech_jury))
+
+            if template.questions.filter(groups__id=4).exists():
+                submission_recipients.extend(list(to_director))
+
+            print("Submission start reminder sending...")
+            sending(submission_recipients, timing.start_day, timing.end_day, template, 'nominate_app/emails/managers_start-date.html', \
+                manager_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:nominations')))
+
+
         
+    for timing in submission_end_timings:
+        submission_recipients = []
+        template = timing.award_template
+        if template:
+            if template.questions.filter(groups__id=2).exists():
+                submission_recipients.extend(list(to_manager))
+
+            if template.questions.filter(groups__id=3).exists():
+                submission_recipients.extend(list(to_tech_jury))
+
+            if template.questions.filter(groups__id=4).exists():
+                submission_recipients.extend(list(to_director))
+
+            sending(submission_recipients, timing.start_day, timing.end_day, template, 'nominate_app/emails/managers_end-date.html', \
+                manager_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:nominations')))
+
+
+# ratings
+    rating_recipients = list(to_tech_jury)
+    for timing in rating_start_timings:
+        template = timing.award_template
+        if template:
+            print("Rating start reminder sending...")
+            sending(rating_recipients, timing.review_start_day, timing.review_end_day, template, 'nominate_app/emails/tech_jurys_start-date.html', \
+                tech_jury_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index')))
+
+
+
+    for timing in rating_end_timings:
+        template = timing.award_template
+        if template:
+            sending(rating_recipients, timing.review_start_day, timing.review_end_day, template, 'nominate_app/emails/tech_jurys_end-date.html', \
+                tech_jury_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:nomination_review_index')))
+
+
+# approvals
+    approval_recipients = list(to_director)
+    for timing in approval_start_timings:
+        template = timing.award_template
+        if template:
+            sending(approval_recipients, timing.approval_start_day, timing.approval_end_day, template, 'nominate_app/emails/directors_start-date.html', \
+                director_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:approval')))
+
+
+    for timing in approval_end_timings:
+        template = timing.award_template
+        if template:
+            sending(approval_recipients, timing.approval_start_day, timing.approval_end_day, template, 'nominate_app/emails/directors_end-date.html', \
+                director_start_date, str(os.environ['SERVER_NAME'] + reverse('nominate_app:approval')))
+    
+
+
+
