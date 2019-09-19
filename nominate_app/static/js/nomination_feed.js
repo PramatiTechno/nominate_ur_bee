@@ -50,6 +50,7 @@ $(function() {
   // like link event
   $(document).on("click", ".like-link", function() {
     var instance_id = $(this).attr("value");
+    var likes_count = $('#like-data').data("liked");
     var like_btn = $(this);
     var like_count = $(this)
       .parents("div.card-body")
@@ -59,14 +60,28 @@ $(function() {
       type: "GET",
       url: "/nomination_feed/" + instance_id + "/like/",
       success: function(data) {
-        if (data.value === "like") {
-          like_btn.html("<i class='fa fa-heart'></i>");
-          like_count.html("You and " + like_count_val);
-        } else {
-          like_btn.html("<i class='fa fa-heart-o'></i>");
-          like_count.html(like_count_val.replace("You and ", ""));
+    // debugger
+        if (likes_count == 0)
+        {
+          if (data.value === "like" ) {
+            like_btn.html("<i class='fa fa-heart'></i>");
+            like_count.html("You liked " + like_count_val);
+          } else {
+            like_btn.html("<i class='fa fa-heart-o'></i>");
+            like_count.html(like_count_val.replace("You liked ", ""));
+          }
         }
+        else 
+        {
+          if (data.value === "like" ) {
+            like_btn.html("<i class='fa fa-heart'></i>");
+            like_count.html("You and " + like_count_val);
+          } else {
+            like_btn.html("<i class='fa fa-heart-o'></i>");
+            like_count.html(like_count_val.replace("You and ", ""));
+          }
         console.log("our data", data);
+        } 
       },
       error: function(response) {
         console.log("error", response);
