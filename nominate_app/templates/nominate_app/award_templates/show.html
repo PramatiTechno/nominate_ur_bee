@@ -12,7 +12,7 @@
 
 <div class="header">
   <h5>
-    <a href="{% url 'nominate_app:award_templates_home' %}" class="pull-left mr-4"><i class="fa fa-chevron-left back-nav"></i></a>
+    <a href="javascript:history.back()" class="pull-left mr-4"><i class="fa fa-chevron-left back-nav"></i></a>
     Award Template - {{ template.template_name }}
     {% if template.is_active %}
     <div class="custom-control custom-switch pull-right">
