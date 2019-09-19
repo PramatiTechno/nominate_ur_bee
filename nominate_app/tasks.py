@@ -156,13 +156,13 @@ def email_task():
         submission_recipients = []
         template = timing.award_template
         if template:
-            if template.questions.filter(groups__id=2).exists():
+            if template.questions_set.filter(groups__id=2).exists():
                 submission_recipients.extend(list(to_manager))
 
-            if template.questions.filter(groups__id=3).exists():
+            if template.questions_set.filter(groups__id=3).exists():
                 submission_recipients.extend(list(to_tech_jury))
 
-            if template.questions.filter(groups__id=4).exists():
+            if template.questions_set.filter(groups__id=4).exists():
                 submission_recipients.extend(list(to_director))
 
             print("Submission start reminder sending...")
@@ -175,13 +175,13 @@ def email_task():
         submission_recipients = []
         template = timing.award_template
         if template:
-            if template.questions.filter(groups__id=2).exists():
+            if template.questions_set.filter(groups__id=2).exists():
                 submission_recipients.extend(list(to_manager))
 
-            if template.questions.filter(groups__id=3).exists():
+            if template.questions_set.filter(groups__id=3).exists():
                 submission_recipients.extend(list(to_tech_jury))
 
-            if template.questions.filter(groups__id=4).exists():
+            if template.questions_set.filter(groups__id=4).exists():
                 submission_recipients.extend(list(to_director))
 
             sending(submission_recipients, timing.start_day, timing.end_day, template, 'nominate_app/emails/managers_end-date.html', \
