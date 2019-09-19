@@ -50,38 +50,45 @@ $(function() {
   // like link event
   $(document).on("click", ".like-link", function() {
     var instance_id = $(this).attr("value");
-    var likes_count = $('#like-data').data("liked");
     var like_btn = $(this);
-    var like_count = $(this)
+    var like_count_btn = $(this)
       .parents("div.card-body")
       .find(".like-count");
-    var like_count_val = like_count.html();
+
+    var likes_count = like_btn.attr('data-like-count');
+    var is_liked = like_btn.attr('data-liked');
+    var like_count_btn_val = like_count_btn.html();
+
     $.ajax({
       type: "GET",
       url: "/nomination_feed/" + instance_id + "/like/",
       success: function(data) {
     // debugger
-        if (likes_count == 0)
-        {
+        if (is_liked === 'False'){
           if (data.value === "like" ) {
+            like_btn.attr('data-liked', 'True')
             like_btn.html("<i class='fa fa-heart'></i>");
-            like_count.html("You liked " + like_count_val);
-          } else {
-            like_btn.html("<i class='fa fa-heart-o'></i>");
-            like_count.html(like_count_val.replace("You liked ", ""));
-          }
+            if (likes_count==="0"){
+              like_count_btn.html("You liked");
+            }else{
+              like_count_btn.html("You and " + like_count_btn_val);
+            }
+
+          } 
         }
         else 
         {
-          if (data.value === "like" ) {
-            like_btn.html("<i class='fa fa-heart'></i>");
-            like_count.html("You and " + like_count_val);
-          } else {
+          if (data.value === "unlike" ) {
+            like_btn.attr('data-liked', 'False')
             like_btn.html("<i class='fa fa-heart-o'></i>");
-            like_count.html(like_count_val.replace("You and ", ""));
-          }
-        console.log("our data", data);
+            if (likes_count==="0"){
+              like_count_btn.html("");
+            }else{
+              like_count_btn.html(like_count_btn_val.replace("You and ", ""));
+            }
+          } 
         } 
+        console.log("our data", data);
       },
       error: function(response) {
         console.log("error", response);
