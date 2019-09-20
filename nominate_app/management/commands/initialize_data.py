@@ -6,6 +6,7 @@ import json
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
+import os
 
 # To run this file use "python manage.py initialize_data"
 # This file will populate awards, award_templates, nominations, nomination_instances, questions, nomination_submitted, question_answers, auth_user and auth_user_group.
@@ -87,9 +88,9 @@ class Command(BaseCommand):
         admin_user, created = User.objects.get_or_create(username='aneesh.narayanan@imaginea.com', email='aneesh.narayanan@imaginea.com')
         technical_jury_user, created = User.objects.get_or_create(username='sandeep.singh@imaginea.com', email='sandeep.singh@imaginea.com')
         director_user, created = User.objects.get_or_create(username='akhilesh.sharma@imaginea.com', email='akhilesh.sharma@imaginea.com')
-        if env == 'dev':
+        if os.environ['ENVIRONMENT'] == 'DEVELOPMENT' or os.environ['ENVIRONMENT'] == '':
             manager_user, created = User.objects.get_or_create(username='anija.thomas@imaginea.com', email='anija.thomas@imaginea.com')
-        elif env == 'stg':
+        elif os.environ['ENVIRONMENT'] == 'STAGING':
             manager_user, created = User.objects.get_or_create(username='muthukrishnan.kasiraman@imaginea.com', email='muthukrishnan.kasiraman@imaginea.com')
 
         # Save the users.
@@ -223,11 +224,7 @@ class Command(BaseCommand):
         approve_nomination.status = 2
         approve_nomination.save()
     
-    def add_arguments(self, parser):
-        parser.add_argument('env', type=str, help='used to distinguish between the env stg and dev')
-
     def handle(self, *args, **options):
-        env = options['env']
         self._initialize_data(env)
 
 
