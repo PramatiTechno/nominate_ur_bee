@@ -32,7 +32,7 @@ class UserProfile(models.Model):
   baselocation = models.CharField(max_length=70)
   uid = models.CharField(max_length=70)
   worklocation = models.CharField(max_length=70)
-  user = models.OneToOneField(User,on_delete=models.PROTECT)
+  user = models.OneToOneField(User,on_delete=models.PROTECT, related_name='userprofile')
   created_at = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
   updated_at = models.DateTimeField(auto_now=True, editable=False, null=False, blank=False)
 
@@ -44,6 +44,12 @@ class UserProfile(models.Model):
 
   def get_group_name(self):
     return self.user.groups.all()[0].name.lower()
+
+  def get_username(self):
+    full_name = (self.user.first_name + " " + self.user.last_name).title()
+    if full_name == 'Test User':
+      return self.user.username
+    return full_name
 
 
 class Awards(models.Model):

@@ -51,7 +51,7 @@
         </thead>
         <tbody>
             {% for template in load_templates %}
-            <tr data-rowId={{form.id}}>
+            <tr data-rowId={{template.id}}>
                 <td></td>
 
                 <td scope="row" data-label="Name"><a href="{% url 'nominate_app:award_template' award.id template.id %}">{{template.template_name}}</a></td>
@@ -61,7 +61,7 @@
                 <td scope="row" data-label="Actions">
                     <a href="{% url 'nominate_app:edit_award_template' award.id template.id %}"><i class="fa fa-edit edit_fa"></i></a>
 
-                    <form action="{% url 'nominate_app:award_template' award.id template.id %}" method="post" id="form_{{form.id}}" class="form_det">
+                    <form action="{% url 'nominate_app:award_template' award.id template.id %}" method="post" id="form_{{template.id}}" class="form_det">
                         {% csrf_token%}
                         <input type="hidden" name="_method" value="delete">
                         <i class="fa fa-trash" type="submit" value="Delete" onclick="return clicked();"></i>
@@ -73,7 +73,7 @@
 <script type="text/javascript">
   function clicked() {
      if (confirm('Are you sure?')) {
-           $("#form_{{form.id}}").submit();
+           $("#form_{{template.id}}").submit();
        } else {
            return false;
        }

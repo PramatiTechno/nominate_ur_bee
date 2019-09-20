@@ -6,6 +6,7 @@ import json
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
+import os
 
 # To run this file use "python manage.py initialize_data"
 # This file will populate awards, award_templates, nominations, nomination_instances, questions, nomination_submitted, question_answers, auth_user and auth_user_group.
@@ -81,14 +82,18 @@ groups = Group.objects.all()
 
 
 class Command(BaseCommand):
-    args = ''
     help = 'Run to Initialize database'
     def _initialize_data(self):
+
         admin_user, created = User.objects.get_or_create(username='aneesh.narayanan@imaginea.com', email='aneesh.narayanan@imaginea.com')
         #manager_user, created = User.objects.get_or_create(username='anija.thomas@imaginea.com', email='anija.thomas@imaginea.com')
         manager_user, created = User.objects.get_or_create(username='muthukrishnan.kasiraman@imaginea.com', email='muthukrishnan.kasiraman@imaginea.com')
         technical_jury_user, created = User.objects.get_or_create(username='sandeep.singh@imaginea.com', email='sandeep.singh@imaginea.com')
         director_user, created = User.objects.get_or_create(username='akhilesh.sharma@imaginea.com', email='akhilesh.sharma@imaginea.com')
+        if os.environ['ENVIRONMENT'] == 'DEVELOPMENT' or os.environ['ENVIRONMENT'] == '':
+            manager_user, created = User.objects.get_or_create(username='anija.thomas@imaginea.com', email='anija.thomas@imaginea.com')
+        elif os.environ['ENVIRONMENT'] == 'STAGING':
+            manager_user, created = User.objects.get_or_create(username='muthukrishnan.kasiraman@imaginea.com', email='muthukrishnan.kasiraman@imaginea.com')
 
         # Save the users.
         admin_user.save()
@@ -130,12 +135,14 @@ class Command(BaseCommand):
         create_questions(at25)
 
         # Create Nomination for award2
-        nominations = []
+        manager_nominations = []
+        jury_nominations = []
+        director_nominations = []
         for at in [at21, at22, at23, at24, at25]:
             periods = at.award.nominationperiod_set.all()
-            submission_period = periods[0]
-            review_period = periods[1]
-            approval_period = periods[2]
+            submission_period = periods.get(group_id=2)
+            review_period = periods.get(group_id=3)
+            approval_period = periods.get(group_id=4)
             for i in range(1, 4):
                 np = NominationPeriod.objects.get(award_id=award2.id,group=groups[i])
                 nt,created = NominationTiming.objects.get_or_create(award_template_id= at.id,start_day=submission_period.start_day,end_day=submission_period.end_day,
@@ -146,25 +153,36 @@ class Command(BaseCommand):
                 nomination,nom_created = Nomination.objects.get_or_create(award_template=at, group=groups[i],nomination_timing=nt)
                 if nom_created:
                     nomination.save()
-                nominations.append(nomination) 
 
-        save_nominations = nominations[3:6]
-        submit_nominations = nominations[-9:]
+                if i == 1:
+                    manager_nominations.append(nomination) 
+                if i == 2:
+                    jury_nominations.append(nomination) 
+                if i == 3:
+                    director_nominations.append(nomination) 
+
+
+        save_nominations = []
+        submit_nominations = []
+ 
+        save_nominations = manager_nominations[1:3] + jury_nominations[1:3] + director_nominations[1:3]
+        submit_nominations = manager_nominations[3:5] + jury_nominations[3:5] + director_nominations[3:5]
 
 
         # Create a saved nomination for each user.
         for i in range(0, len(save_nominations)):
             nomination = save_nominations[i]
-            if i == 0:
+            if nomination.group == groups[1]:
                 user = manager_user
-            elif i == 1:
+            elif nomination.group == groups[2]:
                 user = technical_jury_user
             else:
                 user = director_user
+
             nomination_instance, created = NominationInstance.objects.get_or_create(nomination=nomination, user=user)
             nomination_instance.status = 1
             nomination_instance.save()
-            questions = Questions.objects.filter(award_template = nomination.award_template, groups=groups[1]).order_by('id')
+            questions = Questions.objects.filter(award_template = nomination.award_template, groups=nomination.group).order_by('id')
             answer1, created = NominationAnswers.objects.get_or_create(answer_option=False, answer_text="TestUser",nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[0].id, submitted_by=user)
             answer2, created = NominationAnswers.objects.get_or_create(answer_option=True, answer_text=json.dumps(['Option1']),nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[1].id, submitted_by=user)
             answer3, created = NominationAnswers.objects.get_or_create(answer_option=True, answer_text=json.dumps(["Choice1", "Choice2"]),nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[2].id, submitted_by=user)
@@ -175,9 +193,9 @@ class Command(BaseCommand):
         # Create a three nominations for each user, .
         for i in range(0, len(submit_nominations)):
             nomination = submit_nominations[i]
-            if i in [0, 3, 6]:
+            if nomination.group == groups[1]:
                 user = manager_user
-            elif i in [1, 4, 7]:
+            elif nomination.group == groups[2]:
                 user = technical_jury_user
             else:
                 user = director_user
@@ -185,7 +203,7 @@ class Command(BaseCommand):
             nomination_instance, created = NominationInstance.objects.get_or_create(nomination=nomination, user=user)
             nomination_instance.status = 2
             nomination_instance.save()
-            questions = Questions.objects.filter(award_template = nomination.award_template, groups=user.groups.first()).order_by('id')
+            questions = Questions.objects.filter(award_template = nomination.award_template, groups=nomination.group).order_by('id')
             answer1, created = NominationAnswers.objects.get_or_create(answer_option=False, answer_text="TestUser",nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[0].id, submitted_by=user)
             answer2, created = NominationAnswers.objects.get_or_create(answer_option=True, answer_text=json.dumps(['Option1']),nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[1].id, submitted_by=user)
             answer3, created = NominationAnswers.objects.get_or_create(answer_option=True, answer_text=json.dumps(["Choice1", "Choice2"]),nomination_instance_id=nomination_instance.id, uploaded_at=timezone.now(), award_template_id=nomination.award_template_id, question_id=questions[2].id, submitted_by=user)
@@ -193,7 +211,7 @@ class Command(BaseCommand):
             answer2.save()
             answer3.save()
             nomination_submitted, created = NominationSubmitted.objects.get_or_create(nomination=nomination, status=0, submitted_at=timezone.now(), email=user.email,\
-                                                    firstname='test', group=user.groups.first(), designation='test', lastname='test',\
+                                                    firstname='test', group=nomination.group, designation='test', lastname='test',\
                                                     award_name=award2.name, worklocation='test', baselocation='test', template_name=nomination.award_template.template_name)
             nomination_submitted.save()
             qa, created = QuestionAnswers.objects.get_or_create(nomination_submitted=nomination_submitted, question=questions[0].qname, answer=answer1.answer_text)
@@ -203,10 +221,13 @@ class Command(BaseCommand):
             qa1.save()
             qa2.save()
         
-        manager_submitted = NominationSubmitted.objects.filter(group__name="Manager")[:2]
+        submitted_nominations = list(NominationSubmitted.objects.filter(group__name="Manager")[:1]) + \
+                                list(NominationSubmitted.objects.filter(group=groups[2])[:1]) + \
+                                list(NominationSubmitted.objects.filter(group=groups[3])[:1])
+    
 
-        # # Create 2 nomination reviews.
-        for nomination in manager_submitted:
+        # Create 2 nomination reviews.
+        for nomination in submitted_nominations:
             review_user = User.objects.filter(groups__name='Technical Jury Member')[0]
             obj, created = NominationRating.objects.get_or_create(rating="3", review="Great Idea!", submission=nomination, user_id=review_user.id)
             obj.save()
@@ -214,13 +235,13 @@ class Command(BaseCommand):
             nomination.save()    
 
         # # approve one review.
-        approve_nomination = manager_submitted[0]
+        approve_nomination = submitted_nominations[0]
         approve_user = User.objects.filter(groups__name='Directorial Board Member')[0]
         obj, created = DirectorComments.objects.get_or_create(comment='Approved !!', nomination_submitted=approve_nomination, user=approve_user)
         obj.save()
         approve_nomination.status = 2
         approve_nomination.save()
-
+    
     def handle(self, *args, **options):
         self._initialize_data()
 
