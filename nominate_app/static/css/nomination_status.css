@@ -128,7 +128,8 @@ padding-right: .2em;
 
 .template-link-active{
     text-decoration: none;
-     color: #3b3b3e;
+    font-style: bold;
+    color: #48b6d5;
 }
 
 .template-link{
