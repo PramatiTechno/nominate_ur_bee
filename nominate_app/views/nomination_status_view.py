@@ -199,17 +199,18 @@ def email(request, username, nomination_id):
   end_day = nomination.end_day
   award_name = nomination.award_template.award.name
   template_name = 'nominate_app/emails/reminder.html'
+  instance=nomination.nominationinstance_set.filter(user__email=users.first())
   subjects = { 
               0:['Reminder to Review the Nominations', 'review'], 
               1:['Reminder to Approve the Nominations', 'approve/decline'],
               4:['Reminder to Approve the Nominations', 'approve/decline']
               }  
   try:
-    if not nomination.nominationinstance_set.filter(user__email=users.first()):
+    if not instance:
       new_status = "submit"
       subject = 'Reminder to Submit your Nominations'
       link = str(os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
-    elif nomination.nominationinstance_set.filter(user__email=users.first()):
+    elif instance and instance.first().get_status(instance.first().status)=='Saved':
       new_status = "submit"
       subject = 'Reminder to Submit your Nominations'
       link = str(os.environ['SERVER_NAME'] + reverse('nominate_app:nominations'))
@@ -227,7 +228,7 @@ def email(request, username, nomination_id):
       subject = subjects[submission.status][0]
     for user in users:
       message_value_html_template = render_to_string(template_name,\
-      {'name':user.username, 'award_template':award_template, \
+      {'name':user.userprofile.get_username(), 'award_template':award_template, \
         'award_name':award_name, 'end_day':end_day, 'new_status':new_status, \
           'link':link })
       plain_message_value = strip_tags(message_value_html_template)
