@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect 
+from nominate_app.utils import group_required
 from django.forms import modelformset_factory, inlineformset_factory
 from nominate_app.forms import NominationAnswersForm
 from nominate_app.models import Nomination,NominationPeriod, AwardTemplate, NominationInstance, User, Questions, NominationAnswers, NominationSubmitted, QuestionAnswers, UserProfile
@@ -21,6 +22,8 @@ from IPython import embed
 def get_item(dictionary, key):
     return dictionary.get(key)
 
+
+@group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def index(request,nomination_id):
   if request.method == 'POST':  
     answers_form = NominationAnswersForm(instance=NominationAnswers())
@@ -139,6 +142,8 @@ def index(request,nomination_id):
         messages.success(request, 'Nomination submitted successfully.')
       return redirect('nominate_app:nominations')
 
+
+@group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def new(request,nomination_id):
   answers_form = NominationAnswersForm(instance=NominationAnswers())
   nomination = Nomination.objects.get(id=nomination_id)
@@ -161,6 +166,8 @@ def new(request,nomination_id):
       new_form.pop(key)
   return render(request, 'nominate_app/nomination_instances/new.html', {'answers_form':answers_form,'nomination':nomination,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'questions':questions })
 
+
+@group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def edit(request,nomination_id,nomination_instance_id):
   answers_form = NominationAnswersForm(instance=NominationAnswers())
   nomination = Nomination.objects.get(id=nomination_id)
@@ -206,6 +213,8 @@ def edit(request,nomination_id,nomination_instance_id):
 
   return render(request, 'nominate_app/nomination_instances/edit.html', {'answers_form':answers_form,'nomination':nomination,'nomination_instance':nomination_instance, 'nomination_template':nomination_template, 'qanswers': qanswers })
 
+
+@group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def submitted_nomination(request, nomination_submitted_id):
   qa = QuestionAnswers.objects.filter(nomination_submitted_id=nomination_submitted_id)
   qa_set = []
@@ -216,6 +225,8 @@ def submitted_nomination(request, nomination_submitted_id):
     })
   return render(request, 'nominate_app/nomination_instances/show.html', {'question_answerset':qa_set, 'nomination_submitted':NominationSubmitted.objects.get(id=nomination_submitted_id)})
 
+
+@group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def nomination_instance(request,nomination_id,nomination_instance_id):
   answers_form = NominationAnswersForm(instance=NominationAnswers())
   nomination = Nomination.objects.get(id=nomination_id)

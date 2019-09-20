@@ -29,6 +29,8 @@ def home(request):
     'load_templates': templates
   })
 
+
+@group_required('Admin', raise_exception=True)
 def index(request,award_id):
   if request.method == 'GET':
     if Awards.objects.count()==0:
@@ -85,6 +87,8 @@ def index(request,award_id):
             messages.error(request,str(err[0]))
         return render(request, 'nominate_app/award_templates/new.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items()})       
 
+
+@group_required('Admin', raise_exception=True)
 def new(request,award_id):
   award_template = AwardTemplate()
   award_form = TemplateForm(instance=award_template)
@@ -94,6 +98,8 @@ def new(request,award_id):
   award = Awards.objects.get(id=award_id)
   return render(request, 'nominate_app/award_templates/new.html', {'formset':formset,'award_form':award_form,'award': award })
 
+
+@group_required('Admin', raise_exception=True)
 def edit(request,award_id,award_template_id):
     award = Awards.objects.get(id=award_id)
     award_template = AwardTemplate.objects.get(id = award_template_id)
@@ -186,5 +192,3 @@ def award_template(request,award_id,award_template_id):
       else:
          messages.success(request, 'Could not delete award. Contact Admin')
          return redirect('nominate_app:award_templates_index', award_id=award.id)
-
-      

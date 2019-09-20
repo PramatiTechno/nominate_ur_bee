@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from nominate_app.utils import group_required
 from nominate_app.models import *
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -41,6 +42,8 @@ def index(request):
     return render(request, 'nominate_app/results.html', {'submissions': published, \
 		'date': date_field, 'unpublished_submissions':unpublished})
 
+
+@group_required('Admin', raise_exception=True)
 def publish(request, sub_id):
 	subject = "Results Published!"
 	manager_users = User.objects.filter(groups__name='Manager')

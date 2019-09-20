@@ -21,7 +21,7 @@ def index(request):
     graph_data = load_graph(award)
     awards_list = Awards.objects.all().order_by('created_at').reverse()[:4]
     awards = {'data': [], 'show': False}
-    recent_nominations = get_recent_nominations()
+    recent_nominations = get_recent_nominations(request.user)
     notifications = get_notifications()
     activities = get_activities(request.user)
     summary = {'awards': Awards.objects.count()}
@@ -49,9 +49,43 @@ def get_notifications():
     return notifications
 
 
-def get_recent_nominations():
-    nominations = Nomination.objects.filter(~Q(award_template=None)).order_by('id')[:3]
-    return nominations
+def get_recent_nominations(user):
+    group = user.groups.all()[0]
+    recent_nominations = []
+    # taking last three nominations
+    if group.name == 'Admin':
+        nominations = Nomination.objects.filter(~Q(award_template=None)).order_by('-updated_at')
+        for nomination in nominations[0:3]:
+            n_detail = {
+                'award': nomination.award_template.award.name,
+                'template': nomination.award_template.template_name,
+                'group': nomination.group.name
+            }
+            n_detail['end_day'] = nomination.nomination_timing.end_day
+            recent_nominations.append(n_detail)
+
+    else:
+        nominations = Nomination.objects.filter(~Q(award_template=None), group=group).order_by('-updated_at')
+        for nomination in nominations[0:6]:
+            n_detail = {
+                'award': nomination.award_template.award.name,
+                'template': nomination.award_template.template_name,
+                'group': nomination.group.name
+            }
+            instance = nomination.nominationinstance_set.filter(user=user)
+            if instance:
+                # to check for status in nomination submitted
+                if instance[0].status == 2:
+                    submission = NominationSubmitted.objects.get(nomination=nomination, email=user.email)
+                    n_detail['status'] = submission.get_status(submission.status)
+                else:
+                    n_detail['status'] = instance[0].get_status(instance[0].status)
+            else:
+                n_detail['status'] = 'New'
+
+            recent_nominations.append(n_detail)
+
+    return recent_nominations
 
 def get_activities(user_obj):
     unsubmitted_list = []

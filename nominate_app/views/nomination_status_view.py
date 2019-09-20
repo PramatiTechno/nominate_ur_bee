@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from nominate_app.models import *
 from nominate_app.forms import NominationStatusDateForm
+from nominate_app.utils import group_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers 
@@ -164,7 +165,7 @@ def get_nomination_details(page, award_name=None, template_name=None, start_day=
   }
 
 
-
+@group_required('Admin', raise_exception=True)
 def nomination_status(request):
   if request.method == 'GET':
     page = request.GET.get('page', 1)
@@ -192,6 +193,7 @@ def nomination_status(request):
       return render(request, 'nominate_app/nomination_status.html')
 
 
+@group_required('Admin', raise_exception=True)
 def email(request, username, nomination_id):
   users = User.objects.filter(email=username)
   nomination = Nomination.objects.get(id=nomination_id)

@@ -27,6 +27,7 @@ def static_group_dropdown(formset):
 def home(request):
     return redirect('nominate_app:dashboard')
 
+
 @group_required('Admin', raise_exception=True)
 def index(request):
   if request.method == 'GET':
@@ -61,6 +62,7 @@ def index(request):
         return render(request, 'nominate_app/awards/new.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items()})
 
 
+@group_required('Admin', raise_exception=True)
 def new(request):
   award = Awards()
   award_form = AwardsForm(instance=award)
@@ -72,6 +74,8 @@ def new(request):
 
   return render(request, 'nominate_app/awards/new.html', {'formset':formset,'award_form':award_form, 'frequencies': Awards.frequencies.items()})
 
+
+@group_required('Admin', raise_exception=True)
 def edit(request,award_id):
   try: 
     award = Awards.objects.get(id=award_id) 
@@ -91,6 +95,7 @@ def edit(request,award_id):
   static_group_dropdown(formset)
 
   return render(request, 'nominate_app/awards/edit.html', {'formset':formset, 'award':award, 'award_form':award_form, 'frequencies': Awards.edit_frequencies.items() })
+
 
 @group_required('Admin', raise_exception=True)
 def award(request,award_id):
