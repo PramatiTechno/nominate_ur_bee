@@ -13,7 +13,11 @@
                         Template 
                     </td>
                     <td class="td_body table_head">
+                        {% if user.userprofile.get_group_name == "admin" %}
                             End Date
+                        {% else %}
+                            Status
+                        {% endif %}
                     </td>
                     <td class="td_body table_head">
                         Group
@@ -24,19 +28,27 @@
             </thead>
             <tbody>
                 {% for nomination in recent_nominations %}
-                        <tr class="link tr_body" onclick='location.href="{% url 'nominate_app:nomination_status' %}?award_name={{nomination.award_template.award.name}}&template_name={{nomination.award_template.template_name}}"'>
+                    {% if user.userprofile.get_group_name == "admin" %}
+                        <tr class="link tr_body" onclick='location.href="{% url 'nominate_app:nomination_status' %}?award_name={{nomination.award}}&template_name={{nomination.template}}"'>
+                    {% else %}
+                        <tr class="link tr_body" onclick='location.href="{% url 'nominate_app:nomination_status_index' status_value=nomination.status %} "'>
+                    {% endif %}
                             
                             <td class="td_body">
-                                {{ nomination.award_template.award.name }}
+                                {{ nomination.award }}
                             </td>
                             <td class="td_body">
-                                {{ nomination.award_template.template_name }}
+                                {{ nomination.template }}
                             </td>
                             <td class="td_body">
+                                {% if user.userprofile.get_group_name == "admin" %}
                                     {{ nomination.end_day }}
+                                {% else %}
+                                    {{ nomination.status }}
+                                {% endif %}
                             </td>
                             <td class="td_body">
-                                {{ nomination.group.name }}
+                                {{ nomination.group }}
                             </td>
                             
                         

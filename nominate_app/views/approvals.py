@@ -135,6 +135,7 @@ def approve(request, submission_id):
     return render(request, 'nominate_app/approvals/new.html', {'selected_nomination': nomination_submitted, 'avg_rating': avg_rating, 'ratings': ratings})
 
 
+@group_required('Directorial Board Member', raise_exception=True)
 def edit(request, submission_id):
     nomination_submitted = NominationSubmitted.objects.get(id=submission_id)
     ratings = NominationRating.objects.filter(submission_id=nomination_submitted.id)

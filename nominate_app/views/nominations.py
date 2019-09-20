@@ -39,7 +39,7 @@ def change_date(request, nomination_id):
 @group_required('Directorial Board Member', 'Technical Jury Member', 'Manager', raise_exception=True)
 def index(request):
     requested_user_group = request.user.groups.first()
-    nominations = Nomination.objects.filter(group=requested_user_group ,nomination_timing__start_day__lte=datetime.today() + timedelta(days=1), nomination_timing__end_day__gte= datetime.today())
+    nominations = Nomination.objects.filter(group=requested_user_group ,nomination_timing__start_day__lte=datetime.today(), nomination_timing__end_day__gte= datetime.today())
     new_nominations = []
     for nomination in nominations:
         nomination_instance = nomination.nominationinstance_set.filter(user=request.user)
@@ -88,7 +88,7 @@ def status_index(request, status_value):
 
 
     elif status_value.lower() == "saved":
-        nominations = Nomination.objects.filter(group__in=request.user.groups.all(), nomination_timing__start_day__lte= datetime.today(), nomination_timing__end_day__lte= datetime.today())
+        nominations = Nomination.objects.filter(group__in=request.user.groups.all())
         for nomination in nominations:
             nomination_instance = nomination.nominationinstance_set.filter(user=request.user)
             if nomination_instance and nomination_instance[0].status == 1:
