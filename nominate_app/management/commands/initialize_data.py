@@ -83,7 +83,7 @@ groups = Group.objects.all()
 
 class Command(BaseCommand):
     help = 'Run to Initialize database'
-    def _initialize_data(self, env):
+    def _initialize_data(self):
 
         admin_user, created = User.objects.get_or_create(username='aneesh.narayanan@imaginea.com', email='aneesh.narayanan@imaginea.com')
         technical_jury_user, created = User.objects.get_or_create(username='sandeep.singh@imaginea.com', email='sandeep.singh@imaginea.com')
@@ -225,6 +225,6 @@ class Command(BaseCommand):
         approve_nomination.save()
     
     def handle(self, *args, **options):
-        self._initialize_data(env)
+        self._initialize_data()
 
 
