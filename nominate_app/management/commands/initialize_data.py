@@ -86,6 +86,8 @@ class Command(BaseCommand):
     def _initialize_data(self):
 
         admin_user, created = User.objects.get_or_create(username='aneesh.narayanan@imaginea.com', email='aneesh.narayanan@imaginea.com')
+        #manager_user, created = User.objects.get_or_create(username='anija.thomas@imaginea.com', email='anija.thomas@imaginea.com')
+        manager_user, created = User.objects.get_or_create(username='muthukrishnan.kasiraman@imaginea.com', email='muthukrishnan.kasiraman@imaginea.com')
         technical_jury_user, created = User.objects.get_or_create(username='sandeep.singh@imaginea.com', email='sandeep.singh@imaginea.com')
         director_user, created = User.objects.get_or_create(username='akhilesh.sharma@imaginea.com', email='akhilesh.sharma@imaginea.com')
         if os.environ['ENVIRONMENT'] == 'DEVELOPMENT' or os.environ['ENVIRONMENT'] == '':
