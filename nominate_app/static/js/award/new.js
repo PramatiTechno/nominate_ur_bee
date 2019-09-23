@@ -13,6 +13,89 @@ $(document).ready(function(){
   //     }
   //   }
   // });
+
+  var elements = document.querySelectorAll('input,select,textarea');
+  var invalidListener = function(){ this.scrollIntoView(false);};
+
+  for(var i = elements.length; i--;)
+    elements[i].addEventListener('invalid', invalidListener);
+
+  $('#award_form').on('submit', function(){
+
+    var frequency = $(this).find('#exampleSelect1').val()
+    var error = $('.error')
+
+    var submission_start = $(this).find('#id_nominationperiod_set-0-start_day').val()
+    var rating_start = $(this).find('#id_nominationperiod_set-1-start_day').val()
+    var approval_start = $(this).find('#id_nominationperiod_set-2-start_day').val()
+
+    var submission_end = $(this).find('#id_nominationperiod_set-0-end_day').val()
+    var rating_end = $(this).find('#id_nominationperiod_set-1-end_day').val()
+    var approval_end = $(this).find('#id_nominationperiod_set-2-end_day').val()
+
+    if (submission_start !== '' || rating_start !== '' || approval_start !== '' || submission_end !== '' || rating_end !== '' || approval_end !== ''){
+      submission_start = new Date(submission_start)
+      rating_start = new Date(rating_start)
+      approval_start = new Date(approval_start)
+      submission_end = new Date(submission_end)
+      rating_end = new Date(rating_end)
+      approval_end = new Date(approval_end)
+      if (frequency === 'MONTHLY'){
+        if (check_start_end_exceed(submission_start, submission_end, rating_start, rating_end, approval_start, approval_end)){
+          if (submission_start.getMonth() === approval_end.getMonth()){
+            return true
+          } else {
+            error.html('frequency date mismatch')
+            return false
+          } 
+        } else {
+          error.html('period start and end chain mismatch')
+          return false
+        }
+      }
+      if (frequency === 'QUATERLY'){
+        if (check_start_end_exceed(submission_start, submission_end, rating_start, rating_end, approval_start, approval_end)){
+          var start_month = submission_start.getMonth()
+          if (approval_end.getMonth() <= (start_month + 2)){
+            return true
+          } else {
+            error.html('frequency date mismatch')
+            return false
+          }
+        } else {
+          error.html('period start and end chain mismatch')
+          return false
+        }
+      }
+      if (frequency === 'YEARLY'){
+        if (check_start_end_exceed(submission_start, submission_end, rating_start, rating_end, approval_start, approval_end)){
+          if (submission_start.getYear() === approval_end.getYear()){
+            return true
+          } else {
+            error.html('frequency date mismatch')
+            return false
+          }
+        } else {
+          error.html('period start and end chain mismatch')
+          return false
+        }
+      }
+    } else {
+      error.html('please fill all dates')
+      return false
+    }
+  })
+
+  function check_start_end_exceed(submission_start, submission_end, rating_start, rating_end, approval_start, approval_end){
+    if (submission_start < submission_end && rating_start < rating_end && approval_start < approval_end){
+      if (submission_end < rating_start && rating_end < approval_start){
+        return true;
+      }
+    }
+    return false;
+  }
+
+
   if(($('.del_btn_formset').length) == 1){
     $('.del_btn_formset').hide()
   }
