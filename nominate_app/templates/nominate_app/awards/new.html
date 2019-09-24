@@ -22,7 +22,7 @@
         
         <div class = "row award_top_margin">
           <div class="col-md-2">
-            <label class="col-form-label required" for="name">Award Name</label>
+            <label class="col-form-label" for="name">Award Name<span style='color:red;'>*</span></label>
           </div>
           <div class="col-md-8">
              <input type="text" name="name" class="form-control" placeholder="Enter award name" value="" maxlength="30"required />
@@ -38,7 +38,7 @@
 
         <div class = "row award_top_margin">
           <div class="col-md-2">
-            <label class="col-form-label required" for="name">Frequency</label>
+            <label class="col-form-label" for="name">Frequency<span style='color:red;'>*</span></label>
           </div>
           <div class="col-md-8">
               <select class="form-control" id="exampleSelect1" name="frequency" required>
@@ -73,7 +73,7 @@
             
                 <div class="col-md-4">
                       
-                      <label class="col-form-label required" for="">Start Date</label>
+                      <label class="col-form-label" for="">Start Date<span style='color:red;'>*</span></label>
                             {{ form.start_day|attr:"class:form-control datepicker" }}
                             <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
@@ -82,7 +82,7 @@
                 </div>
             
                 <div class="col-md-4">
-                    <label class="col-form-label required" for="name">End Date</label>	
+                    <label class="col-form-label" for="name">End Date<span style='color:red;'>*</span></label>	
                     
                         {{ form.end_day|attr:"class:form-control datepicker" }}
                         <span class="input-group-addon">
