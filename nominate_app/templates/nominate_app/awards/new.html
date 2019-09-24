@@ -17,12 +17,12 @@
 
 <div class = "container">
    <div class="form-group">
-      <form method = "post" action="/awards/" id="needs-validation">
+      <form id="award_form" method = "post" action="/awards/" id="needs-validation">
         {% csrf_token %}
         
         <div class = "row award_top_margin">
           <div class="col-md-2">
-            <label class="col-form-label" for="name">Award Name*</label>
+            <label class="col-form-label required" for="name">Award Name</label>
           </div>
           <div class="col-md-8">
              <input type="text" name="name" class="form-control" placeholder="Enter award name" value="" required />
@@ -38,7 +38,7 @@
 
         <div class = "row award_top_margin">
           <div class="col-md-2">
-            <label class="col-form-label" for="name">Frequency*</label>
+            <label class="col-form-label required" for="name">Frequency</label>
           </div>
           <div class="col-md-8">
               <select class="form-control" id="exampleSelect1" name="frequency" required>
@@ -73,7 +73,7 @@
             
                 <div class="col-md-4">
                       
-                      <label class="col-form-label" for="">Start Date*</label>
+                      <label class="col-form-label required" for="">Start Date</label>
                             {{ form.start_day|attr:"class:form-control datepicker" }}
                             <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
@@ -82,7 +82,7 @@
                 </div>
             
                 <div class="col-md-4">
-                    <label class="col-form-label" for="name">End Date*</label>	
+                    <label class="col-form-label required" for="name">End Date</label>	
                     
                         {{ form.end_day|attr:"class:form-control datepicker" }}
                         <span class="input-group-addon">
@@ -120,13 +120,19 @@
           <div class="col-md-8"> 
             <textarea class="form-control" rows="5" id="comment" name="description"></textarea>	
           </div>
-        </div>          
+        </div>
+
+         <div class="row">
+          <span class="col-md-10 offset-2 error" style="color:red;"></span>
+         </div>
+
          <div class ="row award_top_margin justify-content-md-center">
             <div class="col-md-4">
-               <a type="button" class="btn btn-danger" href="{% url 'nominate_app:awards' %}">Cancel</a>
-               <button type="submit" class="btn btn-success">Save</button>
+               <a type="button" class="btn btn-rounded btn-danger" href="{% url 'nominate_app:awards' %}">Cancel</a>
+               <button type="submit" class="btn btn-rounded btn-success">Save</button>
             </div>
          </div>
+
       </form>
    </div>
 </div>

@@ -38,3 +38,9 @@
     margin:0px 10px;
     text-decoration: inline;
 }
+
+form label.required:after
+{
+    color: red;
+    content: " *";
+}
