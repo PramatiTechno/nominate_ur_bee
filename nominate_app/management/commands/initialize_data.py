@@ -1,4 +1,6 @@
-from nominate_app.models import User, Group, Awards, AwardTemplate, NominationRating,NominationTiming, DirectorComments, NominationPeriod, Nomination, NominationSubmitted, QuestionAnswers, Questions, NominationInstance, NominationAnswers
+from nominate_app.models import User, Group, Awards, AwardTemplate, NominationRating, \
+    NominationTiming, DirectorComments, NominationPeriod, Nomination, NominationSubmitted, \
+        QuestionAnswers, Questions, NominationInstance, NominationAnswers, UserProfile
 from django.utils import timezone
 from datetime import datetime
 from datetime import timedelta
@@ -96,15 +98,180 @@ class Command(BaseCommand):
             director_user.groups.add(groups[3])
         elif os.environ['ENVIRONMENT'] == 'STAGING':
             user_data = {
-                0:['muthukrishnan.kasiraman@imaginea.com', 'sandeep.singh@imaginea.com', 'akhilesh.sharma@imaginea.com'], 
-                1:['ramya.raju@imaginea.com', 'nishant.das@imaginea.com', 'arun.balan@imaginea.com'], 
-                2:['nishanthini.ramu@imaginea.com', 'kishorekumar.arul@imaginea.com', 'vignesh.kanagaraj@imaginea.com'], 
-                3:['saravanan.murugesan@imaginea.com', 'nimmy.vipin@imaginea.com', 'anjali.devi@imaginea.com']
+                0:{'muthukrishnan.kasiraman@imaginea.com':{
+                                                'designation':'HR', 
+                                                'telephonenumber':'9123456780', 
+                                                'employeenumber':'13101', 
+                                                'jobtitle':'HR', 
+                                                'cn':'India', 
+                                                'title':'HR', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati', 
+                                                'baselocation':'WS-A220', 
+                                                'uid':'13101', 
+                                                'worklocation':'Chennai'
+                                                }, 
+                    'sandeep.singh@imaginea.com':{
+                                                'designation':'HR', 
+                                                'telephonenumber':'9123456781', 
+                                                'employeenumber':'13102', 
+                                                'jobtitle':'HR', 
+                                                'cn':'India', 
+                                                'title':'HR', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati', 
+                                                'baselocation':'WS-A221', 
+                                                'uid':'13102', 
+                                                'worklocation':'Chennai'                        
+                                                }, 
+                    'akhilesh.sharma@imaginea.com':{
+                                                'designation':'HR', 
+                                                'telephonenumber':'9123456782', 
+                                                'employeenumber':'13103', 
+                                                'jobtitle':'HR', 
+                                                'cn':'India', 
+                                                'title':'HR', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati', 
+                                                'baselocation':'WS-A222', 
+                                                'uid':'13103', 
+                                                'worklocation':'Chennai'
+                                                    }
+                    }, 
+                1:{'ramya.raju@imaginea.com':{
+                                                'designation':'Manager', 
+                                                'telephonenumber':'9123456783', 
+                                                'employeenumber':'13104', 
+                                                'jobtitle':'Manager', 
+                                                'cn':'India', 
+                                                'title':'Manager', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati123', 
+                                                'baselocation':'WS-A223', 
+                                                'uid':'13104', 
+                                                'worklocation':'Chennai'
+                                            }, 
+                'nishant.das@imaginea.com':{
+                                                'designation':'Manager', 
+                                                'telephonenumber':'9123456784', 
+                                                'employeenumber':'13105', 
+                                                'jobtitle':'Manager', 
+                                                'cn':'India', 
+                                                'title':'Manager', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati123', 
+                                                'baselocation':'WS-A224', 
+                                                'uid':'13105', 
+                                                'worklocation':'Chennai'
+                                            }, 
+                'arun.balan@imaginea.com':{
+                                                'designation':'Manager', 
+                                                'telephonenumber':'9123456785', 
+                                                'employeenumber':'13106', 
+                                                'jobtitle':'Manager', 
+                                                'cn':'India', 
+                                                'title':'Manager', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati123', 
+                                                'baselocation':'WS-A225', 
+                                                'uid':'13106', 
+                                                'worklocation':'Chennai'
+                                            }
+                }, 
+                2:{'nishanthini.ramu@imaginea.com':{
+                                                'designation':'Architect', 
+                                                'telephonenumber':'9123456786', 
+                                                'employeenumber':'13107', 
+                                                'jobtitle':'Architect', 
+                                                'cn':'India', 
+                                                'title':'Development', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati123', 
+                                                'baselocation':'WS-A226', 
+                                                'uid':'13107', 
+                                                'worklocation':'Chennai'
+                                                    }, 
+                'kishorekumar.arul@imaginea.com':{
+                                                'designation':'Architect', 
+                                                'telephonenumber':'9123456787', 
+                                                'employeenumber':'13108', 
+                                                'jobtitle':'Architect', 
+                                                'cn':'India', 
+                                                'title':'Development', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati123', 
+                                                'baselocation':'WS-A227', 
+                                                'uid':'13108', 
+                                                'worklocation':'Chennai'
+                                                }, 
+                'vignesh.kanagaraj@imaginea.com':{
+                                                'designation':'Architect', 
+                                                'telephonenumber':'9123456788', 
+                                                'employeenumber':'13109', 
+                                                'jobtitle':'Architect', 
+                                                'cn':'India', 
+                                                'title':'QA', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati123', 
+                                                'baselocation':'WS-A228', 
+                                                'uid':'13109', 
+                                                'worklocation':'Chennai'
+                                                }
+                }, 
+                3:{'saravanan.murugesan@imaginea.com':{
+                                                'designation':'Director', 
+                                                'telephonenumber':'9123456789', 
+                                                'employeenumber':'13110', 
+                                                'jobtitle':'Director', 
+                                                'cn':'India', 
+                                                'title':'Director', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati123', 
+                                                'baselocation':'WS-A229', 
+                                                'uid':'13110', 
+                                                'worklocation':'Chennai'
+                                                    }, 
+                'nimmy.vipin@imaginea.com':{
+                                                'designation':'Director', 
+                                                'telephonenumber':'9123456790', 
+                                                'employeenumber':'13111', 
+                                                'jobtitle':'Director', 
+                                                'cn':'India', 
+                                                'title':'Director', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati123', 
+                                                'baselocation':'WS-A230', 
+                                                'uid':'13111', 
+                                                'worklocation':'Chennai'
+                                            }, 
+                'anjali.devi@imaginea.com':{
+                                                'designation':'Director', 
+                                                'telephonenumber':'9123456791', 
+                                                'employeenumber':'13112', 
+                                                'jobtitle':'Director', 
+                                                'cn':'India', 
+                                                'title':'Director', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati123', 
+                                                'baselocation':'WS-A231', 
+                                                'uid':'13112', 
+                                                'worklocation':'Chennai'
+                                            }
                 }
-            for data in user_data.keys():
-                for user in user_data[data]:
-                    user, created = User.objects.get_or_create(username=user, email=user)
-                    user.groups.add(groups[data])
+                }
+            for group in user_data.keys():
+                for username in user_data[group].keys():
+                    user, created = User.objects.get_or_create(username=username, email=username, first_name=username.split('.')[0],last_name=username.split('.')[1][:-9])
+                    user.groups.add(groups[group])
+                    value = user_data[group][username]
+                    if user.username not in ['aneesh.narayanan@imaginea.com', 'akhilesh.sharma@imaginea.com', 'sandeep.singh@imaginea.com', 'muthukrishnan.kasiraman@imaginea.com']:
+                        UserProfile.objects.get_or_create(email=user.email, designation=value['designation'], \
+                            telephonenumber=value['telephonenumber'], employeenumber=value['employeenumber'], \
+                                jobtitle=value['jobtitle'], cn=value['cn'], title=value['title'], \
+                                    lastpwdchange=value['lastpwdchange'], defaultpwd=value['defaultpwd'], \
+                                        baselocation=value['baselocation'],uid=value['uid'], \
+                                            worklocation=value['worklocation'], user_id=user.id)
+
 
         # # Create Awards
         awards_data = {
