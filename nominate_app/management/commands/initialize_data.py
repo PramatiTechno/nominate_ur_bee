@@ -110,7 +110,20 @@ class Command(BaseCommand):
                                                 'baselocation':'WS-A220', 
                                                 'uid':'13101', 
                                                 'worklocation':'Chennai'
-                                                }, 
+                                                },
+                    'aneesh.narayanan@imaginea.com':{
+                                                'designation':'HR', 
+                                                'telephonenumber':'9123456780', 
+                                                'employeenumber':'13111', 
+                                                'jobtitle':'HR', 
+                                                'cn':'India', 
+                                                'title':'HR', 
+                                                'lastpwdchange':'Pramati123', 
+                                                'defaultpwd':'Pramati', 
+                                                'baselocation':'WS-A920', 
+                                                'uid':'13111', 
+                                                'worklocation':'Chennai'
+                                                    },
                     'sandeep.singh@imaginea.com':{
                                                 'designation':'HR', 
                                                 'telephonenumber':'9123456781', 
@@ -261,16 +274,16 @@ class Command(BaseCommand):
                 }
             for group in user_data.keys():
                 for username in user_data[group].keys():
-                    user, created = User.objects.get_or_create(username=username, email=username, first_name=username.split('.')[0],last_name=username.split('.')[1][:-9])
-                    user.groups.add(groups[group])
-                    value = user_data[group][username]
-                    if user.username not in ['aneesh.narayanan@imaginea.com', 'akhilesh.sharma@imaginea.com', 'sandeep.singh@imaginea.com', 'muthukrishnan.kasiraman@imaginea.com']:
-                        UserProfile.objects.get_or_create(email=user.email, designation=value['designation'], \
-                            telephonenumber=value['telephonenumber'], employeenumber=value['employeenumber'], \
-                                jobtitle=value['jobtitle'], cn=value['cn'], title=value['title'], \
-                                    lastpwdchange=value['lastpwdchange'], defaultpwd=value['defaultpwd'], \
-                                        baselocation=value['baselocation'],uid=value['uid'], \
-                                            worklocation=value['worklocation'], user_id=user.id)
+                    # if username not in ['aneesh.narayanan@imaginea.com', 'akhilesh.sharma@imaginea.com', 'sandeep.singh@imaginea.com', 'muthukrishnan.kasiraman@imaginea.com']:
+                        user, created = User.objects.get_or_create(username=username, email=username)
+                        user.groups.add(groups[group])
+                        value = user_data[group][username]
+                        # UserProfile.objects.get_or_create(email=user.email, designation=value['designation'], \
+                        #     telephonenumber=value['telephonenumber'], employeenumber=value['employeenumber'], \
+                        #         jobtitle=value['jobtitle'], cn=value['cn'], title=value['title'], \
+                        #             lastpwdchange=value['lastpwdchange'], defaultpwd=value['defaultpwd'], \
+                        #                 baselocation=value['baselocation'],uid=value['uid'], \
+                        #                     worklocation=value['worklocation'], user_id=user.id)
 
 
         # # Create Awards

@@ -62,15 +62,17 @@ def index(request):
 	users = User.objects.filter(groups=selected_group['id'], is_active=True)
 	for user in users:
 		if user.groups.order_by('-group')[0] == group:  # to get the users if the group is his/her highest
-			user_list.append({
-				'id': user.id,
-				'first_name': user.first_name,
-				'last_name': user.last_name,
-				'email': user.email,
-				'baselocation': user.userprofile.baselocation,
-				'designation': user.userprofile.designation,
-				'is_exist': True
-			})
+			try:
+				user_list.append({
+					'id': user.id,
+					'first_name': user.first_name,
+					'last_name': user.last_name,
+					'email': user.email,
+					'baselocation': user.userprofile.baselocation,
+					'designation': user.userprofile.designation,
+					'is_exist': True
+				})
+			except:pass
 	return render(request, 'nominate_app/user_management/index.html', {'users': user_list, 'groups':group_list, 'c_group': selected_group})
 
 
