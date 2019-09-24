@@ -104,7 +104,7 @@ class AwardTemplate(models.Model):
     db_table='award_templates'
 
   def __str__(self):
-    return self.award.name.capitalize() + " " + self.template_name.capitalize()
+    return (self.award.name + " " + self.template_name).title()
 
 
 class Questions(SafeDeleteModel):
