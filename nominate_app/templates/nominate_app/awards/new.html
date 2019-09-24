@@ -17,7 +17,7 @@
 
 <div class = "container">
    <div class="form-group">
-      <form method = "post" action="/awards/" id="needs-validation">
+      <form id="award_form" method = "post" action="/awards/" id="needs-validation">
         {% csrf_token %}
         
         <div class = "row award_top_margin">
@@ -120,13 +120,19 @@
           <div class="col-md-8"> 
             <textarea class="form-control" rows="5" id="comment" name="description"></textarea>	
           </div>
-        </div>          
+        </div>
+
+         <div class="row">
+          <span class="col-md-10 offset-2 error" style="color:red;"></span>
+         </div>
+
          <div class ="row award_top_margin justify-content-md-center">
             <div class="col-md-4">
-               <a type="button" class="btn btn-danger" href="{% url 'nominate_app:awards' %}">Cancel</a>
-               <button type="submit" class="btn btn-success">Save</button>
+               <a type="button" class="btn btn-rounded btn-danger" href="{% url 'nominate_app:awards' %}">Cancel</a>
+               <button type="submit" class="btn btn-rounded btn-success">Save</button>
             </div>
          </div>
+
       </form>
    </div>
 </div>

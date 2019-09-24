@@ -13,6 +13,75 @@ $(document).ready(function(){
   //     }
   //   }
   // });
+
+  var elements = document.querySelectorAll('input,select,textarea');
+  var invalidListener = function(){ this.scrollIntoView(false);};
+
+  for(var i = elements.length; i--;)
+    elements[i].addEventListener('invalid', invalidListener);
+
+  frequency_checker = {
+   'MONTHLY': function(submission_start, approval_end){
+        return (submission_start.getMonth() === approval_end.getMonth()) && (submission_start.getYear() === approval_end.getYear())
+    },
+    'QUATERLY': function(submission_start, approval_end){
+        var start_year = submission_start.getYear()
+        var start_month = submission_start.getMonth() + start_year * 12;
+        return (approval_end.getMonth() + approval_end.getYear() * 12 <= (start_month + 2))
+    },
+    'YEARLY': function(submission_start, approval_end){
+        return (submission_start.getYear() === approval_end.getYear())
+    }
+  }
+
+  $('#award_form').on('submit', function(){
+
+    var frequency = $(this).find('#exampleSelect1').val()
+    var error = $('.error')
+
+    var submission_start = $(this).find('#id_nominationperiod_set-0-start_day').val()
+    var rating_start = $(this).find('#id_nominationperiod_set-1-start_day').val()
+    var approval_start = $(this).find('#id_nominationperiod_set-2-start_day').val()
+
+    var submission_end = $(this).find('#id_nominationperiod_set-0-end_day').val()
+    var rating_end = $(this).find('#id_nominationperiod_set-1-end_day').val()
+    var approval_end = $(this).find('#id_nominationperiod_set-2-end_day').val()
+
+    if (submission_start !== '' || rating_start !== '' || approval_start !== '' || submission_end !== '' || rating_end !== '' || approval_end !== ''){
+      submission_start = new Date(submission_start)
+      rating_start = new Date(rating_start)
+      approval_start = new Date(approval_start)
+      submission_end = new Date(submission_end)
+      rating_end = new Date(rating_end)
+      approval_end = new Date(approval_end)
+      if (check_start_end_exceed(submission_start, submission_end, rating_start, rating_end, approval_start, approval_end)){
+        if (frequency_checker[frequency](submission_start, approval_end)){
+          return true
+        } else {
+          error.html('* Frequency and Period dates does not match')
+          return false
+        }
+
+      } else {
+          error.html('* Period Start and End date chain Exceeds')
+          return false
+      }
+    } else {
+      error.html('* please fill all the dates')
+      return false
+    }
+  })
+
+  function check_start_end_exceed(submission_start, submission_end, rating_start, rating_end, approval_start, approval_end){
+    if (submission_start < submission_end && rating_start < rating_end && approval_start < approval_end){
+      if (submission_end < rating_start && rating_end < approval_start){
+        return true;
+      }
+    }
+    return false;
+  }
+
+
   if(($('.del_btn_formset').length) == 1){
     $('.del_btn_formset').hide()
   }
