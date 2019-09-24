@@ -177,6 +177,8 @@ $(function() {
 
   // comment submit event
   $(document).on("submit", ".post-form", function() {
+    var cmt_count = $(this).parents('.card-body').find('.comment-link');
+    var comments_count = cmt_count.attr("data-comment-count");
     var instance_id = $(this)
       .find(".send")
       .attr("value");
@@ -195,6 +197,9 @@ $(function() {
         csrfmiddlewaretoken: csrf
       },
       success: function(data) {
+        var count = Number(comments_count)+1;
+        cmt_count.html("Comments("+count+")");
+    // debugger
         console.log("success");
         comment_rows.append(data);
         comment_text_field.val("");
@@ -209,6 +214,8 @@ $(function() {
 
   // comment delete event
   $(document).on("click", ".comment-delete", function() {
+    var cmt_count = $(this).parents('.card-body').find('.comment-link');
+    var comments_count = cmt_count.attr("data-comment-count");
     var comment_section = $(this).parents("div.comment-section");
     var comment_row = $(this).parents("div.comment");
     var instance_id = comment_section.find("span.instance_id_span").html();
@@ -217,6 +224,14 @@ $(function() {
       type: "GET",
       url: instance_id + "/comment/" + comment_id + "/delete",
       success: function(data) {
+        if(Number(comments_count)==0){
+          cmt_count.html("Comments(0)");
+        }
+        else{
+        var count = Number(comments_count)-1;
+        cmt_count.html("Comments("+count+")");
+      }
+    // debugger
         console.log("success");
         if (data.status == "deleted") {
           comment_row.remove();

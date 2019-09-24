@@ -18,13 +18,13 @@
 
 <div class = "container">
    <div class="form-group">
-      <form action="/awards/{{award.id}}/" method="post">
+      <form id="award_form" action="/awards/{{award.id}}/" method="post">
          <input type="hidden" name="_method" value="put">
 
          {% csrf_token %}
          <div class = "row award_top_margin">
             <div class="col-md-2">
-               <label class="col-form-label" for="name">Award Name</label>
+               <label class="col-form-label required" for="name">Award Name</label>
             </div>
             <div class="col-md-8">
                <input type="text" name="name" class="form-control" value="{{  award.name }}" />
@@ -37,7 +37,7 @@
 
          <div class = "row award_top_margin">
             <div class="col-md-2">
-               <label class="col-form-label" for="name">Frequency</label>
+               <label class="col-form-label required" for="name">Frequency</label>
             </div>
             <div class="col-md-8">
                <select class="form-control" id="exampleSelect1" name="frequency" required>
@@ -57,7 +57,7 @@
                <label class="col-form-label" for="name">Description</label>
             </div>
             <div class="col-md-8">
-               <textarea class="form-control descript" rows="5" name="description">{{ award.description }}</textarea>  	
+               <textarea class="form-control description" rows="5" name="description">{{ award.description }}</textarea>  	
             </div>
          </div>
 
@@ -78,7 +78,7 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label class="col-form-label" for="name">Start Date</label>
+                    <label class="col-form-label required" for="name">Start Date</label>
                         {{ form.start_day|attr:"class:form-control datepicker" }}
                         <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
@@ -86,7 +86,7 @@
                 </div>
                
                 <div class="col-md-4">
-                    <label class="col-form-label" for="name">End Date</label>	
+                    <label class="col-form-label required" for="name">End Date</label>	
                           {{ form.end_day|attr:"class:form-control datepicker" }}
                           <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
@@ -114,6 +114,10 @@
           </div>
         </div>  -->
         <br>
+        <div class="row">
+          <span class="col-md-10 offset-2 error" style="color:red;"></span>
+         </div>
+         
          <div class ="row award_top_margin justify-content-md-center">
             <div class="col-sm-4">
                <a type="button" class="btn btn-danger" href="{% url 'nominate_app:awards' %}">Cancel</a>
