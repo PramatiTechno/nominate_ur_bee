@@ -22,7 +22,7 @@ $(document).ready(function(){
 
   frequency_checker = {
    'MONTHLY': function(submission_start, approval_end){
-        return (submission_start.getMonth() === approval_end.getMonth() && submission_start.getYear() === approval_end.getYear)
+        return (submission_start.getMonth() === approval_end.getMonth()) && (submission_start.getYear() === approval_end.getYear())
     },
     'QUATERLY': function(submission_start, approval_end){
         var start_year = submission_start.getYear()
