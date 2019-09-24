@@ -2,6 +2,12 @@
   min-height: calc(100vh - 50px); /* 54 pixel is the height of your .navbar */
 /*}*/
 
+body,
+html {
+  font-family: "LatoRegular", "Arial", sans-serif !important;
+  font-size: 14px;
+}
+
 #sidebar {
   min-height: 80px;
   background-color: #00b6d5;
@@ -42,7 +48,7 @@
 
 .nav-link.leftsidebar {
   width: 100% !important;
-  font-size: 16px;
+  font-size: 14px;
   padding: 18px !important;
 }
 
