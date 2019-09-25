@@ -557,15 +557,17 @@ class Command(BaseCommand):
                     NominationPeriod.objects.get_or_create(group_id=period, award_id=award.id, \
                         start_day=datetime.strptime(awards_data[data][period]['start_day'], '%m/%d/%y'), \
                             end_day=datetime.strptime(awards_data[data][period]['end_day'], '%m/%d/%y'))
-                for temp_data in template_data[data]:
-                    award_template, at_create = AwardTemplate.objects.get_or_create(template_name=temp_data['template'], award_id=award.id)
-                    question_data = list(temp_data.keys())
-                    question_data.remove('template')
-                    for ques_data in question_data:
-                        try:qtype = list(temp_data[ques_data]['Question Type'].keys())[0]
-                        except:qtype = temp_data[ques_data]['Question Type']
-                        question, q_create = Questions.objects.get_or_create(qname=temp_data[ques_data]['Question'], qtype=qtype, award_template_id=award_template.id, attachment_need=temp_data[ques_data]['Need Attachment'])
-                        question.groups.add(*temp_data[ques_data]['group'])
+                try:
+                    for temp_data in template_data[data]:
+                        award_template, at_create = AwardTemplate.objects.get_or_create(template_name=temp_data['template'], award_id=award.id)
+                        question_data = list(temp_data.keys())
+                        question_data.remove('template')
+                        for ques_data in question_data:
+                            try:qtype = list(temp_data[ques_data]['Question Type'].keys())[0]
+                            except:qtype = temp_data[ques_data]['Question Type']
+                            question, q_create = Questions.objects.get_or_create(qname=temp_data[ques_data]['Question'], qtype=qtype, award_template_id=award_template.id, attachment_need=temp_data[ques_data]['Need Attachment'])
+                            question.groups.add(*temp_data[ques_data]['group'])
+                except:pass
     
     def handle(self, *args, **options):
         self._initialize_data()
