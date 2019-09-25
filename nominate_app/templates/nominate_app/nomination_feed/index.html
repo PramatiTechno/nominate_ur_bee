@@ -50,7 +50,7 @@
 </div>
 
 <div class="container panel">
-	<div class="row nomination-feed infinite-container" >
+	<div class="row nomination-feed infinite-container">
 		{% for instance in instances %}
 		<div class="infinite-item">
 			{% include 'nominate_app/nomination_feed/detail.html' with submission=instance.submission qa_list=instance.qa detail=instance.detail comment_form=comment_form  %}

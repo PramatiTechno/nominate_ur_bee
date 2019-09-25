@@ -94,3 +94,14 @@ td {
   border-bottom: 1px solid rgba(232, 232, 232, 0.48);
   font-size: 12px;
 }
+
+#activities {
+  padding-left: 5px;
+  padding-right: 5px;
+} 
+
+#graph {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+

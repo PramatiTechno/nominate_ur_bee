@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% block title %} Dashboard {% endblock %}
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
@@ -37,12 +38,12 @@
             </div>
         {% else %}
             <div class="row row-pad" style="margin:0px;">
-                <div class="col-sm-12">
+                <div class="col-sm-12" id="activities">
                     {% include "nominate_app/include/my_activities.html" %}
                 </div>
             </div>
             <div class="row row-pad" style="margin:0px;">
-                <div class="col-sm-12">
+                <div class="col-sm-12" id="graph">
                     {% include "nominate_app/include/my_graph.html" %}
                 </div>
             </div>            
