@@ -1,25 +1,25 @@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header" style="font-size: 1.08em;font-weight: 300;border-radius:0px !important;border-bottom: 0px;padding: 0.75rem;">
         Recent Nominations
     </div>
-    <div class="card-body">
-        <table>
+    <div class="card-body" style="padding:0px;">
+        <table class="table table-striped">
             <thead>
-                <tr class="tr_body table_head">
-                    <td class="td_body table_head">
+                <tr scope="col">
+                    <td>
                         Award 
                     </td>
-                    <td class="td_body table_head">
+                    <td>
                         Template 
                     </td>
-                    <td class="td_body table_head">
+                    <td>
                         {% if user.userprofile.get_group_name == "admin" %}
                             End Date
                         {% else %}
                             Status
                         {% endif %}
                     </td>
-                    <td class="td_body table_head">
+                    <td>
                         Group
                     </td>
                     
@@ -29,9 +29,9 @@
             <tbody>
                 {% for nomination in recent_nominations %}
                     {% if user.userprofile.get_group_name == "admin" %}
-                        <tr class="link tr_body" onclick='location.href="{% url 'nominate_app:nomination_status' %}?award_name={{nomination.award}}&template_name={{nomination.template}}"'>
+                        <tr class="tr_body" onclick='location.href="{% url 'nominate_app:nomination_status' %}?award_name={{nomination.award}}&template_name={{nomination.template}}"' style="cursor:pointer;">
                     {% else %}
-                        <tr class="link tr_body" onclick='location.href="{% url 'nominate_app:nomination_status_index' status_value=nomination.status %} "'>
+                        <tr class="tr_body" onclick='location.href="{% url 'nominate_app:nomination_status_index' status_value=nomination.status %} "' style="cursor:pointer;">
                     {% endif %}
                             
                             <td class="td_body">
