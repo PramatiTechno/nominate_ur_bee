@@ -311,7 +311,15 @@ class Command(BaseCommand):
         'Good Performer':{'frequency':'YEARLY',
                     1:{'start_day':'01/01/19', 'end_day':'12/31/19'}, 
                     2:{'start_day':'01/01/19', 'end_day':'12/31/19'}, 
-                    3:{'start_day':'01/01/19', 'end_day':'12/31/19'}}        
+                    3:{'start_day':'01/01/19', 'end_day':'12/31/19'}},
+        'Difference  Maker':{'frequency':'QUATERLY',
+                    1:{'start_day':'09/26/19', 'end_day':'09/27/19'}, 
+                    2:{'start_day':'09/26/19', 'end_day':'09/27/19'}, 
+                    3:{'start_day':'09/26/19', 'end_day':'09/27/19'}},
+        'Ultimate team player':{'frequency':'QUATERLY',
+                    1:{'start_day':'09/26/19', 'end_day':'09/27/19'}, 
+                    2:{'start_day':'09/26/19', 'end_day':'09/27/19'}, 
+                    3:{'start_day':'09/26/19', 'end_day':'09/27/19'}},
         }
         template_data = {
             'Infinity':[{'template': 'Infinity Final', 
