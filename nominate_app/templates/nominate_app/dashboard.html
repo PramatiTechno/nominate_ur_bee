@@ -1,47 +1,49 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% block title %} Dashboard {% endblock %}
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/header.css' %}">
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 
-<div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
+<!--div class="container-fluid" style="padding-left:0px !important;padding-right:0px !important;">
     <div class="header" style="background-image: linear-gradient(to right, #5e7479 , #70e4af5e);color:white;padding:10px 20px;font-size:14px !important;">
         <h5>Dashboard</h5>
     </div>
-</div>
+</div-->
 
-    <div class="container" >
-            <div class="row">
-                <div class="col-md-6">
+    <div class="container" style="padding:10px 5px;background: #f7f6f6;" >
+            <div class="row" style="margin:0px;">
+                <div class="col-md-8" style="padding:5px 5px;">
                     {% include "nominate_app/include/recent_nominations_card.html" %}
                 </div>
-                <div class="col-md-6">
-                    {% include "nominate_app/include/notification_card.html" %}
+                <div class="col-md-4" style="padding:5px 5px;">
+                    {% include "nominate_app/include/summary_card.html" %}
                 </div>
             </div>
         {% if user.userprofile.get_group_name == "admin" %}            
-            <div class="row row-pad">
-                <div class="col-md-6">
-                    {% include "nominate_app/include/awards_card.html" %}
+            <div class="row row-pad" style="margin:0px;">
+                <div class="col-md-8" style="padding:5px 5px;">
+                    {% include "nominate_app/include/statistics_card.html" %}
+
+                    <!--{% include "nominate_app/include/awards_card.html" %}-->
                 </div>
-                <div class="col-md-6">
-                    {% include "nominate_app/include/summary_card.html" %}
+                <div class="col-md-4" style="padding:5px 5px;">
+                    {% include "nominate_app/include/notification_card.html" %}
                 </div>
             </div>          
-            <div class="row row-pad">
+            <div class="row row-pad" style="margin:0px;">
                 <div class="col-sm-12">
-                    {% include "nominate_app/include/statistics_card.html" %}
                 </div>
             </div>
         {% else %}
-            <div class="row row-pad">
-                <div class="col-sm-12">
+            <div class="row row-pad" style="margin:0px;">
+                <div class="col-sm-12" id="activities">
                     {% include "nominate_app/include/my_activities.html" %}
                 </div>
             </div>
-            <div class="row row-pad">
-                <div class="col-sm-12">
+            <div class="row row-pad" style="margin:0px;">
+                <div class="col-sm-12" id="graph">
                     {% include "nominate_app/include/my_graph.html" %}
                 </div>
             </div>            

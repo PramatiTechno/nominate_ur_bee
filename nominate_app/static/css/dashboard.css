@@ -1,93 +1,107 @@
 #container {
-	padding-left:0px !important;
-	padding-right:0px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
 .header {
-	background-image: linear-gradient(to right, #5e7479 , #70e4af5e);
-	color:white;
-	padding:10px 20px;
-	font-size:14px !important;
+  background-image: linear-gradient(to right, #5e7479, #70e4af5e);
+  color: white;
+  padding: 10px 20px;
+  font-size: 14px !important;
 }
 
 .container {
-	padding: 40px;
+  padding: 40px;
 }
 
 #font-size {
-	font-size: 15px;
+  font-size: 15px;
 }
 
 #padding {
-	padding:5px 5px 5px 15px;
+  padding: 5px 5px 5px 15px;
 }
 
 #column {
-	text-align: right;
+  text-align: right;
 }
 
 .dropdown-item {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #graph-container {
-    height: 30em;
+  height: 30em;
 }
 
 .row-pad {
-    padding-top:30px;
+  /* padding-top: 30px; */
 }
 
 .graph-box {
-    height:35em;
+  height: 35em;
 }
 
 .card-body {
-    height: 15em;
-} 
+  height: 15em;
+}
 
-table{
-    width: 100%;
+table {
+  width: 100%;
 }
 
 .link {
-    color: blue;
-    cursor: pointer;
+  color: blue;
+  cursor: pointer;
 }
 
-.card-header {   
-    padding: .75rem 1.25rem;
-    color: white;
-    margin-bottom: 0;
-    background-image: linear-gradient(to right, #33929c , #3ce1f3);
-    background-color: rgba(0,0,0,.03);
-    border-bottom: 1px solid rgba(0,0,0,.125);
-    font-weight: 700;
-    border-radius: 15px 15px 0px 0px !important;
+.card-header {
+  padding: 0.75rem 1.25rem;
+  color: black;
+  background: white;
+  margin-bottom: 0;
+  /* background-image: linear-gradient(to right, #33929c, #3ce1f3); */
+  /* background-color: rgba(0, 0, 0, 0.03); */
+  /* border-bottom: 1px solid rgba(0, 0, 0, 0.125); */
+  font-weight: 300;
+  /* border-radius: 15px 15px 0px 0px !important; */
 }
 
 .card {
-    box-shadow: 2px 2px 8px rgba(110,110,110,.5);
-    border-radius:15px;
+  /* box-shadow: 2px 2px 8px rgba(110, 110, 110, 0.5);
+  border-radius: 15px; */
+  border: 0px !important;
 }
 
-tr,td {
-    padding:10px;
+tr,
+td {
+  padding: 10px;
 }
 
-.tr_body { 
-    font-size:12px;
+.tr_body {
+  font-size: 12px;
 }
 
-.td_body { 
-    font-size:12px;
+.td_body {
+  font-size: 12px;
 }
 
-.table_head { 
-    font-weight: bold;
+.table_head {
 }
 
 .notifications {
-    padding:10px;
-    border-bottom:1px solid rgba(232, 232, 232, 0.48);        
+  padding: 10px;
+  border-bottom: 1px solid rgba(232, 232, 232, 0.48);
+  font-size: 12px;
 }
+
+#activities {
+  padding-left: 5px;
+  padding-right: 5px;
+} 
+
+#graph {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+

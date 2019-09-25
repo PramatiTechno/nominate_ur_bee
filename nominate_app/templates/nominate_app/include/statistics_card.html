@@ -9,7 +9,7 @@
                 type: 'column'
             },
             title: {
-                text: '{{ award_selected.name.capitalize }} Statistics'
+                text: ''//{{ award_selected.name.capitalize }} Statistics'
             },
             xAxis: {
                 categories: [{% for k,v in award_stats.submitted.data.items %}'{{ k.capitalize }}'{% if not forloop.last %}, {% endif %}{% endfor %}]
@@ -59,7 +59,7 @@
             </div>
     </div>
         
-    <div class="graph-box">
+    <div class="graph-box" >
         <div id="graph-container"></div>
     </div>
 </div>

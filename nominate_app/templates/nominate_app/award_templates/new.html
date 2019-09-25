@@ -17,8 +17,11 @@
     <a href="javascript:history.back()" class="pull-left mr-4"><i class="fa fa-chevron-left back-nav"></i></a>
     Award Template for {{award.name}}
   </h5>
+  <!--   <span class="custom-control custom-switch pull-right" style="margin-top: -25px">
+        {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
+        <label class="custom-control-label" for="customSwitch1" >Enable/Disable</label>
+      </span> -->
 </div>
-
 
 <div class = "container">
   <div class="form-group">
@@ -36,10 +39,7 @@
         </div>   -->
       {% endif %}
       {% csrf_token %}
-      <div class="custom-control custom-switch pull-right">
-        {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
-        <label class="custom-control-label" for="customSwitch1" ></label>
-      </div>
+     
       <div class = "row award_top_margin">
         <div class="col-md-2">
           <label class="col-form-label" for='{{award_form.template_name}}'>Template Name<span style='color:red;'>*</span></label>
@@ -47,6 +47,10 @@
         <div class="col-md-8">    
           {{ award_form.template_name }}
         </div>
+          <div class="col-md-2 custom-control custom-switch pull-right">
+        {{ award_form.is_active|attr:"class:custom-control-input"|attr:"id:customSwitch1" }}
+        <label class="custom-control-label pull-right" for="customSwitch1" style="margin-top: -45px; color: white" >Enable/Disable</label>
+      </div>
       </div> 
 
       {{ formset.management_form }}
