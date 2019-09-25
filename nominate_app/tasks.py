@@ -81,9 +81,9 @@ def populate_monthly_frequency():
         print("Checking awards");
         award_templates = award.awardtemplate_set.all()##.filter#(is_active=True)
         periods = award.nominationperiod_set.all()
-        submission_period = periods.get(group_id=2)
-        review_period = periods.get(group_id=3)
-        approval_period = periods.get(group_id=4)
+        submission_period = periods.get(group_id=1)
+        review_period = periods.get(group_id=2)
+        approval_period = periods.get(group_id=3)
         frequency = award.frequency
         for period in periods:
             print("Iterating the periods");
